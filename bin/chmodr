@@ -9,8 +9,8 @@ while [ "$#" -gt 0 ]; do
 	case "$1" in
 		-V|--version) echo $MBX_VERSION && exit 0 ;;
 		-v|--verbose) verbose=1 ;;
-		-d=*|--directory-permissions=*)  directory_permissions="${1#*=}" ;;
-		-f=*|--file-permissions=*)  file_permissions="${1#*=}" ;;
+		-d=*|--directory-permissions=*) directory_permissions="${1#*=}" ;;
+		-f=*|--file-permissions=*) file_permissions="${1#*=}" ;;
 		-c|--claim-ownership) claim_ownership=1 ;;
 		-s|--slow-mode) terminator=\; ;;
 		-h|--help)
@@ -54,7 +54,7 @@ while [ "$#" -gt 0 ]; do
      read and execute by others, and no set-uid or set-gid behaviour is 755 (400+200+100+040+010+004+001)."
 			exit 0
 			;;
-		*) test -z $path && path=$1 || echo "Invalid command line flag $1" >&2 && exit 1 ;;
+		*) { test -z $path && path=$1; } || { echo "Invalid command line flag $1" >&2 && exit 1; } ;;
 	esac
 	shift
 done
