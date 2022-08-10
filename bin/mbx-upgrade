@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# Upgrades Martin Braun's eXtensive toolkit.
+
+while [ "$#" -gt 0 ]; do
+	case "$1" in
+		-V|--version) echo $MBX_VERSION && exit 0 ;;
+		-v|--verbose) verbose=1 ;;
+		-h|--help)
+			echo "Usage: $(basename "$0") [OPTIONS]"
+			echo "Upgrades Martin Braun's eXtensive toolkit."
+			echo ""
+			echo "OPTIONS"
+			echo "  -V,   --version                 Prints the version of this script suite (MBX)."
+			echo "  -v,   --verbose                 Prints verbose information."
+			echo "  -h,   --help                    Prints this help message."
+			exit 0
+			;;
+		*) echo "Invalid command line flag $1" >&2 && exit 1 ;;
+	esac
+	shift
+done
+test $verbose && trap 'echo "◊ $BASH_COMMAND"' DEBUG
+set -e
+
+echo "» Upgrading MBX toolkit ..."
+git -C "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.." pull --ff-only
+
+# Done!
+set +e && trap - DEBUG && echo "» Done!"

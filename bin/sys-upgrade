@@ -1,0 +1,68 @@
+#!/bin/bash
+#
+# Upgrades the entire system.
+
+. "$MBX_LIBPATH/_ext.bash"
+. "$MBX_LIBPATH/deps.bash"
+
+while [ "$#" -gt 0 ]; do
+	case "$1" in
+		-V|--version) echo $MBX_VERSION && exit 0 ;;
+		-v|--verbose) verbose=1 ;;
+		-h|--help)
+			echo "Usage: $(basename "$0") [OPTIONS]"
+			echo "Upgrades the entire system."
+			echo "  -V,   --version                 Prints the version of this script suite (MBX)."
+			echo "  -v,   --verbose                 Prints verbose information."
+			echo "  -h,   --help                    Prints this help message."
+			exit 0
+			;;
+		*) echo "Invalid command line flag $1" >&2 && exit 1 ;;
+	esac
+	shift
+done
+test $verbose && trap 'echo "◊ $BASH_COMMAND"' DEBUG
+set -e
+
+echo "» Upgrading system packages ..."
+if [[ $PKGMGR == "apt-get" ]]; then
+	if test-command sudo; then
+		sudo apt-get update
+		sudo apt-get dist-upgrade -y
+		sudo apt-get autoremove -y
+		sudo apt-get clean
+	else
+		apt-get update
+		apt-get dist-upgrade -y
+		apt-get autoremove -y
+		apt-get clean
+	fi
+elif [[ $PKGMGR == "brew" ]]; then
+	brew update
+	brew upgrade
+	brew upgrade --cask
+	brew cleanup
+fi
+
+if test-command npm; then
+	echo "» Upgrading global NPM packages ..."
+	npm update -g npm
+fi
+
+if test-command gem; then
+	echo "» Upgrading global Ruby gems ..."
+	gem update --system
+fi
+
+if test-command fvm; then
+	echo "» Upgrading Flutter ..."
+	fvm global beta
+	fvm flutter upgrade
+	fvm global stable
+	fvm flutter upgrade
+elif test-command flutter; then
+	echo "» Upgrading Flutter ..."
+	flutter upgrade
+fi
+
+set +e && trap - DEBUG && echo "» Done!"

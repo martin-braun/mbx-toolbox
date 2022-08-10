@@ -1,5 +1,0 @@
-#!/bin/bash
-#
-# Updates Martin Braun's eXtensive toolkit.
-
-git -C "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.." pull --ff-only
