@@ -12,17 +12,19 @@ Use at your own risk. I will not be responsible for any damages that might occur
 ### Debian (incl. Proxmox)
 
 ```bash
-sudo mkdir -p /usr/local/mbx && sudo chown "$(whoami)" /usr/local/mbx
-git clone git@github.com:martin-braun/mbx-toolbox.git /usr/local/mbx
+sudo mkdir -p /usr/local/mbx
+sudo chown "$(whoami)" /usr/local/mbx
+git clone https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
 echo 'export PATH=$PATH:/usr/local/mbx/bin:/usr/local/mbx/bin/deb' >> $HOME/.bashrc
-echo "test -e /usr/local/mbx/lib/init.zsh && . /usr/local/mbx/lib/init.zsh" >> $HOME/.bashrc
+echo "test -e /usr/local/mbx/lib/init.bash && . /usr/local/mbx/lib/init.bash" >> $HOME/.bashrc
 ```
 
 ### MacOS
 
 ```zsh
-sudo mkdir -p /usr/local/mbx && sudo chown "$(whoami)" /usr/local/mbx
-git clone git@github.com:martin-braun/mbx-toolbox.git /usr/local/mbx
+sudo mkdir -p /usr/local/mbx
+sudo chown "$(whoami)" /usr/local/mbx
+git clone https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
 echo 'export PATH=$PATH:/usr/local/mbx/bin:/usr/local/mbx/bin/mac' >> $HOME/.zshrc
 echo "test -e /usr/local/mbx/lib/init.zsh && . /usr/local/mbx/lib/init.zsh" >> $HOME/.zshrc
 ```
