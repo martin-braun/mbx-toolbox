@@ -13,8 +13,9 @@
 ###
 meownr() {
 	if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-		echo "Recursively claim ownership to the current user"
+		echo "Recursively claim ownership to the current user."
 		echo "Usage: meownr <path>"
+		echo ""
 		return 1
 	fi
 	if command -v "sudo" >/dev/null 2>&1; then

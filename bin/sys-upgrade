@@ -15,6 +15,7 @@ while [ "$#" -gt 0 ]; do
 			echo "  -V,   --version                 Prints the version of this script suite (MBX)."
 			echo "  -v,   --verbose                 Prints verbose information."
 			echo "  -h,   --help                    Prints this help message."
+			echo ""
 			exit 0
 			;;
 		*) echo "Invalid command line flag $1" >&2 && exit 1 ;;

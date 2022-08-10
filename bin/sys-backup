@@ -25,6 +25,7 @@ while [ "$#" -gt 0 ]; do
 			echo "  -m=*, --max-size=*              Sets the maximum size of every backuped file (default: 10M)."
 			echo "  -k,   --keep-files              Keeps the old backup files that are not overwritten"
 			echo "  -h,   --help                    Prints this help message."
+			echo ""
 			exit 0
 			;;
 		*) echo "Invalid command line flag $1" >&2 && exit 1 ;;
@@ -43,20 +44,21 @@ else
 fi
 
 echo "» Backing up files ..."
-excl={"$path"/*,/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/mnt/*,/media/*,/lost+found}
+excl=( "$path" /dev /proc /sys /tmp /run /mnt /media /lost+found )
 if [[ "$(to-lower "$OSTYPE")" == "darwin"* ]]; then # MacOS
-	excl+={/Volumes/*,/Network/*,/System/*,/Applications/*,/AppleInternal/*,.DS_Store,.AppleDouble,.LSOverride,._*}
-	sudo rsync -aEHv --delete --max-size=$max_size --exclude=$excl / "$path"
-	(( $keep_files )) || sudo find "$path" -type f -size +$max_size -delete
+	excl+=( /Volumes /Network /System /Applications /AppleInternal .DS_Store .AppleDouble .LSOverride )
+	opts="-aEH"
 else # Others
-	excl+={/var/lib/lxcfs/*,/var/lib/vz/*} # proxmox dumps
-	if test-command sudo; then
-		sudo rsync -aAXHv --delete --max-size=$max_size --exclude=$excl / "$path"
-		(( $keep_files )) || sudo find "$path" -type f -size +$max_size -delete
-	else
-		rsync -aAXHv --delete --max-size=$max_size --exclude=$excl / "$path"
-		(( $keep_files )) || find "$path" -type f -size +$max_size -delete
-	fi
+	excl+=( /var/lib/lxcfs /var/lib/vz ) # proxmox dumps
+	opts="-aAXH"
+fi
+(( $verbose )) && opts+="v"
+if test-command sudo; then
+	sudo rsync $opts --delete --max-size=$max_size --exclude="${excl[@]}" / "$path"
+	(( $keep_files )) || sudo find "$path" -type f -size +$max_size -delete
+else
+	rsync $opts --delete --max-size=$max_size --exclude="${excl[@]}" / "$path"
+	(( $keep_files )) || find "$path" -type f -size +$max_size -delete
 fi
 
 echo "» Securing backup directory ..."
