@@ -25,7 +25,9 @@ test $verbose && trap 'echo "◊ $BASH_COMMAND"' DEBUG
 set -e
 
 echo "» Upgrading MBX toolkit ..."
-git -C "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.." pull --ff-only
+dir="$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.."
+git -C "$dir" reset --hard HEAD
+git -C "$dir" pull --ff-only
 
 # Done!
 set +e && trap - DEBUG && echo "» Done!"
