@@ -1,3 +1,3 @@
 #!/bin/sh
 
-export MBX_VERSION="0.0.20220810_211040"
+export MBX_VERSION="0.0.20220811_073356"

@@ -1,36 +1,23 @@
 #!/bin/bash
-#
-# Recursively changes modes on directories and files individually.
 
-. "$MBX_LIBPATH/_ext.bash"
+read -r -d '' usage << EOF
+Usage: $(basename "$0") [OPTIONS] [PATH]
+Recursively changes modes on directories and files individually.
 
-terminator=+
-while [ "$#" -gt 0 ]; do
-	case "$1" in
-		-V|--version) echo $MBX_VERSION && exit 0 ;;
-		-v|--verbose) verbose=1 ;;
-		-d=*|--directory-permissions=*) directory_permissions="${1#*=}" ;;
-		-f=*|--file-permissions=*) file_permissions="${1#*=}" ;;
-		-c|--claim-ownership) claim_ownership=1 ;;
-		-s|--slow-mode) terminator=\; ;;
-		-h|--help)
-			echo "Usage: $(basename "$0") [OPTIONS] [PATH]"
-			echo "Recursively changes modes on directories and files individually."
-			echo ""
-			echo "OPTIONS"
-			echo "  -V,   --version                 Prints the version of this script suite (MBX)."
-			echo "  -v,   --verbose                 Prints verbose information."
-			echo "  -d=*, --directory-permissions=* Sets the directory permissions."
-			echo "  -f=*, --file-permissions=*      Sets the file permissions."
-			echo "  -c,   --claim-ownership         Claim ownership of the directories and files."
-			echo "  -s,   --slow-mode               Concatinate directories and files for two commands in total."
-			echo "  -h,   --help                    Prints this help message."
-			echo ""
-			echo "PATH"
-			echo "  The path to the directory or file to change."
-			echo ""
-			echo "PERMISSION MODES"
-			echo "     Modes may be absolute or symbolic.  An absolute mode is an octal number constructed from the sum of one or more of
+OPTIONS
+  -V,   --version                 Prints the version of this script suite (MBX).
+  -v,   --verbose                 Prints verbose information.
+  -d=*, --directory-permissions=* Sets the directory permissions.
+  -f=*, --file-permissions=*      Sets the file permissions.
+  -c,   --claim-ownership         Claim ownership of the directories and files.
+  -s,   --slow-mode               Concatinate directories and files for two commands in total.
+  -h,   --help                    Prints this help message.
+
+PATH
+  The path to the directory or file to change.
+
+PERMISSION MODES
+     Modes may be absolute or symbolic.  An absolute mode is an octal number constructed from the sum of one or more of
      the following values:
            4000    (the setuid bit).  Executable files with this bit set will run with effective uid set to the uid of the
                    file owner.  Directories with this bit set will force all files and sub-directories created in them to
@@ -51,14 +38,27 @@ while [ "$#" -gt 0 ]; do
            0001    For files, allow execution by others.  For directories allow others to search in the directory.
 
      For example, the absolute mode that permits read, write and execute by the owner, read and execute by group members,
-     read and execute by others, and no set-uid or set-gid behaviour is 755 (400+200+100+040+010+004+001)."
-			echo ""
-			exit 0
-			;;
+     read and execute by others, and no set-uid or set-gid behaviour is 755 (400+200+100+040+010+004+001).
+EOF
+
+. "$MBX_LIBPATH/_ext.bash"
+
+terminator=+
+
+while [ "$#" -gt 0 ]; do
+	case "$1" in
+		-V|--version) echo $MBX_VERSION && exit 0 ;;
+		-v|--verbose) verbose=1 ;;
+		-d=*|--directory-permissions=*) directory_permissions="${1#*=}" ;;
+		-f=*|--file-permissions=*) file_permissions="${1#*=}" ;;
+		-c|--claim-ownership) claim_ownership=1 ;;
+		-s|--slow-mode) terminator=\; ;;
+		-h|--help) echo "$usage" && exit 0 ;;
 		*) { test -z $path && path=$1; } || { echo "Invalid command line flag $1" >&2 && exit 1; } ;;
 	esac
 	shift
 done
+
 test $verbose && trap 'echo "◊ $BASH_COMMAND"' DEBUG
 set -e
 

@@ -1,12 +1,24 @@
 #!/bin/bash
-#
-# Backups all files given a certain maximum size from the root directory of this system.
+
+read -r -d '' usage << EOF
+Usage: $(basename "$0") [OPTIONS]
+Backups all files given a certain maximum size from the root directory of this system.
+
+OPTIONS
+  -V,   --version                 Prints the version of this script suite (MBX).
+  -v,   --verbose                 Prints verbose information.
+  -p=*, --path=*                  Sets the path to the backup directory (default: $HOME/.sys-backup).
+  -m=*, --max-size=*              Sets the maximum size of every backuped file (default: 10M).
+  -k,   --keep-files              Keeps the old backup files that are not overwritten.
+  -h,   --help                    Prints this help message.
+EOF
 
 . "$MBX_LIBPATH/_ext.bash"
 . "$MBX_LIBPATH/tt.bash"
 
 path="$HOME/.sys-backup"
 max_size="10M"
+
 while [ "$#" -gt 0 ]; do
 	case "$1" in
 		-V|--version) echo $MBX_VERSION && exit 0 ;;
@@ -14,24 +26,12 @@ while [ "$#" -gt 0 ]; do
 		-p=*|--path=*) path="${1#*=}" ;;
 		-m=*|--max-size=*) max_size="${1#*=}" ;;
 		-k|--keep-files) keep_files=1 ;;
-		-h|--help)
-			echo "Usage: $(basename "$0") [OPTIONS]"
-			echo "Backups all files given a certain maximum size from the root directory of this system."
-			echo ""
-			echo "OPTIONS"
-			echo "  -V,   --version                 Prints the version of this script suite (MBX)."
-			echo "  -v,   --verbose                 Prints verbose information."
-			echo "  -p=*, --path=*                  Sets the path to the backup directory (default: $HOME/.sys-backup)."
-			echo "  -m=*, --max-size=*              Sets the maximum size of every backuped file (default: 10M)."
-			echo "  -k,   --keep-files              Keeps the old backup files that are not overwritten"
-			echo "  -h,   --help                    Prints this help message."
-			echo ""
-			exit 0
-			;;
+		-h|--help) echo "$usage" && exit 0 ;;
 		*) echo "Invalid command line flag $1" >&2 && exit 1 ;;
 	esac
 	shift
 done
+
 test $verbose && trap 'echo "◊ $BASH_COMMAND"' DEBUG
 set -e
 

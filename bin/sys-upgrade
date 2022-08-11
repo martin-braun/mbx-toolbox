@@ -1,32 +1,32 @@
 #!/bin/bash
-#
-# Upgrades the entire system.
+
+read -r -d '' usage << EOF
+Usage: $(basename "$0") [OPTIONS]
+Upgrades the entire system.
+
+OPTIONS
+  -V,   --version                 Prints the version of this script suite (MBX).
+  -v,   --verbose                 Prints verbose information.
+  -h,   --help                    Prints this help message.
+EOF
 
 . "$MBX_LIBPATH/_ext.bash"
-. "$MBX_LIBPATH/deps.bash"
 
 while [ "$#" -gt 0 ]; do
 	case "$1" in
 		-V|--version) echo $MBX_VERSION && exit 0 ;;
 		-v|--verbose) verbose=1 ;;
-		-h|--help)
-			echo "Usage: $(basename "$0") [OPTIONS]"
-			echo "Upgrades the entire system."
-			echo "  -V,   --version                 Prints the version of this script suite (MBX)."
-			echo "  -v,   --verbose                 Prints verbose information."
-			echo "  -h,   --help                    Prints this help message."
-			echo ""
-			exit 0
-			;;
+		-h|--help) echo "$usage" && exit 0 ;;
 		*) echo "Invalid command line flag $1" >&2 && exit 1 ;;
 	esac
 	shift
 done
+
 test $verbose && trap 'echo "◊ $BASH_COMMAND"' DEBUG
 set -e
 
-echo "» Upgrading system packages ..."
-if [[ $PKGMGR == "apt-get" ]]; then
+if test-command apt-get; then
+	echo "» Upgrading apt packages ..."
 	if test-command sudo; then
 		sudo apt-get update
 		sudo apt-get dist-upgrade -y
@@ -38,7 +38,10 @@ if [[ $PKGMGR == "apt-get" ]]; then
 		apt-get autoremove -y
 		apt-get clean
 	fi
-elif [[ $PKGMGR == "brew" ]]; then
+fi
+
+if test-command brew; then
+	echo "» Upgrading Homebrew packages ..."
 	brew update
 	brew upgrade
 	brew upgrade --cask
