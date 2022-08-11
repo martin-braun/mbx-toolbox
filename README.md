@@ -1,7 +1,7 @@
 # mbx-toolbox
 Martin Braun's eXtensive toolbox
 
-Bash 3 helper libraries with additional interactive shell functions/aliases for Debian (based) distros and MacOS.
+Bash/Batch helper libraries/aliases/functions for Windows, MacOS and Debian (based) distros.
 
 ## Disclaimer
 
@@ -45,10 +45,10 @@ reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t 
 Then, within unprivileged command-line terminal (not PowerShell):
 
 ```cmd
-mkdir %PROGRAMDATA%\mbx
-git clone https://github.com/martin-braun/mbx-toolbox.git %PROGRAMDATA%\mbx
-setx PATH "%PATH%;%PROGRAMDATA%\mbx\bin\win;%PROGRAMDATA%\mbx\bin"
-echo @CALL %PROGRAMDATA%\mbx\lib\init.cmd>>"%USERPROFILE%\autorun.cmd"
+MKDIR %ALLUSERSPROFILE%\mbx
+git clone https://github.com/martin-braun/mbx-toolbox.git %ALLUSERSPROFILE%\mbx
+SETX PATH "%PATH%;%ALLUSERSPROFILE%\mbx\bin\win;%ALLUSERSPROFILE%\mbx\bin"
+echo @CALL %ALLUSERSPROFILE%\mbx\lib\init.cmd>>"%USERPROFILE%\autorun.cmd"
 ```
 
 ### Final steps
@@ -63,6 +63,17 @@ mbx-update
 		
 ## Uninstall
 
+### Windows
+
+```cmd
+DEL /S %ALLUSERSPROFILE%\mbx
+rundll32 sysdm.cpl,EditEnvironmentVariables
+```
+
+Now remove the paths `%ALLUSERSPROFILE%\mbx\bin\win` and `%ALLUSERSPROFILE%\mbx\bin` from your `%PATH%` variable. Also remove the added lines in `%USERPROFILE%\autorun.cmd`.
+
+### \*nix
+
 ```sh
 rm -r /usr/local/mbx
 ```
@@ -73,8 +84,8 @@ Also remove the lines you added to your .bashrc/.zshrc during installation proce
 
 Feel free to open an issue or even expand this toolkit:
 
-- Simple functions or aliases that should be only available in an interactive shell need to be put in [lib/init.d](lib/init.d) and should always use the `#!/bin/sh` shebang and the `.sh` file extension to be imported with maximum compatibility
-- Helper functions or aliases for bash scripts can be put in [lib](lib) and should have a `#!/bin/bash` shebang as well as the `.bash` file extension
-- Full fledged scripts available everywhere will be put in [bin](bin) (all platforms) or the appropriate subdirectory in [bin](bin) (higher priority)
+- Simple functions or aliases that should be only available in an interactive shell need to be put in [lib/init.d](lib/init.d) and should always use the `#!/bin/sh` shebang and the `.sh` file extension to be imported with maximum compatibility in \*nix scripts, Windows scripts should always end up with `.cmd` and should work without `ENABLEDELAYEDEXPANSION`
+- Helper functions or aliases for bash scripts can be put in [lib](lib) and should have a `#!/bin/bash` shebang as well as the `.bash` file extension, helper batch scripts with functions should also be located at [lib](lib) and should end with the `.cmd` file extension
+- Full fledged scripts which should be available everywhere will be put in [bin](bin) (all platforms) or the appropriate subdirectory in [bin](bin) (always favoured by the `PATH` priority)
 
 > IMPORTANT: Update the timestamp in [lib/init.d/mbx.sh](lib/init.d/mbx.sh) and [lib/init.d/mbx.bat](lib/init.d/mbx.cmd) prior any pull requests
