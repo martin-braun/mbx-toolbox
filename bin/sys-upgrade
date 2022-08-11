@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. "$MBX_LIBPATH/_.bash" || exit 1
+
 read -r -d '' usage << EOF
 Usage: $(basename "$0") [OPTIONS]
 Upgrades the entire system.
@@ -9,8 +11,6 @@ OPTIONS
   -v,   --verbose                 Prints verbose information.
   -h,   --help                    Prints this help message.
 EOF
-
-. "$MBX_LIBPATH/_ext.bash"
 
 while [ "$#" -gt 0 ]; do
 	case "$1" in
@@ -22,11 +22,11 @@ while [ "$#" -gt 0 ]; do
 	shift
 done
 
-test $verbose && trap 'echo "◊ $BASH_COMMAND"' DEBUG
+test $verbose && trap 'echo "[o] $BASH_COMMAND"' DEBUG
 set -e
 
 if test-command apt-get; then
-	echo "» Upgrading apt packages ..."
+	echo "[o] Upgrading apt packages ..."
 	if test-command sudo; then
 		sudo apt-get update
 		sudo apt-get dist-upgrade -y
@@ -41,7 +41,7 @@ if test-command apt-get; then
 fi
 
 if test-command brew; then
-	echo "» Upgrading Homebrew packages ..."
+	echo "[o] Upgrading Homebrew packages ..."
 	brew update
 	brew upgrade
 	brew upgrade --cask
@@ -49,24 +49,24 @@ if test-command brew; then
 fi
 
 if test-command npm; then
-	echo "» Upgrading global NPM packages ..."
+	echo "[o] Upgrading global NPM packages ..."
 	npm update -g npm
 fi
 
 if test-command gem; then
-	echo "» Upgrading global Ruby gems ..."
+	echo "[o] Upgrading global Ruby gems ..."
 	gem update --system
 fi
 
 if test-command fvm; then
-	echo "» Upgrading Flutter ..."
+	echo "[o] Upgrading Flutter ..."
 	fvm global beta
 	fvm flutter upgrade
 	fvm global stable
 	fvm flutter upgrade
 elif test-command flutter; then
-	echo "» Upgrading Flutter ..."
+	echo "[o] Upgrading Flutter ..."
 	flutter upgrade
 fi
 
-set +e && trap - DEBUG && echo "» Done!"
+set +e && trap - DEBUG && echo "[o] Done!"

@@ -12,22 +12,48 @@ Use at your own risk. I will not be responsible for any damages that might occur
 ### Debian (incl. Proxmox)
 
 ```bash
+apt update && apt install git -y
 sudo mkdir -p /usr/local/mbx
 sudo chown "$(whoami)" /usr/local/mbx
 git clone https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
-echo 'export PATH=$PATH:/usr/local/mbx/bin:/usr/local/mbx/bin/deb' >> $HOME/.bashrc
+echo 'export PATH=$PATH:/usr/local/mbx/bin/deb:/usr/local/mbx/bin' >> $HOME/.bashrc
 echo "test -e /usr/local/mbx/lib/init.bash && . /usr/local/mbx/lib/init.bash" >> $HOME/.bashrc
 ```
 
 ### MacOS
 
 ```zsh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install git
 sudo mkdir -p /usr/local/mbx
 sudo chown "$(whoami)" /usr/local/mbx
 git clone https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
-echo 'export PATH=$PATH:/usr/local/mbx/bin:/usr/local/mbx/bin/mac' >> $HOME/.zshrc
+echo 'export PATH=$PATH:/usr/local/mbx/bin/mac:/usr/local/mbx/bin' >> $HOME/.zshrc
 echo "test -e /usr/local/mbx/lib/init.zsh && . /usr/local/mbx/lib/init.zsh" >> $HOME/.zshrc
 ```
+
+### Windows
+
+Within privileged command-line terminal (not PowerShell):
+
+```cmd
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+choco install git -y
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d @^%USERPROFILE^%\autorun.cmd" "2^>NUL /f
+```
+
+Then, within unprivileged command-line terminal (not PowerShell):
+
+```cmd
+mkdir %PROGRAMDATA%\mbx
+git clone https://github.com/martin-braun/mbx-toolbox.git %PROGRAMDATA%\mbx
+setx PATH "%PATH%;%PROGRAMDATA%\mbx\bin\win;%PROGRAMDATA%\mbx\bin"
+echo @CALL %PROGRAMDATA%\mbx\lib\init.cmd>>"%USERPROFILE%\autorun.cmd"
+```
+
+### Final steps
+
+To validate your installation, restart your terminal and echo out the variable `MBX_VERSION`.
 
 ## Update
 
@@ -49,6 +75,6 @@ Feel free to open an issue or even expand this toolkit:
 
 - Simple functions or aliases that should be only available in an interactive shell need to be put in [lib/init.d](lib/init.d) and should always use the `#!/bin/sh` shebang and the `.sh` file extension to be imported with maximum compatibility
 - Helper functions or aliases for bash scripts can be put in [lib](lib) and should have a `#!/bin/bash` shebang as well as the `.bash` file extension
-- Full fledged scripts available everywhere will be put in [bin](bin) (all platforms) or the appropriate subdirectory in [bin](bin)
+- Full fledged scripts available everywhere will be put in [bin](bin) (all platforms) or the appropriate subdirectory in [bin](bin) (higher priority)
 
-> IMPORTANT: Update the timestamp in [lib/init.d/mbx.sh](lib/init.d/mbx.sh) prior any pull requests
+> IMPORTANT: Update the timestamp in [lib/init.d/mbx.sh](lib/init.d/mbx.sh) and [lib/init.d/mbx.bat](lib/init.d/mbx.cmd) prior any pull requests

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. "$MBX_LIBPATH/_.bash" || exit 1
+
 read -r -d '' usage << EOF
 Usage: $(basename "$0") [OPTIONS] [PATH]
 Recursively changes modes on directories and files individually.
@@ -41,8 +43,6 @@ PERMISSION MODES
      read and execute by others, and no set-uid or set-gid behaviour is 755 (400+200+100+040+010+004+001).
 EOF
 
-. "$MBX_LIBPATH/_ext.bash"
-
 terminator=+
 
 while [ "$#" -gt 0 ]; do
@@ -59,7 +59,7 @@ while [ "$#" -gt 0 ]; do
 	shift
 done
 
-test $verbose && trap 'echo "◊ $BASH_COMMAND"' DEBUG
+test $verbose && trap 'echo "[o] $BASH_COMMAND"' DEBUG
 set -e
 
 if [ -z "$path" ]; then
@@ -68,20 +68,20 @@ if [ -z "$path" ]; then
 fi
 
 if [ ! -f "$path" ]; then
-	echo "» Changing modes on directories within and incl. $path ..."
+	echo "[o] Changing modes on directories within and incl. $path ..."
 	if test-command sudo; then
 		sudo find "$path" -type f -exec chmod $file_permissions '{}' $terminator
 	else
 		find "$path" -type f -exec chmod $file_permissions '{}' $terminator
 	fi
-	echo "» Changing modes on files within $path ..."
+	echo "[o] Changing modes on files within $path ..."
 	if test-command sudo; then
 		sudo find "$path" -type d -exec chmod $directory_permissions '{}' $terminator
 	else
 		find "$path" -type d -exec chmod $directory_permissions '{}' $terminator
 	fi
 else
-	echo "» Changing modes on $path ..."
+	echo "[o] Changing modes on $path ..."
 	if test-command sudo; then
 		sudo chmod $file_permissions "$path"
 	else
@@ -90,7 +90,7 @@ else
 fi
 
 if (( $claim_ownership )); then
-	echo "» Claiming ownership of $path ..."
+	echo "[o] Claiming ownership of $path ..."
 	if test-command sudo; then
 		sudo chown -R "$(whoami)" $path
 	else
@@ -99,4 +99,4 @@ if (( $claim_ownership )); then
 fi
 
 
-set +e && trap - DEBUG && echo "» Done!"
+set +e && trap - DEBUG && echo "[o] Done!"

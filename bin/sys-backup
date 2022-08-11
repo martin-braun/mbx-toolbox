@@ -1,5 +1,8 @@
 #!/bin/bash
 
+. "$MBX_LIBPATH/_.bash" || exit 1
+. "$MBX_LIBPATH/tt.bash" || exit 1
+
 read -r -d '' usage << EOF
 Usage: $(basename "$0") [OPTIONS]
 Backups all files given a certain maximum size from the root directory of this system.
@@ -12,9 +15,6 @@ OPTIONS
   -k,   --keep-files              Keeps the old backup files that are not overwritten.
   -h,   --help                    Prints this help message.
 EOF
-
-. "$MBX_LIBPATH/_ext.bash"
-. "$MBX_LIBPATH/tt.bash"
 
 path="$HOME/.sys-backup"
 max_size="10M"
@@ -32,10 +32,10 @@ while [ "$#" -gt 0 ]; do
 	shift
 done
 
-test $verbose && trap 'echo "◊ $BASH_COMMAND"' DEBUG
+test $verbose && trap 'echo "[o] $BASH_COMMAND"' DEBUG
 set -e
 
-echo "» Creating backup directory ..."
+echo "[o] Creating backup directory ..."
 mkdir -p "$path"
 if test-command sudo; then
 	sudo chmod 1700 "$path"
@@ -43,7 +43,7 @@ else
 	chmod 1700 "$path"
 fi
 
-echo "» Backing up files ..."
+echo "[o] Backing up files ..."
 excl=( "$path" /dev /proc /sys /tmp /run /mnt /media /lost+found )
 if [[ "$(to-lower "$OSTYPE")" == "darwin"* ]]; then # MacOS
 	excl+=( /Volumes /Network /System /Applications /AppleInternal .DS_Store .AppleDouble .LSOverride )
@@ -65,11 +65,11 @@ else
 	(( $keep_files )) || find "$path" -type f -size +$max_size -delete
 fi
 
-echo "» Securing backup directory ..."
+echo "[o] Securing backup directory ..."
 if test-command sudo; then
 	sudo chmod 0000 "$path"
 else
 	chmod 0000 "$path"
 fi
 
-set +e && trap - DEBUG && echo "» Done!"
+set +e && trap - DEBUG && echo "[o] Done!"

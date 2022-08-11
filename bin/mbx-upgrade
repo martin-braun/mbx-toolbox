@@ -20,13 +20,13 @@ while [ "$#" -gt 0 ]; do
 	shift
 done
 
-test $verbose && trap 'echo "◊ $BASH_COMMAND"' DEBUG
+test $verbose && trap 'echo "[o] $BASH_COMMAND"' DEBUG
 set -e
 
-echo "» Upgrading MBX toolkit ..."
+echo "[o] Upgrading MBX toolkit ..."
 dir="$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.."
 git -C "$dir" reset --hard HEAD
 git -C "$dir" pull --ff-only
 
 # Done!
-set +e && trap - DEBUG && echo "» Done!"
+set +e && trap - DEBUG && echo "[o] Done!"

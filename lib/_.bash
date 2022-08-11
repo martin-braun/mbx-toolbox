@@ -3,11 +3,11 @@
 # Common bash extension library.
 
 # Skip when already sourced:
-test ! $MBX_LIBLOAD_EXT || return
-export MBX_LIBLOAD_EXT=1
+test ! $MBX_LIBLOAD_BASE || return
+export MBX_LIBLOAD_BASE=1
 
 ###
-# Ensure a command can be executed
+# Ensure a command can be executed.
 # Arguments:
 #   $1 - command to check
 # Outputs:

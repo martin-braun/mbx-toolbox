@@ -6,7 +6,7 @@
 test ! $MBX_LIBLOAD_TT || return
 export MBX_LIBLOAD_TT=1
 
-. "$MBX_LIBPATH/_ext.bash"
+. "$MBX_LIBPATH/_.bash"
 
 ###
 # Transforms the given text into the lowercase format

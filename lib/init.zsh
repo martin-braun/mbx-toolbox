@@ -9,5 +9,5 @@ export MBX_LIBPATH="$(dirname "$(realpath "${(%):-%N}")")"
 # Source init.d shell scripts.
 files=( $(find "$MBX_LIBPATH/init.d" -type f -name '*.sh') )
 for f in "${files[@]}"; do
-	[[ -f $f ]] && { . $f || echo "» Failed to source $f"; }
+	[[ -f $f ]] && { . $f || echo "[o] Failed to source $f"; }
 done 
