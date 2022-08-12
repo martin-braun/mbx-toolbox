@@ -27,7 +27,7 @@ IF NOT "%1" == "" (
 		ECHO !usage!
 		EXIT /B 0
 	)
-	ECHO "[x] Invalid command line flag %1" >&2 && EXIT /B 1
+	ECHO "[x] Invalid command line flag %1" >&2 & EXIT /B 1
 )
 
 ( CALL "%MBX_LIBPATH%\_" test-if "%verbose%" EQU "1" ) && @ECHO ON

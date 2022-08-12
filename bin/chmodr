@@ -54,7 +54,7 @@ while [ "$#" -gt 0 ]; do
 		-c|--claim-ownership) claim_ownership=1 ;;
 		-s|--slow-mode) terminator=\; ;;
 		-h|--help) echo "$usage" && exit 0 ;;
-		*) { test -z $path && path=$1; } || { echo "Invalid command line flag $1" >&2 && exit 1; } ;;
+		*) { test -z $path && path=$1; } || { echo "[x] Invalid command line flag $1" >&2; exit 1; } ;;
 	esac
 	shift
 done
