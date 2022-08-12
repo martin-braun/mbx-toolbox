@@ -10,10 +10,10 @@ IF DEFINED $MBX_LIBLOAD_BASE (
 )
 ENDLOCAL
 SET "$MBX_LIBLOAD_BASE=1"
-@REM SET BR= ^& ECHO(
-set BR=^
+SET BR=^
 
 
+@REM The above 2 empty lines are required for the batch file to work.
 EXIT /B
 
 :::

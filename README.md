@@ -48,7 +48,7 @@ Then, within unprivileged command-line terminal (not PowerShell):
 MKDIR %ALLUSERSPROFILE%\mbx
 git clone https://github.com/martin-braun/mbx-toolbox.git %ALLUSERSPROFILE%\mbx
 SETX PATH "%PATH%;%ALLUSERSPROFILE%\mbx\bin\win;%ALLUSERSPROFILE%\mbx\bin"
-echo @CALL %ALLUSERSPROFILE%\mbx\lib\init.cmd>>"%USERPROFILE%\autorun.cmd"
+ECHO @CALL %ALLUSERSPROFILE%\mbx\lib\init.cmd>>"%USERPROFILE%\autorun.cmd"
 ```
 
 ### Final steps
