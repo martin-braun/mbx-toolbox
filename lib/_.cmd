@@ -46,8 +46,8 @@ ENDLOCAL & SET /P %~1=<"%t%" & DEL /Q "%t%" & EXIT /B %ERRORLEVEL%
 : Arguments:
 :   %1 - /I for case-insensitive comparison on strings, can be skipped for case-sensitive comparison.
 :   %2 - NOT to negate the result, can be skipped.
-:   %3 - EXISTS for file checks or first string to compare with, also supports "string1"=="string2" (full condition).
-:   %4 - If EXISTS is specified, path to the directory or file. 
+:   %3 - EXIST for file checks or first string to compare with, also supports "string1"=="string2" (full condition).
+:   %4 - If EXIST is specified, path to the directory or file. 
 :        Otherwise if %3 is not a full condition, this argument has to be one of:
 :        - ==   Compares both strings to be equal using lstrcmpW or lstrcmpiW (case-insensitive).
 :        - EQU  Converts both strings to numbers and checks if they are equal. 
