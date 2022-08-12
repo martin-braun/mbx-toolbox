@@ -50,12 +50,12 @@ ENDLOCAL & SET /P %~1=<"%t%" & DEL /Q "%t%" & EXIT /B %ERRORLEVEL%
 :   %4 - If EXISTS is specified, path to the directory or file. 
 :        Otherwise if %3 is not a full condition, this argument has to be one of:
 :        - ==   Compares both strings to be equal using lstrcmpW or lstrcmpiW (case-insensitive).
-:        - EQU  Compares both strings to numbers and checks if they are equal. 
-:        - NEQ  Compares both strings to numbers and checks if they are not equal.
-:        - LSS  Compares both strings to numbers and checks if the first is lesser than the second.
-:        - LEQ  Compares both strings to numbers and checks if the first is lesser or equal than the second.
-:        - GTR  Compares both strings to numbers and checks if the first is greater than the second.
-:        - GEQ  Compares both strings to numbers and checks if the first is greater or equal than the second.
+:        - EQU  Converts both strings to numbers and checks if they are equal. 
+:        - NEQ  Converts both strings to numbers and checks if they are not equal.
+:        - LSS  Converts both strings to numbers and checks if the first is lesser than the second.
+:        - LEQ  Converts both strings to numbers and checks if the first is lesser or equal than the second.
+:        - GTR  Converts both strings to numbers and checks if the first is greater than the second.
+:        - GEQ  Converts both strings to numbers and checks if the first is greater or equal than the second.
 :        If a string cannot be parsed to a number, its numeric representation will be used. 
 :        This argument can be skipped, so == will be used.
 :   %5 - If %3 is not a full condition, this argument has to be the second string to compare.
