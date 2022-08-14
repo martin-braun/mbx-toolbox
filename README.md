@@ -88,4 +88,4 @@ Feel free to open an issue or even expand this toolkit:
 - Helper functions or aliases for bash scripts can be put in [lib](lib) and should have a `#!/bin/bash` shebang as well as the `.bash` file extension, helper batch scripts with functions should also be located at [lib](lib) and should end with the `.cmd` file extension
 - Full fledged scripts which should be available everywhere will be put in [bin](bin) (all platforms) or the appropriate subdirectory in [bin](bin) (always favoured by the `PATH` priority)
 
-> IMPORTANT: Update the timestamp in [lib/init.d/mbx.sh](lib/init.d/mbx.sh) and [lib/init.d/mbx.bat](lib/init.d/mbx.cmd) prior any pull requests
+> IMPORTANT: Update the timestamp in [VERSION](VERSION) prior any pull requests
