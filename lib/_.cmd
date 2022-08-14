@@ -80,7 +80,6 @@ IF "%~3"=="" (
     SET "comp=%~2"
     SET "string2=%~3"
 )
-@REM ECHO IF %I%%NOT%%EXIST% "%string1%" %comp% "%string2%"
 IF %I%%NOT%%EXIST% "%string1%" %comp% "%string2%" (
     ENDLOCAL & EXIT /B 0
 )
