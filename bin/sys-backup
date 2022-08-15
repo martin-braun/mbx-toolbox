@@ -14,6 +14,7 @@ OPTIONS
   -m=*, --max-size=*              Sets the maximum size of every backuped file (default: 10M).
 	-f,   --force                   Causes the backup to be performed even when it is not recommend.
   -k,   --keep-files              Keeps the old backup files that are not overwritten.
+	-s,   --shutdown					      Shutdowns the system 5 minutes after sucessful system backup.
   -h,   --help                    Prints this help message.
 EOF
 
@@ -28,6 +29,7 @@ while [ "$#" -gt 0 ]; do
 		-m=*|--max-size=*) max_size="${1#*=}" ;;
 		-f|--force) force=1 ;;
 		-k|--keep-files) keep_files=1 ;;
+		-s|--shutdown) shutdown=1 ;;
 		-h|--help) echo "$usage" && exit 0 ;;
 		*) echo "[x] Invalid command line flag $1" >&2; exit 1 ;;
 	esac
@@ -37,9 +39,14 @@ done
 test $verbose && trap 'echo "[o] $BASH_COMMAND"' DEBUG
 set -e
 
-if [[ "$(to-lower "$OSTYPE")" == "darwin"* && ! $force ]]; then # MacOS without force mode
-	echo "[x] Backups on MacOS should be made using time maschine." >&2
-	exit 1
+if [[ "$(to-lower "$OSTYPE")" == "darwin"* && ! $force ]]; then # MacOS uses Time Maschine for backups instead
+	echo "[o] Backing up using Time Maschine ..."
+	if (( $shutdown )); then
+		sudo zsh -c "tmutil startbackup --block && shutdown +5"
+	else
+		tmutil startbackup
+	fi
+	exit
 fi
 
 echo "[o] Creating backup directory ..."
@@ -77,6 +84,14 @@ if test-command sudo; then
 	sudo chmod 0000 "$path"
 else
 	chmod 0000 "$path"
+fi
+
+if (( $shutdown )); then
+	if test-command sudo; then
+		sudo shutdown +5
+	else
+		shutdown +5
+	fi	
 fi
 
 set +e && trap - DEBUG && echo "[o] Done!"
