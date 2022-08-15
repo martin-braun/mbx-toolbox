@@ -11,7 +11,7 @@
 : Returns:
 :   1, if the every command failed, 0 otherwise
 :::
-DOSKEY locip=FOR /F "tokens=4 delims= " %%i in ('route print ^^^| FIND " 0.0.0.0"') DO @ECHO %%i
+DOSKEY locip=FOR /F "tokens=4 delims= " %%i IN ('route print ^^^| FIND " 0.0.0.0"') DO @ECHO %%i
 
 :::
 : Outputs the public IPv4 address. Requires a working internet co^nection.
