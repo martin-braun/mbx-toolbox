@@ -42,7 +42,7 @@ set -e
 if [[ "$(to-lower "$OSTYPE")" == "darwin"* && ! $force ]]; then # MacOS uses Time Maschine for backups instead
 	echo "[o] Backing up using Time Maschine ..."
 	if (( $shutdown )); then
-		sudo zsh -c "tmutil startbackup --block && shutdown +5"
+		sudo zsh -c "tmutil startbackup --block && shutdown -h +5"
 	else
 		tmutil startbackup
 	fi
