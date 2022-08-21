@@ -37,4 +37,4 @@ SET "dir=%MBX_LIBPATH%\.."
 git -C "%dir%" reset --hard HEAD || EXIT /B 1
 git -C "%dir%" pull --ff-only || EXIT /B 1
 
-@ECHO OFF & ECHO [o] Done^^!
+@ECHO OFF & ECHO [o] Done^^! & EXIT /B
