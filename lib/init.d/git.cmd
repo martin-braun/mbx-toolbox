@@ -1,7 +1,7 @@
 @ECHO OFF
 : 
 : Interactive helper functions/aliases around git.
-IF NOT %1 == "" SHIFT & GOTO:%1
+IF NOT "%1" == "" SHIFT & GOTO:%1
 
 :::
 : Outputs the current branch in the current directory.
@@ -46,6 +46,9 @@ DOSKEY git-pullf=git pull --ff-only
 :   1, if the underlying git command failed, 0 otherwise
 :::
 DOSKEY git-pusha=git push --all
+
+GOTO:EOF
+::: FUNCTIONS :::
 
 :::
 : Finds all commits of all branches with a given string in the description.

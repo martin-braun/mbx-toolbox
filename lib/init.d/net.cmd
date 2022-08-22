@@ -1,7 +1,7 @@
 @ECHO OFF
 : 
 : Interactive helper functions/aliases around networking.
-IF NOT %1 == "" SHIFT & GOTO:%1
+IF NOT "%1" == "" SHIFT & GOTO:%1
 
 :::
 : Outputs the primary local IPv4 address.
@@ -24,6 +24,9 @@ DOSKEY locip=FOR /F "tokens=4 delims= " %%a IN ('route print ^^^| FIND " 0.0.0.0
 :   1, if the connection failed, 0 otherwise
 :::
 DOSKEY pubip=curl -4 icanhazip.com
+
+GOTO:EOF
+::: FUNCTIONS :::
 
 :::
 : Outputs process and connection information (of the given local port).
