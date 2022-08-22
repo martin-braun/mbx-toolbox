@@ -31,7 +31,7 @@ GOTO:EOF
 :::
 : Outputs process and connection information (of the given local port).
 : Arguments:
-:   $1 - Local port number (skip to show all)
+:   %1 - Local port number (skip to show all)
 : Outputs:
 :   Formatted process and connection information
 : Returns:

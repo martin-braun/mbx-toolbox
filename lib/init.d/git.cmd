@@ -53,7 +53,7 @@ GOTO:EOF
 :::
 : Finds all commits of all branches with a given string in the description.
 : Arguments:
-:   $1 - Fulltext search text for all commits
+:   %1 - Fulltext search text for all commits
 : Outputs:
 :   Verbose information about the result
 : Returns:
@@ -67,7 +67,7 @@ EXIT /B
 : Merges the current branch into the given branch.
 : Repository must not have working changes active.
 : Arguments:
-:   $1 - Branchname of the branch to merge into
+:   %1 - Branchname of the branch to merge into
 : Outputs:
 :   Verbose information or e~ror
 : Returns:
