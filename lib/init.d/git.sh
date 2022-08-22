@@ -70,6 +70,6 @@ git-search() {
 #   1, if the merge failed, 0 otherwise
 ###
 git-merge-to() {
-	branch="${git-branch}"
+	branch="$(git-branch)"
 	git checkout $1 && git merge $branch && git checkout $branch
 }
