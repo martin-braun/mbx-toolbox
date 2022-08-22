@@ -3,11 +3,15 @@
 # Essential helper library for bash terminals and scripts.
 
 # Skip when already sourced:
-test ! $MBX_LIBPATH || return
+command -v "mbx-version" >/dev/null 2>&1 && return 1
+
 export MBX_LIBPATH="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 # Source init.d shell scripts.
 files=( $(find "$MBX_LIBPATH/init.d" -type f -name '*.sh') )
 for f in "${files[@]}"; do
+	# echo $f
 	[[ -f $f ]] && { . $f || echo "[o] Failed to source $f"; }
 done 
+
+alias mbx-version='echo $MBX_VERSION'
