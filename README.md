@@ -53,7 +53,7 @@ ECHO @CALL %ALLUSERSPROFILE%\mbx\lib\init.cmd>>"%USERPROFILE%\autorun.cmd"
 
 ### Final steps
 
-To validate your installation, restart your terminal and echo out the variable `MBX_VERSION`.
+To validate your installation, restart your terminal and run `mbx-version`. It should print out the [current version](VERSION) to the console.
 
 ## Update
 
