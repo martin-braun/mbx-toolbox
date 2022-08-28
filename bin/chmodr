@@ -44,7 +44,6 @@ PERMISSION MODES
 EOF
 
 terminator=+
-
 while [ "$#" -gt 0 ]; do
 	case "$1" in
 		-V|--version) echo $MBX_VERSION && exit 0 ;;
@@ -97,6 +96,5 @@ if (( $claim_ownership )); then
 		chown -R "$(whoami)" $path
 	fi
 fi
-
 
 set +e && trap - DEBUG && echo "[o] Done!"

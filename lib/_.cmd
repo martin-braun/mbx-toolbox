@@ -37,9 +37,9 @@ IF NOT "%3" == "/F" (
 	EXIT
 	@REM ERRORLEVEL will only be other than 0 if the FOR statement failed, not the command itself.
 )
-SET "t=%temp%\%~nx0.%random%"
-%~2>"%t%"
-ENDLOCAL & SET /P %~1=<"%t%" & DEL /Q "%t%" & EXIT /B %ERRORLEVEL%
+SET "tempfile=%temp%\%~nx0.%random%"
+%~2>"%tempfile%"
+ENDLOCAL & SET /P %~1=<"%tempfile%" & DEL /Q "%tempfile%" & EXIT /B %ERRORLEVEL%
 
 :::
 : Performs conditional processing in batch programs. Is callable for inline use.
@@ -84,3 +84,6 @@ IF %I%%NOT%%EXIST% "%string1%" %comp% "%string2%" (
     ENDLOCAL & EXIT /B 0
 )
 ENDLOCAL & EXIT /B 1
+
+:test-command
+@REM TODO: Add test-command function
