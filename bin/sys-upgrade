@@ -45,6 +45,7 @@ if test-command brew; then
 	brew update
 	brew upgrade
 	brew upgrade --cask
+	brew autoremove
 	brew cleanup
 fi
 
