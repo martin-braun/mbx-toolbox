@@ -37,7 +37,7 @@ IF NOT "%3" == "/F" (
 	EXIT
 	@REM ERRORLEVEL will only be other than 0 if the FOR statement failed, not the command itself.
 )
-SET "tempfile=%temp%\%~nx0.%random%"
+SET "tempfile=%temp%\%~n0.%random%"
 %~2>"%tempfile%"
 ENDLOCAL & SET /P %~1=<"%tempfile%" & DEL /Q "%tempfile%" & EXIT /B %ERRORLEVEL%
 
@@ -85,5 +85,15 @@ IF %I%%NOT%%EXIST% "%string1%" %comp% "%string2%" (
 )
 ENDLOCAL & EXIT /B 1
 
+:::
+: Ensure a command can be executed.
+: Arguments:
+:   %1 - command to check
+: Outputs:
+:   Nothing
+: Returns:
+:   0, if the command exists, 1 otherwise
+:::
 :test-command
-@REM TODO: Add test-command function
+WHERE %~1 1>NUL 2>NUL
+ENDLOCAL & EXIT /B

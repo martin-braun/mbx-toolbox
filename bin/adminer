@@ -4,8 +4,8 @@
 
 read -r -d '' usage << EOF
 Usage: $(basename "$0") [OPTIONS]
-Downloads the latest release of Adminer and launches the default PHP server on the system.
-Adminer allows to edit and inspect local databases of the following kinds:
+Downloads the latest release of Adminer and launches it with the default PHP server on the system.
+Adminer allows to edit and inspect local databases of the following types:
 
 - MySQL
 - SQLite
@@ -46,19 +46,19 @@ if ! test-command php; then
 fi
 
 adminer_name=$(basename "$0")
-tmpfile="$(mktemp /tmp/adminer.XXXXXX).php"
-exec 3>"$tmpfile"
+tempfile="$(mktemp /tmp/$adminer_name.XXXXXX).php"
+exec 3>"$tempfile"
 adminer_repo="https://github.com/vrana/adminer"
 adminer_tag=$(git ls-remote --tags "$adminer_repo" | cut -d/ -f3- | tail -n1)
 curl -L $adminer_repo/releases/download/$adminer_tag/adminer-${adminer_tag:1}-en.php >&3
 adminer_domain="localhost:$port"
 if test-command xdg-open; then
-	xdg-open http://$adminer_domain
+	xdg-open "http://$adminer_domain"
 elif test-command open; then
-	open http://$adminer_domain
+	open "http://$adminer_domain"
 fi
 echo "[i] Starting local server, CTRL+C to stop and remove traces."
-php -S $adminer_domain "$tmpfile"
-rm $tmpfile
+php -S "$adminer_domain" "$tempfile"
+rm $tempfile
 
 set +e && trap - DEBUG && echo "[o] Done!"

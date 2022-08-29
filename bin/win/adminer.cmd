@@ -6,8 +6,8 @@ CALL "%MBX_LIBPATH%\_" load || EXIT /B
 
 SET usage=^
 Usage: %~n0 [OPTIONS]!BR!^
-Downloads the latest release of Adminer and launches the default PHP server on the system.!BR!^
-Adminer allows to edit and inspect local databases of the following kinds:!BR!^
+Downloads the latest release of Adminer and launches it with the default PHP server on the system.!BR!^
+Adminer allows to edit and inspect local databases of the following types:!BR!^
 !BR!^
 - MySQL!BR!^
 - SQLite!BR!^
@@ -23,6 +23,7 @@ Adminer will be opened in the default browser.!BR!^
 OPTIONS!BR!^
   -V,   --version                 Prints the version of this script suite (MBX).!BR!^
   -v,   --verbose                 Prints verbose information.!BR!^
+  -p=*, --port=*                  Defines the local port that should be used to serve Adminer.!BR!^
   -h,   --help                    Prints this help message
 
 SET port=7697
@@ -49,7 +50,21 @@ IF NOT "%1" == "" (
 
 ( CALL "%MBX_LIBPATH%\_" test-if "%verbose%" EQU "1" ) && @ECHO ON
 
-@REM TODO: Implement adminer in Windows (requires test-command)
-ECHO "[x] Not implemented ..."
+( CALL "%MBX_LIBPATH%\_" test-command php ) || (
+	ECHO "[x] PHP missing ..."
+	EXIT /B 1
+)
+
+SET "tempfile=%temp%\%~n0.%random%"
+SET "adminer_repo=https://github.com/vrana/adminer"
+FOR /F "usebackq tokens=3 delims=/" %%a IN (`git ls-remote --tags "%adminer_repo%"`) DO (
+	SET "adminer_tag=%%a"
+)
+curl -L %adminer_repo%/releases/download/%adminer_tag%/adminer-%adminer_tag:~1%-en.php >"%tempfile%"
+SET "adminer_domain=localhost:%port%"
+START "" "http://%adminer_domain%"
+ECHO "[i] Starting local server, CTRL+C to stop and remove traces."
+php -S "%adminer_domain%" "%tempfile%"
+DEL /S "%tempfile%" >NUL 2>&1
 
 @ECHO OFF & ECHO [o] Done^^! & EXIT /B
