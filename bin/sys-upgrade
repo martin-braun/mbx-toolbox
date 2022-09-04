@@ -49,14 +49,18 @@ if test-command brew; then
 	brew cleanup
 fi
 
+if test-command gem; then
+	echo "[o] Upgrading global Ruby gems ..."
+	if test-command sudo; then
+		sudo gem update --system
+	else
+		gem update --system
+	fi
+fi
+
 if test-command npm; then
 	echo "[o] Upgrading global NPM packages ..."
 	npm update -g npm
-fi
-
-if test-command gem; then
-	echo "[o] Upgrading global Ruby gems ..."
-	gem update --system
 fi
 
 if test-command fvm; then

@@ -61,10 +61,11 @@ FOR /F "usebackq tokens=3 delims=/" %%a IN (`git ls-remote --tags "%adminer_repo
 	SET "adminer_tag=%%a"
 )
 curl -L %adminer_repo%/releases/download/%adminer_tag%/adminer-%adminer_tag:~1%-en.php >"%tempfile%"
+SET "adminer_host=0.0.0.0"
 SET "adminer_domain=localhost:%port%"
 START "" "http://%adminer_domain%"
 ECHO "[i] Starting local server, CTRL+C to stop and remove traces."
-php -S "%adminer_domain%" "%tempfile%"
+php -S "%adminer_host%:%port%" "%tempfile%"
 DEL /S "%tempfile%" >NUL 2>&1
 
 @ECHO OFF & ECHO [o] Done^^! & EXIT /B

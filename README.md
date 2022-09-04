@@ -24,7 +24,7 @@ echo "test -e /usr/local/mbx/lib/init.bash && . /usr/local/mbx/lib/init.bash" >>
 
 ```zsh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-brew install git
+brew install git coreutils
 sudo mkdir -p /usr/local/mbx
 sudo chown "$(whoami)" /usr/local/mbx
 git clone https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
