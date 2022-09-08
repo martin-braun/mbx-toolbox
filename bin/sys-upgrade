@@ -24,7 +24,7 @@ while [ "$#" -gt 0 ]; do
 	shift
 done
 
-test $verbose && trap 'echo "[o] $BASH_COMMAND"' DEBUG
+test $verbose && trap 'echo "[$] $BASH_COMMAND"' DEBUG
 set -e
 
 if test-command apt-get; then
