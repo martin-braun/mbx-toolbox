@@ -27,6 +27,6 @@ echo "[o] Upgrading MBX toolkit ..."
 dir="$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.."
 git -C "$dir" reset --hard HEAD
 git -C "$dir" pull --ff-only
-git -C "$dir" fetch --depth 0
+git -C "$dir" fetch --depth 1
 
 set +e && trap - DEBUG && echo "[o] Done!"
