@@ -18,6 +18,7 @@ sudo chown "$(whoami)" /usr/local/mbx # skip sudo if you are root
 git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
 echo 'export PATH=$PATH:/usr/local/mbx/bin/deb:/usr/local/mbx/bin' >> $HOME/.bashrc
 echo "test -e /usr/local/mbx/lib/init.bash && . /usr/local/mbx/lib/init.bash" >> $HOME/.bashrc
+source $HOME/.bashrc
 ```
 
 ### MacOS
@@ -30,6 +31,7 @@ sudo chown "$(whoami)" /usr/local/mbx
 git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
 echo 'export PATH=$PATH:/usr/local/mbx/bin/mac:/usr/local/mbx/bin' >> $HOME/.zshrc
 echo "test -e /usr/local/mbx/lib/init.zsh && . /usr/local/mbx/lib/init.zsh" >> $HOME/.zshrc
+source $HOME/.zshrc
 ```
 
 ### Windows
