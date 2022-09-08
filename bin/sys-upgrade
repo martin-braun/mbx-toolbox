@@ -70,7 +70,7 @@ if test-command npm; then
 
 	echo "[o] Upgrading global npm packages (minor) ..."
 	for val in "${npm_global_packages[@]}"; do
-		npm i -g $(echo $val | tr "." "\n" | head -1)
+		npm i -g --force $(echo $val | tr "." "\n" | head -1)
 	done
 fi
 
