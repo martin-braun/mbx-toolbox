@@ -61,8 +61,17 @@ if test-command gem; then
 fi
 
 if test-command npm; then
-	echo "[o] Upgrading global NPM packages ..."
-	npm update -g npm
+	npm_global_packages=($(npm list -g --depth 0 | awk '/─/{print $2}'))
+
+	if test-command nvm; then
+		echo "[o] Upgrading node (minor) ..."
+		nvm install $(nvm current | sed -rn "s/v([[:digit:]]+).*/\1/p") || true
+	fi
+
+	echo "[o] Upgrading global npm packages (minor) ..."
+	for val in "${npm_global_packages[@]}"; do
+		npm i -g --force $(echo $val | tr "." "\n" | head -1)
+	done
 fi
 
 if test-command fvm; then
