@@ -15,7 +15,7 @@ Use at your own risk. I will not be responsible for any damages that might occur
 apt update && apt install git -y
 sudo mkdir -p /usr/local/mbx
 sudo chown "$(whoami)" /usr/local/mbx
-git clone https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
+git clone --depth 0 https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
 echo 'export PATH=$PATH:/usr/local/mbx/bin/deb:/usr/local/mbx/bin' >> $HOME/.bashrc
 echo "test -e /usr/local/mbx/lib/init.bash && . /usr/local/mbx/lib/init.bash" >> $HOME/.bashrc
 ```
@@ -27,7 +27,7 @@ echo "test -e /usr/local/mbx/lib/init.bash && . /usr/local/mbx/lib/init.bash" >>
 brew install git coreutils
 sudo mkdir -p /usr/local/mbx
 sudo chown "$(whoami)" /usr/local/mbx
-git clone https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
+git clone --depth 0 https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
 echo 'export PATH=$PATH:/usr/local/mbx/bin/mac:/usr/local/mbx/bin' >> $HOME/.zshrc
 echo "test -e /usr/local/mbx/lib/init.zsh && . /usr/local/mbx/lib/init.zsh" >> $HOME/.zshrc
 ```
@@ -46,7 +46,7 @@ Then, within unprivileged command-line terminal (not PowerShell):
 
 ```cmd
 MKDIR %ALLUSERSPROFILE%\mbx
-git clone https://github.com/martin-braun/mbx-toolbox.git %ALLUSERSPROFILE%\mbx
+git clone --depth 0 https://github.com/martin-braun/mbx-toolbox.git %ALLUSERSPROFILE%\mbx
 SETX PATH "%PATH%;%ALLUSERSPROFILE%\mbx\bin\win;%ALLUSERSPROFILE%\mbx\bin"
 ECHO @CALL %ALLUSERSPROFILE%\mbx\lib\init.cmd>>"%USERPROFILE%\autorun.cmd"
 ```
