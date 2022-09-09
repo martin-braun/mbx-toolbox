@@ -6,7 +6,7 @@ CALL "%MBX_LIBPATH%\_" load || EXIT /B
 
 SET usage=^
 Usage: %~n0 [OPTIONS]!BR!^
-Upgrades Martin Braun's eXtensive toolkit.!BR!^
+Upgrades Martin Braun's eXtensive toolbox.!BR!^
 !BR!^
 OPTIONS!BR!^
   -V,   --version                 Prints the version of this script suite (MBX).!BR!^
@@ -27,12 +27,12 @@ IF NOT "%1" == "" (
 		ECHO !usage!
 		EXIT /B 0
 	)
-	ECHO "[x] Invalid command line flag %1" >&2 & EXIT /B 1
+	ECHO [x] Invalid command line flag %1. >&2 & EXIT /B 1
 )
 
-( CALL "%MBX_LIBPATH%\_" test-if "%verbose%" EQU "1" ) && @ECHO ON
+( CALL "%MBX_LIBPATH%\_" test-if "%verbose%" == "1" ) && @ECHO ON
 
-ECHO "[o] Upgrading MBX toolkit ..."
+ECHO [o] Upgrading MBX toolkit ...
 SET "dir=%MBX_LIBPATH%\.."
 git -C "%dir%" reset --hard HEAD || EXIT /B 1
 git -C "%dir%" pull --ff-only || EXIT /B 1

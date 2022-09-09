@@ -45,13 +45,13 @@ IF NOT "%1" == "" (
 		ECHO !usage!
 		EXIT /B 0
 	)
-	ECHO "[x] Invalid command line flag %1" >&2 & EXIT /B 1
+	ECHO [x] Invalid command line flag %1. >&2 & EXIT /B 1
 )
 
 ( CALL "%MBX_LIBPATH%\_" test-if "%verbose%" EQU "1" ) && @ECHO ON
 
 ( CALL "%MBX_LIBPATH%\_" test-command php ) || (
-	ECHO "[x] PHP missing ..."
+	ECHO [x] PHP missing ...
 	EXIT /B 1
 )
 
@@ -64,7 +64,7 @@ curl -L %adminer_repo%/releases/download/%adminer_tag%/adminer-%adminer_tag:~1%-
 SET "adminer_host=0.0.0.0"
 SET "adminer_domain=localhost:%port%"
 START "" "http://%adminer_domain%"
-ECHO "[i] Starting local server, CTRL+C to stop and remove traces."
+ECHO [i] Starting local server, CTRL+C to stop and remove traces.
 php -S "%adminer_host%:%port%" "%tempfile%"
 DEL /S "%tempfile%" >NUL 2>&1
 

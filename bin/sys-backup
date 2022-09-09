@@ -6,6 +6,7 @@
 read -r -d '' usage << EOF
 Usage: $(basename "$0") [OPTIONS]
 Backups all files given a certain maximum size from the root directory of this system.
+On MacOS launch Time Maschine backup instead.
 
 OPTIONS
   -V,   --version                 Prints the version of this script suite (MBX).
@@ -29,7 +30,7 @@ while [ "$#" -gt 0 ]; do
 		-k|--keep-files) keep_files=1 ;;
 		-s|--shutdown) shutdown=1 ;;
 		-h|--help) echo "$usage" && exit 0 ;;
-		*) echo "[x] Invalid command line flag $1" >&2; exit 1 ;;
+		*) echo "[x] Invalid command line flag $1." >&2; exit 1 ;;
 	esac
 	shift
 done
@@ -41,6 +42,8 @@ if [[ "$(to-lower "$OSTYPE")" == "darwin"* ]]; then # MacOS uses Time Maschine f
 	echo "[o] Backing up using Time Maschine ..."
 	if (( $shutdown )); then
 		sudo zsh -c "tmutil startbackup --block && shutdown -h +5"
+		echo; read -rsn1 -p "Press any key to cancel ..."; echo
+		sudo killall shutdown
 	else
 		tmutil startbackup
 	fi
@@ -87,8 +90,12 @@ fi
 if (( $shutdown )); then
 	if test-command sudo; then
 		sudo shutdown +5
+		echo; read -rsn1 -p "Press any key to cancel ..."; echo
+		sudo killall shutdown
 	else
 		shutdown +5
+		echo; read -rsn1 -p "Press any key to cancel ..."; echo
+		killall shutdown
 	fi	
 fi
 

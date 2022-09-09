@@ -4,22 +4,28 @@
 
 read -r -d '' usage << EOF
 Usage: $(basename "$0") [OPTIONS]
-Upgrades the entire system, but the MBX toolkit. (Run mbx-upgrade for this)
+Upgrades all packages of all supported package managers. Supports:
+
+- apt-get
+- brew
+- gem
+- npm / nvm
+- flutter / fvm
 
 OPTIONS
   -V,   --version                 Prints the version of this script suite (MBX).
   -v,   --verbose                 Prints verbose information.
-  -h,   --help                    Prints this help message.
   -r,   --reboot                  Reboots the system after successful upgrade.
+  -h,   --help                    Prints this help message.
 EOF
 
 while [ "$#" -gt 0 ]; do
 	case "$1" in
 		-V|--version) echo $MBX_VERSION && exit 0 ;;
 		-v|--verbose) verbose=1 ;;
-		-h|--help) echo "$usage" && exit 0 ;;
 		-r|--reboot) reboot=1 ;;
-		*) echo "[x] Invalid command line flag $1" >&2; exit 1 ;;
+		-h|--help) echo "$usage" && exit 0 ;;
+		*) echo "[x] Invalid command line flag $1." >&2; exit 1 ;;
 	esac
 	shift
 done
