@@ -34,7 +34,7 @@ test $verbose && trap 'echo "[$] $BASH_COMMAND"' DEBUG
 set -e
 
 if test-command apt-get; then
-	echo "[o] Upgrading apt packages ..."
+	echo "[o] Upgrading APT packages ..."
 	if test-command sudo; then
 		sudo apt-get update
 		sudo apt-get dist-upgrade -y

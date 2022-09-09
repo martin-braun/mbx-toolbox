@@ -11,10 +11,12 @@ Use at your own risk. I will not be responsible for any damages that might occur
 
 ### Debian (incl. Proxmox)
 
+For Debian-based distros simply run the following commands to install essential dependencies and the toolbox. You can run these commands as root, skip sudo in such case: 
+
 ```bash
 apt update && apt install git -y
-sudo mkdir -p /usr/local/mbx # skip sudo if you are root
-sudo chown "$(whoami)" /usr/local/mbx # skip sudo if you are root
+sudo mkdir -p /usr/local/mbx # don't use sudo if you are root
+sudo chown "$(whoami)" /usr/local/mbx # don't use sudo if you are root
 git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
 echo 'export PATH=$PATH:/usr/local/mbx/bin/deb:/usr/local/mbx/bin' >> $HOME/.bashrc
 echo "test -e /usr/local/mbx/lib/init.bash && . /usr/local/mbx/lib/init.bash" >> $HOME/.bashrc
@@ -22,6 +24,8 @@ source $HOME/.bashrc
 ```
 
 ### MacOS
+
+For MacOS, you should install Homebrew and use it to install a few essential dependencies to use this toolbox. Skip the fist command if Homebrew is already installed:
 
 ```zsh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -36,17 +40,19 @@ source $HOME/.zshrc
 
 ### Windows
 
-Within privileged command-line terminal (not PowerShell):
+For Windows, you should install Chocolatey and use it to install a few essential dependencies to use this toolbox. For this run the following commands within a privileged command-line terminal (not PowerShell), skip the first command if Chocolatey is already installed:
 
-```cmd
+```bat
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-choco install git -y
-reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d @^%USERPROFILE^%\autorun.cmd" "2^>NUL /f
+choco install git awk -y
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d @^%USERPROFILE^%\autorun.cmd" "2^>NUL /f
 ```
 
-Then, within unprivileged command-line terminal (not PowerShell):
+The last command will ensure that an autorun.cmd is sourced in a similar fashion like .bashrc on Linux. This is to enable alias support (DOSKEY) in your interactive shell.
 
-```cmd
+Then, within unprivileged command-line terminal (not PowerShell) run the following commands to install this toolbox and autoload its DOSKEY entries via autorun.cmd:
+
+```bat
 MKDIR %ALLUSERSPROFILE%\mbx
 git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git %ALLUSERSPROFILE%\mbx
 SETX PATH "%PATH%;%ALLUSERSPROFILE%\mbx\bin\win;%ALLUSERSPROFILE%\mbx\bin"
@@ -59,11 +65,21 @@ To validate your installation, restart your terminal and run `mbx-version`. It s
 
 ## Update
 
+Straightforward:
+
 ```sh
 mbx-update
 ```
 		
 ## Uninstall
+
+### \*nix (Debian / MacOS / etc.)
+
+```sh
+rm -r /usr/local/mbx
+```
+
+Also remove the lines you added to your .bashrc/.zshrc during installation process.
 
 ### Windows
 
@@ -74,13 +90,11 @@ rundll32 sysdm.cpl,EditEnvironmentVariables
 
 Now remove the paths `%ALLUSERSPROFILE%\mbx\bin\win` and `%ALLUSERSPROFILE%\mbx\bin` from your `%PATH%` variable. Also remove the added lines in `%USERPROFILE%\autorun.cmd`.
 
-### \*nix
+If you don't like to keep the auto-loader of the `autorun.cmd`, just remove the file and finalize your purge in an elevated shell with: 
 
-```sh
-rm -r /usr/local/mbx
+```bat
+REG REMOVE "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun
 ```
-
-Also remove the lines you added to your .bashrc/.zshrc during installation process.
 
 ## Contribute
 
