@@ -58,8 +58,8 @@ Commands
 |`loport [ port ]`|`all`|Outputs process and connection information (of the given local port).|
 |`git-search <text>`|`all`|Finds all commits of all branches with a given string in the description.|
 |`git-merge-to <branch>`|`all`|Merges the current branch into the given branch. Repository must not have working changes active.|
-|`meownr <path`|`all`|Recursively claim ownership of any files and folders within and of a path.|
-`
+|`meownr <path>`|`all`|Recursively claim ownership of any files and folders within and of a path.|
+
 ### Helper Functions
 
 > Helper functions can be called in your scripts and cannot be used in interactive shells. To call a helper function in your script use this while replacing `{LIBRARY}` with the library name and `{COMMAND}` with the function name and arguments: 
@@ -69,7 +69,7 @@ Commands
 
 |Library|Command|Platforms|Description|
 |-|-|-|-|
-|`_`|`subset <variableName> "<command>" [ /F ]`|`win`|Sets a variable to the output of a command substitution. (/F for slower file mode to return a correct errorlevel)|
+|`_`|`subset <variableName> "<command>" [ /F ]`|`win`|Sets a variable to the output of a command substitution. (`/F` for slower file mode to return a correct errorlevel)|
 |`_`|`test-if [ /I ] [ NOT ] [ EXISTS ] <string1> [ == \| EQU \| NEQ \| LSS \| LEQ \| GTR \| GEQ ] <string2>"`|`win`|Performs conditional processing in batch programs. Is callable for inline use.|
 |`_`|`test-command <command>`|`all`|Ensure a command can be executed. Do not pass additional arguments.|
 |`tt`|`to-lower <string>`|`deb`,`mac`|Transforms the given text into the lowercase format.|
@@ -83,7 +83,7 @@ Commands
 |-|-|-|
 |`mbx-upgrade [ -V \| -v \| -h ]`|`all`|Upgrades Martin Braun's eXtensive toolbox.|
 |`sys-upgrade [ -V \| -v \| -r \| -h`|`all`|Upgrades all packages of all supported package managers. (`-r` reboots the system after successful upgrade.)|
-|`sys-backup [ -V \| -v \| -p=* \| -m=* \| -k \| -s \| -h ]`|`all`|Backups all files given a certain maximum size from the root directory of this system. On MacOS launch Time Maschine backup instead. (`-p=*` sets the path to the backup directory if possible (default: $HOME/.sys-backup).; `-m=*` sets the maximum size of every backuped file (default: 10M).; `-k` keeps the old backup files that are not overwritten. Enabled on MacOS by default.; `-s` shutdowns the system 5 minutes after successful system backup.)|
+|`sys-backup [ -V \| -v \| -p=* \| -m=* \| -k \| -l \| -s \| -h ]`|`all`|Backups all files given a certain maximum size from the root directory of this system. On MacOS launch Time Maschine backup instead. (`-p=*` sets the path to the backup directory if possible (default: `$HOME/.sys-backup`).; `-m=*` sets the maximum size of every backup-ed file (default: `10M`).; `-k` keeps the old backup files that are not overwritten. Ignored on MacOS.; `-l` locks the backup by rejecting access permissions to the current user. Ignored on MacOS.; `-s` shutdowns the system 5 minutes after successful system backup.)|
 |`chmodr [ -V \| -v \| -d=* \| -f=* \| -c \| -h ]`|`deb`,`mac`|Recursively changes modes on directories and files individually. (`-d=*` sets the directory permissions.; `-f=*` sets the file permissions.; `-c` claims ownership of the directories and files.)|
 |`adminer [ -V \| -v \| -p=* \| -h ]`|`all`|Downloads the latest release of Adminer and launches it with the default PHP server on the system. (`-p=*` defines the local port that should be used to serve Adminer.)|
 
