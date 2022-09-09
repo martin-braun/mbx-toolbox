@@ -1,13 +1,94 @@
-# mbx-toolbox
+MBX TOOLBOX
+===========
+
 Martin Braun's eXtensive toolbox
 
 Bash/Batch helper libraries/aliases/functions for Windows, MacOS and Debian (based) distributions.
 
-## Disclaimer
+Table of Contents
+-----------------
+
+- [MBX TOOLBOX](#mbx-toolbox)
+	- [Table of Contents](#table-of-contents)
+	- [Disclaimer](#disclaimer)
+	- [Commands](#commands)
+		- [Aliases / DOSKEYs](#aliases--doskeys)
+		- [Interactive Functions](#interactive-functions)
+		- [Helper Functions](#helper-functions)
+		- [Scripts](#scripts)
+	- [Installation](#installation)
+		- [Debian (incl. Proxmox)](#debian-incl-proxmox)
+		- [MacOS](#macos)
+		- [Windows](#windows)
+		- [Final steps](#final-steps)
+	- [Update](#update)
+	- [Uninstall](#uninstall)
+		- [\*nix (Debian / MacOS / etc.)](#nix-debian--macos--etc)
+		- [Windows](#windows-1)
+	- [Contribute](#contribute)
+
+Disclaimer
+----------
 
 Use at your own risk. I will not be responsible for any damages that might occur whilst using my toolbox.
 
-## Installation
+Commands
+--------
+
+### Aliases / DOSKEYs
+
+> Aliases / DOSKEYs are only available in an interactive shell, thus they cannot be used in scripts. They do not allow to pass arguments to them.
+
+|Command|Platforms|Description|
+|-|-|-|
+|`mbx-version`|`all`|Prints the version of this script suite. (MBX)|
+|`locip`|`all`|Outputs the primary local IPv4 address.|
+|`pubip`|`all`|Outputs the public IPv4 address. Requires a working internet connection.|
+|`git-branch`|`all`|Outputs the current branch in the current directory.|
+|`git-pullr`|`all`|Pulls all branches and rebases the commits on the working changes|
+|`git-pullf`|`all`|Attempts to pulls all branches and cancels the action on existing working changes.|
+|`git-pusha`|`all`|Pushes all branches to the remote.|
+
+### Interactive Functions
+
+> Interactive functions will be load on any interactive shell automatically. While they could be called from a script, this is not supported. Their purpose is to run exclusively interactive. A reason for that decision is that the output of such functions is often inconsistent (between platforms) and its use is trivial. Treat those functions like aliases / DOSKEYs with argument support.
+
+|Command|Platforms|Description|
+|-|-|-|
+|`loport [ port ]`|`all`|Outputs process and connection information (of the given local port).|
+|`git-search <text>`|`all`|Finds all commits of all branches with a given string in the description.|
+|`git-merge-to <branch>`|`all`|Merges the current branch into the given branch. Repository must not have working changes active.|
+|`meownr <path`|`all`|Recursively claim ownership of any files and folders within and of a path.|
+`
+### Helper Functions
+
+> Helper functions can be called in your scripts and cannot be used in interactive shells. To call a helper function in your script use this while replacing `{LIBRARY}` with the library name and `{COMMAND}` with the function name and arguments: 
+> 
+> Bash: `. "$MBX_LIBPATH/{LIBRARY}.bash" || exit 1` in the header of your bash script, and then simply run `{COMMAND}` (you can use `if` to make conditions based on the return value, i.e. `if test-command php; then; echo "PHP found"; fi`)
+> Batch: `CALL "%MBX_LIBPATH%\{LIBRARY}" load || EXIT /B` in the header of your batch script, and then run `CALL "%MBX_LIBPATH%\{LIBRARY}" {COMMAND}` (you can wrap these to make conditions based on the return value, i.e. `( CALL "%MBX_LIBPATH%\_" test-command php ) && ECHO PHP found`)
+
+|Library|Command|Platforms|Description|
+|-|-|-|-|
+|`_`|`subset <variableName> "<command>" [ /F ]`|`win`|Sets a variable to the output of a command substitution. (/F for slower file mode to return a correct errorlevel)|
+|`_`|`test-if [ /I ] [ NOT ] [ EXISTS ] <string1> [ == \| EQU \| NEQ \| LSS \| LEQ \| GTR \| GEQ ] <string2>"`|`win`|Performs conditional processing in batch programs. Is callable for inline use.|
+|`_`|`test-command <command>`|`all`|Ensure a command can be executed. Do not pass additional arguments.|
+|`tt`|`to-lower <string>`|`deb`,`mac`|Transforms the given text into the lowercase format.|
+|`tt`|`to-upper <string>`|`deb`,`mac`|Transforms the given text into the uppercase format.|
+
+### Scripts
+
+> Scripts can be called from an interactive shell or they can be used from within any script. They are available in the `PATH` variable and function as full-fledged programs. Every script supports the `-h` flag to print out more help.
+
+|Command|Platforms|Description|
+|-|-|-|
+|`mbx-upgrade [ -V \| -v \| -h ]`|`all`|Upgrades Martin Braun's eXtensive toolbox.|
+|`sys-upgrade [ -V \| -v \| -r \| -h`|`all`|Upgrades all packages of all supported package managers. (`-r` reboots the system after successful upgrade.)|
+|`sys-backup [ -V \| -v \| -p=* \| -m=* \| -k \| -s \| -h ]`|`all`|Backups all files given a certain maximum size from the root directory of this system. On MacOS launch Time Maschine backup instead. (`-p=*` sets the path to the backup directory if possible (default: $HOME/.sys-backup).; `-m=*` sets the maximum size of every backuped file (default: 10M).; `-k` keeps the old backup files that are not overwritten. Enabled on MacOS by default.; `-s` shutdowns the system 5 minutes after successful system backup.)|
+|`chmodr [ -V \| -v \| -d=* \| -f=* \| -c \| -h ]`|`deb`,`mac`|Recursively changes modes on directories and files individually. (`-d=*` sets the directory permissions.; `-f=*` sets the file permissions.; `-c` claims ownership of the directories and files.)|
+|`adminer [ -V \| -v \| -p=* \| -h ]`|`all`|Downloads the latest release of Adminer and launches it with the default PHP server on the system. (`-p=*` defines the local port that should be used to serve Adminer.)|
+
+Installation
+------------
 
 ### Debian (incl. Proxmox)
 
@@ -63,7 +144,8 @@ ECHO @CALL %ALLUSERSPROFILE%\mbx\lib\init.cmd>>"%USERPROFILE%\autorun.cmd"
 
 To validate your installation, restart your terminal and run `mbx-version`. It should print out the [current version](VERSION) to the console.
 
-## Update
+Update
+------
 
 Straightforward:
 
@@ -71,7 +153,8 @@ Straightforward:
 mbx-update
 ```
 		
-## Uninstall
+Uninstall
+---------
 
 ### \*nix (Debian / MacOS / etc.)
 
@@ -96,7 +179,8 @@ If you don't like to keep the auto-loader of the `autorun.cmd`, just remove the 
 REG REMOVE "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun
 ```
 
-## Contribute
+Contribute
+----------
 
 Feel free to open an issue or even expand this toolkit:
 
