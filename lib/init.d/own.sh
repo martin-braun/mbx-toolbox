@@ -3,7 +3,7 @@
 # Interactive helper functions/aliases around ownership.
 
 ###
-# Recursively claim ownership
+# Recursively claim ownership of any files within a path.
 # Arguments:
 #   $1 - Path to claim ownership to
 # Outputs:

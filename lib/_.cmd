@@ -19,23 +19,25 @@ EXIT /B
 :::
 : Sets a variable to the output of a command substitution.
 : Arguments:
-:   %1 - Variablename of the variable that the output of the function will be written into.
+:   %1 - Variable name of the variable that the output of the function will be written into.
 :   %2 - Double-quoted command that should be executed, whose output will be piped into the variable.
 :        Can contain additional quotes, the outer quotes will be replaced with backticks.
 :        Must not contain backticks.
 :   %3 - /F for slower file mode to return a correct errorlevel.
 : Outputs:
-:   Nothing
+:   Nothing.
 : Returns:
-:   0, if the command was successful or if the file mode is disabled, 1 otherwise
+:   0, if the command was successful or if the file mode is disabled, 1 otherwise.
 :::
 :subset
 IF NOT "%3" == "/F" (
-	FOR /F "usebackq tokens=*" %%a IN (`%~2`) DO (
-			ENDLOCAL & SET "%~1=%%a"
+	IF NOT "%3" == "/f" (
+		FOR /F "usebackq tokens=*" %%a IN (`%~2`) DO (
+				ENDLOCAL & SET "%~1=%%a"
+		)
+		EXIT
+		@REM ERRORLEVEL will only be other than 0 if the FOR statement failed, not the command itself.
 	)
-	EXIT
-	@REM ERRORLEVEL will only be other than 0 if the FOR statement failed, not the command itself.
 )
 SET "tempfile=%temp%\%~n0.%random%"
 %~2>"%tempfile%"
@@ -60,9 +62,9 @@ ENDLOCAL & SET /P %~1=<"%tempfile%" & DEL /Q "%tempfile%" & EXIT /B %ERRORLEVEL%
 :        This argument can be skipped, so == will be used.
 :   %5 - If %3 is not a full condition, this argument has to be the second string to compare.
 : Outputs:
-:   Nothing
+:   Nothing.
 : Returns:
-:   0, if the condition is met, 1 otherwise
+:   0, if the condition is met, 1 otherwise.
 :::
 :test-if
 IF "%~1"=="/I" SET "I=/I " & SHIFT
@@ -86,13 +88,13 @@ IF %I%%NOT%%EXIST% "%string1%" %comp% "%string2%" (
 ENDLOCAL & EXIT /B 1
 
 :::
-: Ensure a command can be executed.
+: Ensure a command can be executed. Do not pass additional arguments.
 : Arguments:
-:   %1 - command to check
+:   %1 - command to check.
 : Outputs:
 :   Nothing
 : Returns:
-:   0, if the command exists, 1 otherwise
+:   0, if the command exists, 1 otherwise.
 :::
 :test-command
 WHERE %~1 1>NUL 2>NUL

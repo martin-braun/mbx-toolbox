@@ -2,6 +2,13 @@
 	"editor.tabCompletion": "off",
 	"diffEditor.codeLens": true,
 	"cSpell.words": [
+		"chmodr",
+		"LIBPATH",
+		"locport",
+		"meownr",
+		"pullf",
+		"pullr",
+		"pusha",
 		"USERPROFILE"
 	]
 }

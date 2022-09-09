@@ -13,5 +13,3 @@ for f in "${files[@]}"; do
 	# echo $f
 	[[ -f $f ]] && { . $f || echo "[o] Failed to source $f"; }
 done 
-
-alias mbx-version='echo $MBX_VERSION'

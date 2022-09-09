@@ -11,8 +11,7 @@ OPTIONS
   -v,   --verbose                 Prints verbose information.
   -d=*, --directory-permissions=* Sets the directory permissions.
   -f=*, --file-permissions=*      Sets the file permissions.
-  -c,   --claim-ownership         Claim ownership of the directories and files.
-  -s,   --slow-mode               Concatinate directories and files for two commands in total.
+  -c,   --claim-ownership         Claims ownership of the directories and files.
   -h,   --help                    Prints this help message.
 
 PATH
@@ -43,7 +42,6 @@ PERMISSION MODES
      read and execute by others, and no set-uid or set-gid behaviour is 755 (400+200+100+040+010+004+001).
 EOF
 
-terminator=+
 while [ "$#" -gt 0 ]; do
 	case "$1" in
 		-V|--version) echo $MBX_VERSION && exit 0 ;;
@@ -51,7 +49,6 @@ while [ "$#" -gt 0 ]; do
 		-d=*|--directory-permissions=*) directory_permissions="${1#*=}" ;;
 		-f=*|--file-permissions=*) file_permissions="${1#*=}" ;;
 		-c|--claim-ownership) claim_ownership=1 ;;
-		-s|--slow-mode) terminator=\; ;;
 		-h|--help) echo "$usage" && exit 0 ;;
 		*) { test -z $path && path=$1; } || { echo "[x] Invalid command line flag $1." >&2; exit 1; } ;;
 	esac
@@ -69,15 +66,15 @@ fi
 if [ ! -f "$path" ]; then
 	echo "[o] Changing modes on directories within and incl. $path ..."
 	if test-command sudo; then
-		sudo find "$path" -type f -exec chmod $file_permissions '{}' $terminator
+		sudo find "$path" -type f -exec chmod $file_permissions '{}' \;
 	else
-		find "$path" -type f -exec chmod $file_permissions '{}' $terminator
+		find "$path" -type f -exec chmod $file_permissions '{}' \;
 	fi
 	echo "[o] Changing modes on files within $path ..."
 	if test-command sudo; then
-		sudo find "$path" -type d -exec chmod $directory_permissions '{}' $terminator
+		sudo find "$path" -type d -exec chmod $directory_permissions '{}' \;
 	else
-		find "$path" -type d -exec chmod $directory_permissions '{}' $terminator
+		find "$path" -type d -exec chmod $directory_permissions '{}' \;
 	fi
 else
 	echo "[o] Changing modes on $path ..."

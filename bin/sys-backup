@@ -14,7 +14,7 @@ OPTIONS
   -p=*, --path=*                  Sets the path to the backup directory if possible (default: $HOME/.sys-backup).
   -m=*, --max-size=*              Sets the maximum size of every backuped file (default: 10M).
   -k,   --keep-files              Keeps the old backup files that are not overwritten. Enabled on MacOS by default.
-  -s,   --shutdown                Shutdowns the system 5 minutes after sucessful system backup.
+  -s,   --shutdown                Shutdowns the system 5 minutes after successful system backup.
   -h,   --help                    Prints this help message.
 EOF
 

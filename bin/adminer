@@ -21,8 +21,8 @@ Adminer will be opened in the default browser.
 OPTIONS
   -V,   --version                 Prints the version of this script suite (MBX).
   -v,   --verbose                 Prints verbose information.
-  -h,   --help                    Prints this help message.
   -p=*, --port=*                  Defines the local port that should be used to serve Adminer.
+  -h,   --help                    Prints this help message.
 EOF
 
 port=7697

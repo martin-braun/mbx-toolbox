@@ -9,26 +9,26 @@ export MBX_LIBLOAD_TT=1
 . "$MBX_LIBPATH/_.bash"
 
 ###
-# Transforms the given text into the lowercase format
+# Transforms the given text into the lowercase format.
 # Arguments:
-#   $1 - text to transform
+#   $1 - text to transform.
 # Outputs:
-#   Text in lowercase format
+#   Text in lowercase format.
 # Returns:
-#   0, if the text conversion was successful, 1 otherwise
+#   0, if the text conversion was successful, 1 otherwise.
 ###
 to-lower() {
 	echo "$1" | tr '[:upper:]' '[:lower:]'
 }
 
 ###
-# Transforms the given text into the uppercase format
+# Transforms the given text into the uppercase format.
 # Arguments:
-#   $1 - text to transform
+#   $1 - text to transform.
 # Outputs:
-#   Text in lowercase format
+#   Text in lowercase format.
 # Returns:
-#   0, if the text conversion was successful, 1 otherwise
+#   0, if the text conversion was successful, 1 otherwise.
 ###
 to-upper() {
 	echo "$1" | tr '[:lower:]' '[:upper:]'

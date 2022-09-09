@@ -14,7 +14,7 @@
 alias git-branch="git rev-parse --abbrev-ref HEAD"
 
 ###
-# Pulls all branches and rebases the commits before working changes.
+# Pulls all branches and rebases the commits on the working changes.
 # Arguments:
 #   None
 # Outputs:

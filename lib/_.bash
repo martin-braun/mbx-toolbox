@@ -9,11 +9,11 @@ export MBX_LIBLOAD_BASE=1
 ###
 # Ensure a command can be executed.
 # Arguments:
-#   $1 - command to check
+#   $1 - command to check.
 # Outputs:
-#   Nothing
+#   Nothing.
 # Returns:
-#   0, if the command exists, 1 otherwise
+#   0, if the command exists, 1 otherwise.
 ###
 test-command() {
 	command -v "$1" >/dev/null 2>&1
