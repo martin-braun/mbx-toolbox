@@ -13,7 +13,7 @@ export MBX_LIBLOAD_BASE=1
 # Outputs:
 #   Nothing.
 # Returns:
-#   0, if the command exists, 1 otherwise.
+#   0, if the command exists.
 ###
 test-command() {
 	command -v "$1" >/dev/null 2>&1

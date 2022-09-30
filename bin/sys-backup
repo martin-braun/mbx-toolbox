@@ -69,9 +69,8 @@ else # Others
 	excl+=( /var/lib/lxcfs /var/lib/vz ) # proxmox dumps
 	opts="-aAXH"
 fi
-for i in "${!excl[@]}"
-do
-  excl[i]="--exclude=${excl[i]}"
+for i in "${!excl[@]}"; do
+	excl[i]="--exclude=${excl[i]}"
 done
 (( $verbose )) && opts+="v"
 if test-command sudo; then

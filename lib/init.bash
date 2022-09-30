@@ -6,6 +6,7 @@
 command -v "mbx-version" >/dev/null 2>&1 && return 1
 
 export MBX_LIBPATH="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+export MBX_BINPATH="$MBX_LIBPATH/../bin"
 
 # Source init.d shell scripts.
 files=( $(find "$MBX_LIBPATH/init.d" -type f -name '*.sh') )

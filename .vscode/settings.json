@@ -1,5 +1,5 @@
 {
-	"editor.tabCompletion": "off",
+	"editor.tabCompletion": "on",
 	"diffEditor.codeLens": true,
 	"cSpell.words": [
 		"chmodr",

@@ -33,6 +33,10 @@ done
 test $verbose && trap 'echo "[$] $BASH_COMMAND"' DEBUG
 set -e
 
+if test-command sudo; then
+	sudo echo "[i] Requested root permissions for priviledged tasks."
+fi
+
 if test-command apt-get; then
 	echo "[o] Upgrading APT packages ..."
 	if test-command sudo; then
@@ -66,14 +70,21 @@ if test-command gem; then
 	fi
 fi
 
-if test-command npm; then
-	npm_global_packages=($(npm list -g --depth 0 | awk '/ /{print $2}'))
+if [ -s "$HOME/.nvm/nvm.sh" ]; then
+	\. "$NVM_DIR/nvm.sh" # ensure nvm is loaded
+fi
 
+if test-command npm; then
 	if test-command nvm; then
 		echo "[o] Upgrading node (minor) ..."
-		nvm install $(nvm current | sed -rn "s/v([[:digit:]]+).*/\1/p") || true
+		nvm install $(nvm current | sed -rn "s/v([[:digit:]]+).*/\1/p") --reinstall-packages-from=$(nvm current) || true
+		nvm install $(nvm current) # upgrade default-packages to major version
+		# TODO: Replace last command with better alternative, see https://github.com/npm/cli/issues/2329#issuecomment-743308323
+	else
+		echo "[x] nvm script found, but unable to load nvm!"
+		exit 1
 	fi
-
+	npm_global_packages=($(npm list -g --depth 0 | awk '/ /{print $2}'))
 	echo "[o] Upgrading global npm packages (minor) ..."
 	for val in "${npm_global_packages[@]}"; do
 		npm i -g --force $(echo $val | tr "." "\n" | head -1)
@@ -101,3 +112,4 @@ if [ $reboot ]; then
 fi
 
 set +e && trap - DEBUG && echo "[o] Done!"
+

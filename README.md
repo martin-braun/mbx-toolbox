@@ -55,7 +55,7 @@ Commands
 
 |Command|Platforms|Description|
 |-|-|-|
-|`loport [ port ]`|`all`|Outputs process and connection information (of the given local port).|
+|`locport [ port ]`|`all`|Outputs process and connection information (of the given local port).|
 |`git-search <text>`|`all`|Finds all commits of all branches with a given string in the description.|
 |`git-merge-to <branch>`|`all`|Merges the current branch into the given branch. Repository must not have working changes active.|
 |`meownr <path>`|`all`|Recursively claim ownership of any files and folders within and of a path.|
