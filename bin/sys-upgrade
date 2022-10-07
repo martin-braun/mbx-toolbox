@@ -62,12 +62,50 @@ if test-command brew; then
 fi
 
 if test-command gem; then
+	if test-command rbenv; then
+
+		current_ruby_version=$(rbenv global)
+		installed_ruby_versions=($(rbenv versions | awk -F "[ ]+" '/ /{print $2}'))
+		available_ruby_versions=($(rbenv install -l 2>/dev/null))
+
+		echo "[o] Updating Ruby builds ..."
+
+		for installed in "${installed_ruby_versions[@]}"; do
+			if [ "$installed" = "system" ]; then
+				continue
+			fi
+			for available in "${available_ruby_versions[@]}"; do
+				if [ "$installed" = "$available" ]; then
+					continue
+				fi
+				if [ \
+					"$(echo $installed | tr '.' '\n' | head -2)" \
+					= \
+					"$(echo $available | tr '.' '\n' | head -2)" \
+					]; then
+					rbenv install $available
+					# TODO: Install all global packages from $installed to $available
+					if [ "$current_ruby_version" = "$installed" ]; then
+						rbenv global $available
+					fi
+					if test-command sudo; then
+						sudo rbenv uninstall -f $installed
+					else
+						rbenv uninstall -f $installed
+					fi
+				fi
+			done
+		done
+
+	fi
+
 	echo "[o] Upgrading global Ruby gems ..."
 	if test-command sudo; then
 		sudo gem update --system
 	else
 		gem update --system
 	fi
+
 fi
 
 if [ -s "$HOME/.nvm/nvm.sh" ]; then
@@ -76,7 +114,7 @@ fi
 
 if test-command npm; then
 	if test-command nvm; then
-		echo "[o] Upgrading node (minor) ..."
+		echo "[o] Upgrading node minors ..."
 		nvm install $(nvm current | sed -rn "s/v([[:digit:]]+).*/\1/p") --reinstall-packages-from=$(nvm current) || true
 		nvm install $(nvm current) # upgrade default-packages to major version
 		# TODO: Replace last command with better alternative, see https://github.com/npm/cli/issues/2329#issuecomment-743308323
@@ -97,9 +135,11 @@ if test-command fvm; then
 	fvm flutter upgrade
 	fvm global stable
 	fvm flutter upgrade
+	dart pub global activate rps
 elif test-command flutter; then
 	echo "[o] Upgrading Flutter ..."
 	flutter upgrade
+	dart pub global activate rps
 fi
 
 if [ $reboot ]; then
