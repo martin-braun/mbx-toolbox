@@ -131,10 +131,8 @@ fi
 
 if test-command fvm; then
 	echo "[o] Upgrading Flutter ..."
-	fvm global beta
-	fvm flutter upgrade
-	fvm global stable
-	fvm flutter upgrade
+	fvm install beta
+	fvm install stable
 	dart pub global activate rps
 elif test-command flutter; then
 	echo "[o] Upgrading Flutter ..."
