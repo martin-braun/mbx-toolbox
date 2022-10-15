@@ -11,8 +11,8 @@ On MacOS launch Time Maschine backup instead.
 OPTIONS
   -V,   --version                 Prints the version of this script suite (MBX).
   -v,   --verbose                 Prints verbose information.
-  -p=*, --path=*                  Sets the path to the backup directory if possible (default: $HOME/.sys-backup).
-  -m=*, --max-size=*              Sets the maximum size of every backup-ed file (default: 10M).
+  -p=*, --path=*                  Sets the path to the backup directory if possible (default: $HOME/.sys-backup). Ignored on MacOS.
+  -m=*, --max-size=*              Sets the maximum size of every backup-ed file (default: 10M). Ignored on MacOS.
   -k,   --keep-files              Keeps the old backup files that are not overwritten. Ignored on MacOS.
   -l,   --lock-backup             Locks the backup by rejecting access permissions to the current user. Ignored on MacOS.
   -s,   --shutdown                Shutdowns the system 5 minutes after successful system backup.
