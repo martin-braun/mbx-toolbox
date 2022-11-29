@@ -59,10 +59,10 @@ if test-command dnf; then
 	echo "[o] Upgrading Red Hat packages ..."
 	if test-command sudo; then
 		sudo dnf up --refresh -y
-		sudo dnf autoremove
+		sudo dnf autoremove -y
 	else
 		dnf up --refresh -y
-		dnf autoremove
+		dnf autoremove -y
 	fi
 fi
 
