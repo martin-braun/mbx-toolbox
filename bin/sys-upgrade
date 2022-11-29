@@ -1,12 +1,14 @@
 #!/bin/bash
 
 . "$MBX_LIBPATH/_.bash" || exit 1
+. "$MBX_LIBPATH/tt.bash" || exit 1
 
 read -r -d '' usage << EOF
 Usage: $(basename "$0") [OPTIONS]
 Upgrades all packages of all supported package managers. Supports:
 
 - apt-get
+- dnf
 - brew
 - gem
 - npm / nvm
@@ -32,6 +34,7 @@ done
 
 test $verbose && trap 'echo "[$] $BASH_COMMAND"' DEBUG
 set -e
+OIFS="$IFS"
 
 if test-command sudo; then
 	sudo echo "[i] Requested root permissions for priviledged tasks."
@@ -49,6 +52,17 @@ if test-command apt-get; then
 		apt-get dist-upgrade -y
 		apt-get autoremove -y
 		apt-get clean
+	fi
+fi
+
+if test-command dnf; then
+	echo "[o] Upgrading Red Hat packages ..."
+	if test-command sudo; then
+		sudo dnf up --refresh -y
+		sudo dnf autoremove
+	else
+		dnf up --refresh -y
+		dnf autoremove
 	fi
 fi
 
@@ -111,7 +125,6 @@ fi
 if [ -s "$HOME/.nvm/nvm.sh" ]; then
 	\. "$NVM_DIR/nvm.sh" # ensure nvm is loaded
 fi
-
 if test-command npm; then
 	if test-command nvm; then
 		echo "[o] Upgrading node minors ..."
@@ -128,6 +141,46 @@ if test-command npm; then
 		npm i -g --force $(echo $val | tr "." "\n" | head -1)
 	done
 fi
+
+# if test-command nativefier; then
+# 	if [ -n "$NATIVEFIER_APPS_DIR" ]; then
+# 		echo [o] Upgrading electron in nativefier applications ...
+# 		IFS=$'\n'
+# 		if [[ "$(to-lower "$OSTYPE")" == "darwin"* ]]; then
+# 			for d in ${NATIVEFIER_APPS_DIR%/}/*; do
+# 				for f in $(ls -1F "$d" | grep "\.app/"); do
+# 					app="$d/${f//\/}"
+# 					if [ -d "$app/Contents/Frameworks/Electron Framework.framework" ]; then
+# 						echo Upgrading $app ...
+# 						if test-command sudo; then
+# 							sudo nativefier --upgrade "$app"
+# 						else
+# 							nativefier --upgrade "$app"
+# 						fi
+# 					fi
+# 				done
+# 			done
+# 		else
+# 			for d in ${NATIVEFIER_APPS_DIR%/}/*; do
+# 				if [ -f "$d/v8_context_snapshot.bin" ]; then
+# 					for f in $(ls -1F "$d" | grep "*"); do
+# 						app=$d/${f//\*}
+# 						echo Upgrading $app ...
+# 						if test-command sudo; then
+# 							sudo nativefier --upgrade "$app"
+# 						else
+# 							nativefier --upgrade "$app"
+# 						fi
+# 					done
+# 				fi
+# 			done
+# 		fi
+# 		IFS="$OIFS"
+# 	else
+# 		echo [i] Found nativefier, but NATIVEFIER_APPS_DIR is unset, so electron upgrades of nativefier applications will be skipped.
+# 	fi
+# fi
+# TODO: Outcomment when https://github.com/nativefier/nativefier/issues/1347 is closed
 
 if test-command fvm; then
 	echo "[o] Upgrading Flutter ..."

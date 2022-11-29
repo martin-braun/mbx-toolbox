@@ -3,7 +3,7 @@ MBX TOOLBOX
 
 Martin Braun's eXtensive toolbox
 
-Bash/Batch helper libraries/aliases/functions for Windows, MacOS and Debian (based) distributions.
+Bash/Batch helper libraries/aliases/functions for Windows, MacOS and Debian (based) and Red Hat (based) distributions.
 
 Table of Contents
 -----------------
@@ -46,7 +46,7 @@ Commands
 |`pubip`|`all`|Outputs the public IPv4 address. Requires a working internet connection.|
 |`git-branch`|`all`|Outputs the current branch in the current directory.|
 |`git-pullr`|`all`|Pulls all branches and rebases the commits on the working changes|
-|`git-pullf`|`all`|Attempts to pulls all branches and cancels the action on existing working changes.|
+|`git-pullf`|`all`|Attempts to pull all branches and cancels the action on existing working changes.|
 |`git-pusha`|`all`|Pushes all branches to the remote.|
 
 ### Interactive Functions
@@ -65,15 +65,16 @@ Commands
 > Helper functions can be called in your scripts and cannot be used in interactive shells. To call a helper function in your script use this while replacing `{LIBRARY}` with the library name and `{COMMAND}` with the function name and arguments: 
 > 
 > Bash: `. "$MBX_LIBPATH/{LIBRARY}.bash" || exit 1` in the header of your bash script, and then simply run `{COMMAND}` (you can use `if` to make conditions based on the return value, i.e. `if test-command php; then; echo "PHP found"; fi`)
+> 
 > Batch: `CALL "%MBX_LIBPATH%\{LIBRARY}" load || EXIT /B` in the header of your batch script, and then run `CALL "%MBX_LIBPATH%\{LIBRARY}" {COMMAND}` (you can wrap these to make conditions based on the return value, i.e. `( CALL "%MBX_LIBPATH%\_" test-command php ) && ECHO PHP found`)
 
 |Library|Command|Platforms|Description|
 |-|-|-|-|
 |`_`|`subset <variableName> "<command>" [ /F ]`|`win`|Sets a variable to the output of a command substitution. (`/F` for slower file mode to return a correct errorlevel)|
-|`_`|`test-if [ /I ] [ NOT ] [ EXISTS ] <string1> [ == \| EQU \| NEQ \| LSS \| LEQ \| GTR \| GEQ ] <string2>"`|`win`|Performs conditional processing in batch programs. Is callable for inline use.|
+|`_`|`test-if [ /I ] [ NOT ] [ EXISTS ] <string1> [ == \| EQU \| NEQ \| LSS \| LEQ \| GTR \| GEQ ] <string2>`|`win`|Performs conditional processing in batch programs. Is callable for inline use.|
 |`_`|`test-command <command>`|`all`|Ensure a command can be executed. Do not pass additional arguments.|
-|`tt`|`to-lower <string>`|`deb`,`mac`|Transforms the given text into the lowercase format.|
-|`tt`|`to-upper <string>`|`deb`,`mac`|Transforms the given text into the uppercase format.|
+|`tt`|`to-lower <string>`|`deb`,`rh`,`mac`|Transforms the given text into the lowercase format.|
+|`tt`|`to-upper <string>`|`deb`,`rh`,`mac`|Transforms the given text into the uppercase format.|
 
 ### Scripts
 
@@ -83,8 +84,8 @@ Commands
 |-|-|-|
 |`mbx-upgrade [ -V \| -v \| -h ]`|`all`|Upgrades Martin Braun's eXtensive toolbox.|
 |`sys-upgrade [ -V \| -v \| -r \| -h`|`all`|Upgrades all packages of all supported package managers. (`-r` reboots the system after successful upgrade.)|
-|`sys-backup [ -V \| -v \| -p=* \| -m=* \| -k \| -l \| -s \| -h ]`|`all`|Backups all files given a certain maximum size from the root directory of this system. On MacOS launch Time Maschine backup instead. (`-p=*` sets the path to the backup directory if possible (default: `$HOME/.sys-backup`).; `-m=*` sets the maximum size of every backup-ed file (default: `10M`).; `-k` keeps the old backup files that are not overwritten. Ignored on MacOS.; `-l` locks the backup by rejecting access permissions to the current user. Ignored on MacOS.; `-s` shutdowns the system 5 minutes after successful system backup.)|
-|`chmodr [ -V \| -v \| -d=* \| -f=* \| -c \| -h ]`|`deb`,`mac`|Recursively changes modes on directories and files individually. (`-d=*` sets the directory permissions.; `-f=*` sets the file permissions.; `-c` claims ownership of the directories and files.)|
+|`sys-backup [ -V \| -v \| -p=* \| -m=* \| -k \| -l \| -s \| -h ]`|`deb`,`rh`,`mac`|Backups all files given a certain maximum size from the root directory of this system. On MacOS it launches Time Maschine backup instead. (`-p=*` sets the path to the backup directory if possible (default: `$HOME/.sys-backup`).; `-m=*` sets the maximum size of every backup-ed file (default: `10M`).; `-k` keeps the old backup files that are not overwritten. Ignored on MacOS.; `-l` locks the backup by rejecting access permissions to the current user. Ignored on MacOS.; `-s` shutdowns the system 5 minutes after successful system backup.)|
+|`chmodr [ -V \| -v \| -d=* \| -f=* \| -c \| -h ]`|`deb`,`rh`,`mac`|Recursively changes modes on directories and files individually. (`-d=*` sets the directory permissions.; `-f=*` sets the file permissions.; `-c` claims ownership of the directories and files.)|
 |`adminer [ -V \| -v \| -p=* \| -h ]`|`all`|Downloads the latest release of Adminer and launches it with the default PHP server on the system. (`-p=*` defines the local port that should be used to serve Adminer.)|
 
 Installation
@@ -95,11 +96,25 @@ Installation
 For Debian-based distros simply run the following commands to install essential dependencies and the toolbox. You can run these commands as root, skip sudo in such case: 
 
 ```bash
-apt update && apt install git -y
+sudo apt update && apt install git -y
 sudo mkdir -p /usr/local/mbx # don't use sudo if you are root
-sudo chown "$(whoami)" /usr/local/mbx # don't use sudo if you are root
+sudo chown "$(whoami)" /usr/local/mbx # skip, if you are root
 git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
 echo 'export PATH=$PATH:/usr/local/mbx/bin/deb:/usr/local/mbx/bin' >> $HOME/.bashrc
+echo "test -e /usr/local/mbx/lib/init.bash && . /usr/local/mbx/lib/init.bash" >> $HOME/.bashrc
+source $HOME/.bashrc
+```
+
+### Red Hat (incl. Fedora / Nobara)
+
+For Red Hat-based distros simply run the following commands to install essential dependencies and the toolbox. You can run these commands as root, skip sudo in such case: 
+
+```bash
+sudo dnf install git --refresh -y
+sudo mkdir -p /usr/local/mbx # don't use sudo if you are root
+sudo chown "$(whoami)" /usr/local/mbx # skip, if you are root
+git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
+echo 'export PATH=$PATH:/usr/local/mbx/bin/rh:/usr/local/mbx/bin' >> $HOME/.bashrc
 echo "test -e /usr/local/mbx/lib/init.bash && . /usr/local/mbx/lib/init.bash" >> $HOME/.bashrc
 source $HOME/.bashrc
 ```
@@ -156,7 +171,7 @@ mbx-update
 Uninstall
 ---------
 
-### \*nix (Debian / MacOS / etc.)
+### \*nix (Debian / Red Hat / MacOS / etc.)
 
 ```sh
 rm -r /usr/local/mbx
