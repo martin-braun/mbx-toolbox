@@ -96,7 +96,7 @@ Installation
 For Debian-based distros simply run the following commands to install essential dependencies and the toolbox. You can run these commands as root, skip sudo in such case: 
 
 ```bash
-sudo apt update && apt install git -y
+sudo apt update && apt install git -y # don't use sudo if you are root
 sudo mkdir -p /usr/local/mbx # don't use sudo if you are root
 sudo chown "$(whoami)" /usr/local/mbx # skip, if you are root
 git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
@@ -110,7 +110,7 @@ source $HOME/.bashrc
 For Red Hat-based distros simply run the following commands to install essential dependencies and the toolbox. You can run these commands as root, skip sudo in such case: 
 
 ```bash
-sudo dnf install git --refresh -y
+sudo dnf install git --refresh -y # don't use sudo if you are root
 sudo mkdir -p /usr/local/mbx # don't use sudo if you are root
 sudo chown "$(whoami)" /usr/local/mbx # skip, if you are root
 git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx

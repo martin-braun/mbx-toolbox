@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 . "$MBX_LIBPATH/_.bash" || exit 1
 . "$MBX_LIBPATH/tt.bash" || exit 1

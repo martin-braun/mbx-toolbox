@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 read -r -d '' usage << EOF
 Usage: $(basename "$0") [OPTIONS]
@@ -15,7 +15,7 @@ while [ "$#" -gt 0 ]; do
 		-V|--version) echo $MBX_VERSION && exit 0 ;;
 		-v|--verbose) verbose=1 ;;
 		-h|--help) echo "$usage" && exit 0 ;;
-		*) echo "[x] Invalid command line flag $1." >&2; exit 1 ;;
+		*) echo [x] Invalid command line flag $1. >&2; exit 1 ;;
 	esac
 	shift
 done
@@ -23,10 +23,11 @@ done
 test $verbose && trap 'echo "[$] $BASH_COMMAND"' DEBUG
 set -e
 
-echo "[o] Upgrading MBX toolkit ..."
+echo [o] Upgrading MBX toolkit ...
 dir="$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.."
 git -C "$dir" reset --hard HEAD
 git -C "$dir" pull --ff-only
 git -C "$dir" fetch --depth 1
 
-set +e && trap - DEBUG && echo "[o] Done!"
+set +e && trap - DEBUG && echo [o] Done!
+

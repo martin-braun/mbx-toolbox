@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 export MBX_VERSION=$(cat "$MBX_LIBPATH/../VERSION")
 

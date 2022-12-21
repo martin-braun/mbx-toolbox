@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 . "$MBX_LIBPATH/_.bash" || exit 1
 
@@ -50,7 +50,7 @@ while [ "$#" -gt 0 ]; do
 		-f=*|--file-permissions=*) file_permissions="${1#*=}" ;;
 		-c|--claim-ownership) claim_ownership=1 ;;
 		-h|--help) echo "$usage" && exit 0 ;;
-		*) { test -z $path && path=$1; } || { echo "[x] Invalid command line flag $1." >&2; exit 1; } ;;
+		*) { test -z $path && path=$1; } || { echo [x] Invalid command line flag $1. >&2; exit 1; } ;;
 	esac
 	shift
 done
@@ -59,25 +59,25 @@ test $verbose && trap 'echo "[$] $BASH_COMMAND"' DEBUG
 set -e
 
 if [ -z "$path" ]; then
-	echo "No path specified" >&2
+	echo No path specified >&2
 	exit 1
 fi
 
 if [ ! -f "$path" ]; then
-	echo "[o] Changing modes on directories within and incl. $path ..."
+	echo [o] Changing modes on directories within and incl. $path ...
 	if test-command sudo; then
 		sudo find "$path" -type f -exec chmod $file_permissions '{}' \;
 	else
 		find "$path" -type f -exec chmod $file_permissions '{}' \;
 	fi
-	echo "[o] Changing modes on files within $path ..."
+	echo [o] Changing modes on files within $path ...
 	if test-command sudo; then
 		sudo find "$path" -type d -exec chmod $directory_permissions '{}' \;
 	else
 		find "$path" -type d -exec chmod $directory_permissions '{}' \;
 	fi
 else
-	echo "[o] Changing modes on $path ..."
+	echo [o] Changing modes on $path ...
 	if test-command sudo; then
 		sudo chmod $file_permissions "$path"
 	else
@@ -86,7 +86,7 @@ else
 fi
 
 if (( $claim_ownership )); then
-	echo "[o] Claiming ownership of $path ..."
+	echo [o] Claiming ownership of $path ...
 	if test-command sudo; then
 		sudo chown -R "$(whoami)" $path
 	else
@@ -94,4 +94,5 @@ if (( $claim_ownership )); then
 	fi
 fi
 
-set +e && trap - DEBUG && echo "[o] Done!"
+set +e && trap - DEBUG && echo [o] Done!
+

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 . "$MBX_LIBPATH/_.bash" || exit 1
 
@@ -32,7 +32,7 @@ while [ "$#" -gt 0 ]; do
 		-v|--verbose) verbose=1 ;;
 		-p=*|--port=*) port="${1#*=}" ;;
 		-h|--help) echo "$usage" && exit 0 ;;
-		*) echo "[x] Invalid command line flag $1." >&2; exit 1 ;;
+		*) echo [x] Invalid command line flag $1. >&2; exit 1 ;;
 	esac
 	shift
 done
@@ -41,7 +41,7 @@ test $verbose && trap 'echo "[$] $BASH_COMMAND"' DEBUG
 set -e
 
 if ! test-command php; then
-	echo "[x] PHP missing ..."
+	echo [x] PHP missing ...
 	exit 1
 fi
 
@@ -59,8 +59,9 @@ if test-command xdg-open; then
 elif test-command open; then
 	open "http://$adminer_domain"
 fi
-echo "[i] Starting local server, CTRL+C to stop and remove traces."
+echo [i] Starting local server, CTRL+C to stop and remove traces.
 php -S "$adminer_host:$port" "$tempfile"
 rm $tempfile
 
-set +e && trap - DEBUG && echo "[o] Done!"
+set +e && trap - DEBUG && echo [o] Done!
+
