@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+
+. "$MBX_LIBPATH/_.bash" || exit 1
+
+read -r -d '' usage << EOF
+Usage: $(basename "$0") [OPTIONS]
+Sends input data to an Android device via shell (keystrokes).
+Additionally, allows to send text directly. 
+In this case, the text is send letter by letter to avoid accidental swallowing due to lags.
+
+Requires ADB to be installed and the device being connected with USB debugging.
+
+OPTIONS
+  -V,   --version                 Prints the version of this script suite (MBX).
+  -v,   --verbose                 Prints verbose information.
+  -t=*, --text=*                  Sends the given text instead of spawning an input shell.
+  -h,   --help                    Prints this help message.
+EOF
+
+text=""
+while [ "$#" -gt 0 ]; do
+	case "$1" in
+		-V|--version) echo $MBX_VERSION && exit 0 ;;
+		-v|--verbose) verbose=1 ;;
+		-t=*|--text=*) text="${1#*=}" ;;
+		-h|--help) echo "$usage" && exit 0 ;;
+		*) echo "[x] Invalid command line flag $1." >&2; exit 1 ;;
+	esac
+	shift
+done
+
+test $verbose && trap 'echo "[$] $BASH_COMMAND"' DEBUG
+set -e
+
+if ! test-command adb; then
+	echo "[x] ADB missing ..."
+	exit 1
+fi
+
+if [ -n "$text" ]; then
+
+	echo [o] Sending \"$text\" to input ...
+	echo "$text" | fold -w 1 | while read c; do
+	\
+		if [ -z $c ]; then
+			c="%s"
+		fi
+		adb shell -n input text $c
+	done
+else
+	echo -n ">"
+	while read -rn 1 c; do
+		if [ -z $c ]; then
+			adb shell -n input text "%s"
+		else
+			case "$c" in
+				[[:graph:]])
+					adb shell -n input text "$c"
+					;;
+				$'\x7f') # DEL
+					adb shell -n input keyevent 67
+					;;
+			esac
+		fi
+	done
+fi
+
+set +e && trap - DEBUG && echo [o] Done!
+
