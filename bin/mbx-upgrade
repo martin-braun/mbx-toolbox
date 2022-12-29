@@ -23,7 +23,7 @@ done
 test $verbose && trap 'echo "[$] $BASH_COMMAND"' DEBUG
 set -e
 
-echo [o] Upgrading MBX toolkit ...
+echo [o] Upgrading MBX toolbox ...
 dir="$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.."
 git -C "$dir" reset --hard HEAD
 git -C "$dir" pull --depth 1 --rebase --allow-unrelated-histories

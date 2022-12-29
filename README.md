@@ -229,7 +229,7 @@ REG REMOVE "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun
 Contribute
 ----------
 
-Feel free to open an issue or even expand this toolkit:
+Feel free to open an issue or even expand this toolbox:
 
 - Simple functions or aliases that should be only available in an interactive shell need to be put in [lib/init.d](lib/init.d) and should always use the `#!/usr/bin/env sh` shebang and the `.sh` file extension to be imported with maximum compatibility in \*nix scripts, Windows scripts should always end up with `.cmd` and should work without `ENABLEDELAYEDEXPANSION`
 - Helper functions for bash scripts can be put in [lib](lib) and should have a `#!/usr/bin/env bash` shebang as well as the `.bash` file extension, helper batch scripts with functions should also be located at [lib](lib) and should end with the `.cmd` file extension

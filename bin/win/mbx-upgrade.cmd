@@ -32,7 +32,7 @@ IF NOT "%1" == "" (
 
 ( CALL "%MBX_LIBPATH%\_" test-if "%verbose%" == "1" ) && @ECHO ON
 
-ECHO [o] Upgrading MBX toolkit ...
+ECHO [o] Upgrading MBX toolbox ...
 SET "dir=%MBX_LIBPATH%\.."
 git -C "%dir%" reset --hard HEAD || EXIT /B 1
 git -C "%dir%" pull --ff-only || EXIT /B 1
