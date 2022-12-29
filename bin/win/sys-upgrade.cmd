@@ -14,6 +14,7 @@ Upgrades all packages of all supported package managers. Supports:!BR!^
 OPTIONS!BR!^
   -V,   --version                 Prints the version of this script suite (MBX).!BR!^
   -v,   --verbose                 Prints verbose information.!BR!^
+  -x,   --extensive               Also runs extensions (*.cmd files) within %%XDG_CONFIG_HOME%%/mbx/sys-upgrade/extensions and %%XDG_CONFIG_DIRS%%/mbx/sys-upgrade/extensions.!BR!^
   -r,   --reboot                  Reboots the system after successful upgrade.!BR!^
   -h,   --help                    Prints this help message
 
@@ -25,6 +26,10 @@ IF NOT "%1" == "" (
 	)
 	( ( CALL "%MBX_LIBPATH%\_" test-if "%1" == "-v" ) || ( CALL "%MBX_LIBPATH%\_" test-if "%1" == "--verbose" ) ) && (
 		SET verbose=1
+		SHIFT && GOTO :getopts
+	)
+	( ( CALL "%MBX_LIBPATH%\_" test-if "%1" == "-x" ) || ( CALL "%MBX_LIBPATH%\_" test-if "%1" == "--extensive" ) ) && (
+		SET extensive=1
 		SHIFT && GOTO :getopts
 	)
 	( ( CALL "%MBX_LIBPATH%\_" test-if "%1" == "-r" ) || ( CALL "%MBX_LIBPATH%\_" test-if "%1" == "--reboot" ) ) && (
@@ -54,6 +59,20 @@ IF NOT "%ERRORLEVEL%" == "0" (
 ( CALL "%MBX_LIBPATH%\_" test-command gem ) && (
 	ECHO [o] Upgrading Ruby gems ...
 	gem update --system || EXIT /B 1
+)
+
+IF "%extensive%" == "1" (
+	SET "subpathfilter=mbx\sys-upgrade\extensions\*.cmd"
+	FOR %%f IN ( "%XDG_CONFIG_HOME%\%subpathfilter%" ) DO ( 
+		@REM ECHO %%f
+		CALL "%%f"
+	)
+	FOR %%a IN ("%XDG_CONFIG_DIRS:;=";"%") DO (
+		FOR %%f IN ( "%%a\%subpathfilter%" ) DO ( 
+			@REM ECHO %%f
+			CALL "%%f"
+		)
+	)
 )
 
 IF "%reboot%" == "1" (

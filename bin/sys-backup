@@ -14,6 +14,7 @@ OPTIONS
   -p=*, --path=*                  Sets the path to the backup directory if possible (default: $HOME/.sys-backup). Ignored on MacOS.
   -m=*, --max-size=*              Sets the maximum size of every backup-ed file (default: 10M). Ignored on MacOS.
   -k,   --keep-files              Keeps the old backup files that are not overwritten. Ignored on MacOS.
+  -x,   --extensive               Also runs extensions (*.sh files) within \$XDG_CONFIG_HOME/mbx/sys-backup/extensions and \$XDG_CONFIG_DIRS/mbx/sys-backup/extensions.
   -l,   --lock-backup             Locks the backup by rejecting access permissions to the current user. Ignored on MacOS.
   -s,   --shutdown                Shutdowns the system 5 minutes after successful system backup.
   -h,   --help                    Prints this help message.
@@ -79,6 +80,29 @@ if test-command sudo; then
 else
 	rsync $opts --delete --max-size=$max_size "${excl[@]}" / "$path"
 	(( $keep_files )) || find "$path" -type f -size +$max_size -delete
+fi
+
+if [ $extensive ]; then
+	extsubpath="mbx/sys-backup/extensions"
+	extdir="$XDG_CONFIG_HOME/$extsubpath" 
+	if [ -d "$extdir" ]; then
+		extfiles=( $(find "$extdir" -mindepth 1 -maxdepth 1 -type f -name '*.sh') )
+		for f in "${extfiles[@]}"; do
+			# echo $f
+			[ -f "$f" ] && { . "$f" || { echo "[!] Failed to source $f" && exit 1; }; }
+		done 
+	fi
+	( IFS=: 
+	for confdir in $XDG_CONFIG_DIRS; do
+		extdir="$confdir/$extsubpath"
+		if [ -d "$extdir" ]; then
+			extfiles=( $(find "$extdir" -mindepth 1 -maxdepth 1 -type f -name '*.sh') )
+			for f in "${extfiles[@]}"; do
+				# echo $f
+				[ -f "$f" ] && { . "$f" || { echo "[!] Failed to source $f" && exit 1; }; }
+			done 
+		fi
+	done; )
 fi
 
 if [ $lock_backup ]; then
