@@ -12,12 +12,14 @@ Table of Contents
 	- [Table of Contents](#table-of-contents)
 	- [Disclaimer](#disclaimer)
 	- [Commands](#commands)
+		- [Variables](#variables)
 		- [Aliases / DOSKEYs](#aliases--doskeys)
 		- [Interactive Functions](#interactive-functions)
 		- [Helper Functions](#helper-functions)
 		- [Scripts](#scripts)
 	- [Installation](#installation)
 		- [Debian (incl. Proxmox)](#debian-incl-proxmox)
+		- [Red Hat (incl. Fedora / Nobara)](#red-hat-incl-fedora-nobara)
 		- [MacOS](#macos)
 		- [Windows](#windows)
 		- [Final steps](#final-steps)
@@ -34,6 +36,22 @@ Use at your own risk. I will not be responsible for any damages that might occur
 
 Commands
 --------
+
+### Variables
+
+> Helper variables are defined when launching an interactive shell and will also be available in your scripts.
+
+|Library|Variable|Platforms|Description|
+|-|-|-|-|
+|`xdg`|`XDG_DATA_HOME`|`all`|Environment variable of the XDG Base Directory Specification. If the variable was already set, it will be unchanged, otherwise it will default to the recommend value of the specification which is `$HOME/.local/share` on POSIX systems and `` (unofficial) on Windows systems.|
+|`xdg`|`XDG_CONFIG_HOME`|`all`|Environment variable of the XDG Base Directory Specification. If the variable was already set, it will be unchanged, otherwise it will default to the recommend value of the specification which is `$HOME/.config` on POSIX systems and `` (unofficial) on Windows systems.|
+|`xdg`|`XDG_STATE_HOME`|`all`|Environment variable of the XDG Base Directory Specification. If the variable was already set, it will be unchanged, otherwise it will default to the recommend value of the specification which is `$HOME/.local/state` on POSIX systems and `` (unofficial) on Windows systems.|
+|`xdg`|`XDG_DATA_DIRS`|`all`|Environment variable of the XDG Base Directory Specification. If the variable was already set, it will be unchanged, otherwise it will default to the recommend value of the specification which is `/usr/local/share/:/usr/share/` on POSIX systems and `` (unofficial) on Windows systems.|
+|`xdg`|`XDG_CONFIG_DIRS`|`all`|Environment variable of the XDG Base Directory Specification. If the variable was already set, it will be unchanged, otherwise it will default to the recommend value of the specification which is `/etc/xdg` on POSIX systems and `` (unofficial) on Windows systems.|
+|`xdg`|`XDG_CACHE_HOME`|`all`|Environment variable of the XDG Base Directory Specification. If the variable was already set, it will be unchanged, otherwise it will default to the recommend value of the specification which is `$HOME/.cache` on POSIX systems and `` (unofficial) on Windows systems.|
+|`xdg`|`XDG_RUNTIME_DIR`|`all`|Environment variable of the XDG Base Directory Specification. If the variable was already set, it will be unchanged, otherwise it will default to the recommend value of the specification which is `/run/user/$UID` or `${TMPDIR}runtime-$UID` (unofficial) on POSIX systems and `%TEMP%/runtime-%USERSID%` (unofficial) on Windows systems.|
+
+> Please head to the [Environment Variables section in the XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html#variables) to learn more about `XDG` variables and their meaning. Colon separators are replaced with semicolon separators on Windows systems.
 
 ### Aliases / DOSKEYs
 
@@ -65,9 +83,9 @@ Commands
 
 > Helper functions can be called in your scripts and cannot be used in interactive shells. To call a helper function in your script use this while replacing `{LIBRARY}` with the library name and `{COMMAND}` with the function name and arguments: 
 > 
-> Bash: `. "$MBX_LIBPATH/{LIBRARY}.bash" || exit 1` in the header of your bash script, and then simply run `{COMMAND}` (you can use `if` to make conditions based on the return value, i.e. `if test-command php; then; echo "PHP found"; fi`)
+> Bash: `. "$MBX_LIBPATH/{LIBRARY}.bash" || exit 1` in the header of your bash script, and then simply run `{COMMAND}` (you can use `if` to make conditions based on the return value, i.e. `if test-command php; then; echo "PHP found"; fi`).
 > 
-> Batch: `CALL "%MBX_LIBPATH%\{LIBRARY}" load || EXIT /B` in the header of your batch script, and then run `CALL "%MBX_LIBPATH%\{LIBRARY}" {COMMAND}` (you can wrap these to make conditions based on the return value, i.e. `( CALL "%MBX_LIBPATH%\_" test-command php ) && ECHO PHP found`)
+> Batch: `CALL "%MBX_LIBPATH%\{LIBRARY}" load || EXIT /B` in the header of your batch script, and then run `CALL "%MBX_LIBPATH%\{LIBRARY}" {COMMAND}` (you can wrap these to make conditions based on the return value, i.e. `( CALL "%MBX_LIBPATH%\_" test-command php ) && ECHO PHP found`).
 
 |Library|Command|Platforms|Description|
 |-|-|-|-|
@@ -140,7 +158,7 @@ source $HOME/.zshrc
 For Windows, you should install Chocolatey and use it to install a few essential dependencies to use this toolbox. For this run the following commands within a privileged command-line terminal (not PowerShell), skip the first command if Chocolatey is already installed:
 
 ```bat
-@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%PROGRAMDATA%\chocolatey\bin"
 choco install git awk -y
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d @^%USERPROFILE^%\autorun.cmd" "2^>NUL /f
 ```
@@ -150,10 +168,10 @@ The last command will ensure that an autorun.cmd is sourced in a similar fashion
 Then, within unprivileged command-line terminal (not PowerShell) run the following commands to install this toolbox and autoload its DOSKEY entries via autorun.cmd:
 
 ```bat
-MKDIR %ALLUSERSPROFILE%\mbx
-git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git %ALLUSERSPROFILE%\mbx
-SETX PATH "%PATH%;%ALLUSERSPROFILE%\mbx\bin\win;%ALLUSERSPROFILE%\mbx\bin"
-ECHO @CALL %ALLUSERSPROFILE%\mbx\lib\init.cmd>>"%USERPROFILE%\autorun.cmd"
+MKDIR %PROGRAMDATA%\mbx
+git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git %PROGRAMDATA%\mbx
+SETX PATH "%PATH%;%PROGRAMDATA%\mbx\bin\win;%PROGRAMDATA%\mbx\bin"
+ECHO @CALL %PROGRAMDATA%\mbx\lib\init.cmd>>"%USERPROFILE%\autorun.cmd"
 ```
 
 ### Final steps

@@ -40,3 +40,4 @@ locport() {
 		lsof -P -i:$1
 	fi
 }
+

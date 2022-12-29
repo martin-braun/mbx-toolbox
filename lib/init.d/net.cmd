@@ -42,3 +42,4 @@ FOR /F "usebackq tokens=1,2,3,4,5 delims= " %%a IN (`netstat -ano ^| FIND ":%1"`
 	FOR /F "tokens=* delims= " %%t IN ('TASKLIST /fi "pid eq %%e" ^2^>NUL ^| FIND "%%e"') DO @ECHO %%t    %%a %%b-^>%%c ^(%%d^)
 )
 EXIT /B
+

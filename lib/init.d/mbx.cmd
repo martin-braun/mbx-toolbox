@@ -12,3 +12,4 @@ SET /P MBX_VERSION=<"%MBX_LIBPATH%\\..\\VERSION"
 :   0
 :::
 DOSKEY mbx-version=ECHO ^%MBX_VERSION%
+

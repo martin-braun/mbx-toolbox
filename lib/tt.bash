@@ -6,8 +6,6 @@
 test ! $MBX_LIBLOAD_TT || return
 export MBX_LIBLOAD_TT=1
 
-. "$MBX_LIBPATH/_.bash"
-
 ###
 # Transforms the given text into the lowercase format.
 # Arguments:
@@ -33,3 +31,4 @@ to-lower() {
 to-upper() {
 	echo "$1" | tr '[:lower:]' '[:upper:]'
 }
+

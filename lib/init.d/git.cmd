@@ -77,3 +77,4 @@ EXIT /B
 FOR /F "tokens=4 delims=*" %%i IN ('git-branch') DO @SET "branch=%%i"
 git checkout %1 && git merge %branch% && git checkout %branch%
 EXIT /B
+

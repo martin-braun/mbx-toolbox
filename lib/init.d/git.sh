@@ -73,3 +73,4 @@ git-merge-to() {
 	branch="$(git-branch)"
 	git checkout $1 && git merge $branch && git checkout $branch
 }
+
