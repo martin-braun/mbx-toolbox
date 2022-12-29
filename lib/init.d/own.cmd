@@ -24,3 +24,4 @@ IF "%attr:~0,1%" == "d" (
 	TAKEOWN /F "%~1"
 )
 ENDLOCAL & EXIT /B
+
