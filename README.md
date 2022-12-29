@@ -12,7 +12,7 @@ Table of Contents
 	- [Table of Contents](#table-of-contents)
 	- [Disclaimer](#disclaimer)
 	- [Commands](#commands)
-		- [Variables](#variables)
+		- [Aliases / DOSKEYs](#aliases--doskeys)
 		- [Aliases / DOSKEYs](#aliases--doskeys)
 		- [Interactive Functions](#interactive-functions)
 		- [Helper Functions](#helper-functions)
@@ -201,11 +201,11 @@ Also remove the lines you added to your .bashrc/.zshrc during installation proce
 ### Windows
 
 ```cmd
-DEL /S %ALLUSERSPROFILE%\mbx
+DEL /S %PROGRAMDATA%\mbx
 rundll32 sysdm.cpl,EditEnvironmentVariables
 ```
 
-Now remove the paths `%ALLUSERSPROFILE%\mbx\bin\win` and `%ALLUSERSPROFILE%\mbx\bin` from your `%PATH%` variable. Also remove the added lines in `%USERPROFILE%\autorun.cmd`.
+Now remove the paths `%PROGRAMDATA%\mbx\bin\win` and `%PROGRAMDATA%\mbx\bin` from your `%PATH%` variable. Also remove the added lines in `%USERPROFILE%\autorun.cmd`.
 
 If you don't like to keep the auto-loader of the `autorun.cmd`, just remove the file and finalize your purge in an elevated shell with: 
 
