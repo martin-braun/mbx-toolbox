@@ -178,7 +178,7 @@ ECHO @CALL %PROGRAMDATA%\mbx\lib\init.cmd>>"%USERPROFILE%\autorun.cmd"
 
 To validate your installation, restart your terminal and run `mbx-version`. It should print out the [current version](VERSION) to the console.
 
-### Switching to the [dev] branch
+### Switching to the `dev` branch
 
 If you want to test the latest changes, you can switch to the `dev` branch, but things might break. 
 
