@@ -34,6 +34,7 @@ IF NOT "%1" == "" (
 
 ECHO [o] Upgrading MBX toolbox ...
 SET "dir=%MBX_LIBPATH%\.."
+git -C "%dir%" fetch || EXIT /B 1
 git -C "%dir%" reset --hard "@{u}" || EXIT /B 1
 
 @ECHO OFF & ECHO [o] Done^^! & EXIT /B
