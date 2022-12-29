@@ -26,7 +26,7 @@ set -e
 echo [o] Upgrading MBX toolkit ...
 dir="$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.."
 git -C "$dir" reset --hard HEAD
-git -C "$dir" pull --depth 1 --ff-only
+git -C "$dir" pull --depth 1 --rebase --allow-unrelated-histories
 
 set +e && trap - DEBUG && echo [o] Done!
 
