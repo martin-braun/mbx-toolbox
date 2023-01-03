@@ -66,6 +66,15 @@ if test-command dnf; then
 		dnf up --refresh -y
 		dnf autoremove -y
 	fi
+elif test-command yum; then
+	echo "[o] Upgrading Red Hat packages ..."
+	if test-command sudo; then
+		sudo yum check-update
+		sudo yum upgrade -y
+	else
+		yum check-update
+		yum upgrade -y
+	fi
 fi
 
 if test-command brew; then

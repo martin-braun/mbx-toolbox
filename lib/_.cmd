@@ -33,7 +33,7 @@ EXIT /B
 IF NOT "%3" == "/F" (
 	IF NOT "%3" == "/f" (
 		FOR /F "usebackq tokens=*" %%a IN (`%~2`) DO (
-				ENDLOCAL & SET "%~1=%%a"
+			ENDLOCAL & SET "%~1=%%a"
 		)
 		EXIT
 		@REM ERRORLEVEL will only be other than 0 if the FOR statement failed, not the command itself.
@@ -76,19 +76,19 @@ IF "%~1"=="exist" SET "EXIST=EXIST " & SHIFT
 
 SET "string1=%~1%"
 IF "%~3"=="" (
-    SET "comp=^=^="
-    SET "string2=%~2"
+	SET "comp=^=^="
+	SET "string2=%~2"
 ) ELSE (
-    SET "comp=%~2"
-    SET "string2=%~3"
+	SET "comp=%~2"
+	SET "string2=%~3"
 )
 IF %I%%NOT%%EXIST% "%string1%" %comp% "%string2%" (
-    ENDLOCAL & EXIT /B 0
+	ENDLOCAL & EXIT /B 0
 )
 ENDLOCAL & EXIT /B 1
 
 :::
-: Ensure a command can be executed. Do not pass additional arguments.
+: Test if a command can be executed. Do not pass additional arguments.
 : Arguments:
 :   %1 - command to check.
 : Outputs:
