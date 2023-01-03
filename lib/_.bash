@@ -20,7 +20,7 @@ command -v "$1" &>/dev/null
 }
 
 ###
-# Ensure packages are installed using the default package manager.
+# Ensure packages are installed using the default package manager and re-source rc.
 # Arguments:
 #   $@ - packages to install if not installed
 # Outputs:
@@ -28,6 +28,7 @@ command -v "$1" &>/dev/null
 # Returns:
 #   0, if packages were found or were installed successfully, otherwise the last error of the package manager. 
 #   Also returns 1, if the existence of the package could not be verified or no matching package manager was found to install a package.
+#   Returns 1001, if the dot-rc of the current shell could not be reload.
 ###
 ensure-installed() {
 if test-command dpkg; then
@@ -39,6 +40,7 @@ if test-command dpkg; then
 				echo "Unable to ensure $pkg, because no package manager to install the package was found."
 				return 1
 			fi
+			inst=1
 		fi
 	done
 elif test-command rpm; then
@@ -52,17 +54,23 @@ elif test-command rpm; then
 				echo "Unable to ensure $pkg, because no package manager to install the package was found."
 				return 1
 			fi
+			inst=1
 		fi
 	done
 elif test-command brew; then
 	for pkg in "$@"; do
 		if ! brew list $pkg &>/dev/null; then
 			brew install $pkg -y
+			inst=1
 		fi
 	done
 else
 	echo "Unable to ensure $@, because no package detection was found."
 	return 1
 fi
+[ $inst ] || return
+rc="$HOME/.${SHELL##*/}rc"
+[ -f "$rc" ] || return 1001
+\. "$rc"
 }
 
