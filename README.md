@@ -91,7 +91,8 @@ Commands
 |-|-|-|-|
 |`_`|`subset <variableName> "<command>" [ /F ]`|`win`|Sets a variable to the output of a command substitution. (`/F` for slower file mode to return a correct errorlevel)|
 |`_`|`test-if [ /I ] [ NOT ] [ EXISTS ] <string1> [ == \| EQU \| NEQ \| LSS \| LEQ \| GTR \| GEQ ] <string2>`|`win`|Performs conditional processing in batch programs. Is callable for inline use.|
-|`_`|`test-command <command>`|`all`|Ensure a command can be executed. Do not pass additional arguments.|
+|`_`|`test-command <command>`|`all`|Test if a command can be executed. Do not pass additional arguments.|
+|`_`|`ensure-installed <packages>...`|`deb`,`rh`,`mac`|Ensure packages are installed using the default package manager and re-source rc.|
 |`tt`|`to-lower <string>`|`deb`,`rh`,`mac`|Transforms the given text into the lowercase format.|
 |`tt`|`to-upper <string>`|`deb`,`rh`,`mac`|Transforms the given text into the uppercase format.|
 

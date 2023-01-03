@@ -100,3 +100,17 @@ ENDLOCAL & EXIT /B 1
 WHERE %~1 1>NUL 2>NUL
 ENDLOCAL & EXIT /B
 
+:::
+: Ensure packages are installed using the default package manager.
+: Arguments:
+:   %* - packages to install if not installed
+: Outputs:
+:   Nothing
+: Returns:
+:   0, if packages were found or were installed successfully, otherwise the last error of the package manager. 
+:   Also returns 1, if the existence of the package could not be verified or no matching package manager was found to install a package.
+:::
+:ensure-installed
+ECHO Not implemented!
+ENDLOCAL & EXIT /B
+
