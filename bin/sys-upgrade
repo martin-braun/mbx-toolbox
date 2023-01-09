@@ -38,13 +38,13 @@ test $verbose && trap 'echo "[$] $BASH_COMMAND"' DEBUG
 set -e
 OIFS="$IFS"
 
-if test-command sudo; then
+if testc sudo; then
 	sudo echo "[i] Requested root permissions for priviledged tasks."
 fi
 
-if test-command apt-get; then
+if testc apt-get; then
 	echo "[o] Upgrading APT packages ..."
-	if test-command sudo; then
+	if testc sudo; then
 		sudo apt-get update
 		sudo apt-get dist-upgrade -y
 		sudo apt-get autoremove -y
@@ -57,18 +57,18 @@ if test-command apt-get; then
 	fi
 fi
 
-if test-command dnf; then
+if testc dnf; then
 	echo "[o] Upgrading Red Hat packages ..."
-	if test-command sudo; then
+	if testc sudo; then
 		sudo dnf up --refresh -y
 		sudo dnf autoremove -y
 	else
 		dnf up --refresh -y
 		dnf autoremove -y
 	fi
-elif test-command yum; then
+elif testc yum; then
 	echo "[o] Upgrading Red Hat packages ..."
-	if test-command sudo; then
+	if testc sudo; then
 		sudo yum check-update
 		sudo yum upgrade -y
 	else
@@ -77,7 +77,7 @@ elif test-command yum; then
 	fi
 fi
 
-if test-command brew; then
+if testc brew; then
 	echo "[o] Upgrading Homebrew packages ..."
 	brew update
 	brew upgrade
@@ -86,8 +86,8 @@ if test-command brew; then
 	brew cleanup
 fi
 
-if test-command gem; then
-	if test-command rbenv; then
+if testc gem; then
+	if testc rbenv; then
 		current_ruby_version=$(rbenv global)
 		installed_ruby_versions=($(rbenv versions | awk -F "[ ]+" '/ /{print $2}'))
 		available_ruby_versions=($(rbenv install -l 2>/dev/null))
@@ -110,7 +110,7 @@ if test-command gem; then
 									if [ "$current_ruby_version" = "$installed" ]; then
 										rbenv global $available
 									fi
-									if test-command sudo; then
+									if testc sudo; then
 										sudo rbenv uninstall -f $installed
 									else
 										rbenv uninstall -f $installed
@@ -120,7 +120,7 @@ if test-command gem; then
 		done
 	fi
 	echo "[o] Upgrading global Ruby gems ..."
-	if test-command sudo; then
+	if testc sudo; then
 		sudo gem update --system
 	else
 		gem update --system
@@ -130,8 +130,8 @@ fi
 if [ -s "$HOME/.nvm/nvm.sh" ]; then
 	\. "$NVM_DIR/nvm.sh" # ensure nvm is loaded
 fi
-if test-command npm; then
-	if test-command nvm; then
+if testc npm; then
+	if testc nvm; then
 		echo "[o] Upgrading node minors ..."
 		nvm install $(nvm current | sed -rn "s/v([[:digit:]]+).*/\1/p") --reinstall-packages-from=$(nvm current) || true
 		nvm install $(nvm current) # upgrade default-packages to major version
@@ -147,17 +147,17 @@ if test-command npm; then
 	done
 fi
 
-# if test-command nativefier; then
+# if testc nativefier; then
 # 	if [ -n "$NATIVEFIER_APPS_DIR" ]; then
 # 		echo [o] Upgrading electron in nativefier applications ...
 # 		IFS=$'\n'
-# 		if [[ "$(to-lower "$OSTYPE")" == "darwin"* ]]; then
+# 		if [[ "$(tolower "$OSTYPE")" == "darwin"* ]]; then
 # 			for d in ${NATIVEFIER_APPS_DIR%/}/*; do
 # 				for f in $(ls -1F "$d" | grep "\.app/"); do
 # 					app="$d/${f//\/}"
 # 					if [ -d "$app/Contents/Frameworks/Electron Framework.framework" ]; then
 # 						echo Upgrading $app ...
-# 						if test-command sudo; then
+# 						if testc sudo; then
 # 							sudo nativefier --upgrade "$app"
 # 						else
 # 							nativefier --upgrade "$app"
@@ -171,7 +171,7 @@ fi
 # 					for f in $(ls -1F "$d" | grep "*"); do
 # 						app=$d/${f//\*}
 # 						echo Upgrading $app ...
-# 						if test-command sudo; then
+# 						if testc sudo; then
 # 							sudo nativefier --upgrade "$app"
 # 						else
 # 							nativefier --upgrade "$app"
@@ -187,12 +187,12 @@ fi
 # fi
 # TODO: Outcomment when https://github.com/nativefier/nativefier/issues/1347 is closed
 
-if test-command fvm; then
+if testc fvm; then
 	echo "[o] Upgrading Flutter ..."
 	fvm install beta
 	fvm install stable
 	dart pub global activate rps
-elif test-command flutter; then
+elif testc flutter; then
 	echo "[o] Upgrading Flutter ..."
 	flutter upgrade
 	dart pub global activate rps
@@ -223,7 +223,7 @@ fi
 
 if [ $reboot ]; then
 	echo "[o] Rebooting ..."
-	if test-command sudo; then
+	if testc sudo; then
 		sudo reboot
 	else
 		reboot

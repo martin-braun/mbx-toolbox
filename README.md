@@ -83,18 +83,18 @@ Commands
 
 > Helper functions can be called in your scripts and cannot be used in interactive shells. To call a helper function in your script use this while replacing `{LIBRARY}` with the library name and `{COMMAND}` with the function name and arguments: 
 > 
-> Bash: `. "$MBX_LIBPATH/{LIBRARY}.bash" || exit 1` in the header of your bash script, and then simply run `{COMMAND}` (you can use `if` to make conditions based on the return value, i.e. `if test-command php; then; echo "PHP found"; fi`).
+> Bash: `. "$MBX_LIBPATH/{LIBRARY}.bash" || exit 1` in the header of your bash script, and then simply run `{COMMAND}` (you can use `if` to make conditions based on the return value, i.e. `if testc php; then; echo "PHP found"; fi`).
 > 
-> Batch: `CALL "%MBX_LIBPATH%\{LIBRARY}" load || EXIT /B` in the header of your batch script, and then run `CALL "%MBX_LIBPATH%\{LIBRARY}" {COMMAND}` (you can wrap these to make conditions based on the return value, i.e. `( CALL "%MBX_LIBPATH%\_" test-command php ) && ECHO PHP found`).
+> Batch: `CALL "%MBX_LIBPATH%\{LIBRARY}" load || EXIT /B` in the header of your batch script, and then run `CALL "%MBX_LIBPATH%\{LIBRARY}" {COMMAND}` (you can wrap these to make conditions based on the return value, i.e. `( CALL "%MBX_LIBPATH%\_" testc php ) && ECHO PHP found`).
 
 |Library|Command|Platforms|Description|
 |-|-|-|-|
 |`_`|`subset <variableName> "<command>" [ /F ]`|`win`|Sets a variable to the output of a command substitution. (`/F` for slower file mode to return a correct errorlevel)|
-|`_`|`test-if [ /I ] [ NOT ] [ EXISTS ] <string1> [ == \| EQU \| NEQ \| LSS \| LEQ \| GTR \| GEQ ] <string2>`|`win`|Performs conditional processing in batch programs. Is callable for inline use.|
-|`_`|`test-command <command>`|`all`|Test if a command can be executed. Do not pass additional arguments.|
-|`_`|`ensure-installed <packages>...`|`deb`,`rh`,`mac`|Ensure packages are installed using the default package manager and re-source rc.|
-|`tt`|`to-lower <string>`|`deb`,`rh`,`mac`|Transforms the given text into the lowercase format.|
-|`tt`|`to-upper <string>`|`deb`,`rh`,`mac`|Transforms the given text into the uppercase format.|
+|`_`|`testif [ /I ] [ NOT ] [ EXISTS ] <string1> [ == \| EQU \| NEQ \| LSS \| LEQ \| GTR \| GEQ ] <string2>`|`win`|Performs conditional processing in batch programs. Is callable for inline use.|
+|`_`|`testc <command>`|`all`|Test if a command can be executed. Do not pass additional arguments.|
+|`_`|`req <packages>...`|`deb`,`rh`,`mac`|Ensure packages are installed using the default package manager and re-source rc.|
+|`tt`|`tolower <string>`|`deb`,`rh`,`mac`|Transforms the given text into the lowercase format.|
+|`tt`|`toupper <string>`|`deb`,`rh`,`mac`|Transforms the given text into the uppercase format.|
 
 ### Scripts
 

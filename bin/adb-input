@@ -32,13 +32,12 @@ done
 test $verbose && trap 'echo "[$] $BASH_COMMAND"' DEBUG
 set -e
 
-if ! test-command adb; then
+if ! testc adb; then
 	echo "[x] ADB missing ..."
 	exit 1
 fi
 
 if [ -n "$text" ]; then
-
 	echo [o] Sending \"$text\" to input ...
 	echo "$text" | fold -w 1 | while read c; do
 	\

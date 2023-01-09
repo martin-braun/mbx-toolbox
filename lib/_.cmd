@@ -66,7 +66,7 @@ ENDLOCAL & SET /P %~1=<"%tempfile%" & DEL /Q "%tempfile%" & EXIT /B %ERRORLEVEL%
 : Returns:
 :   0, if the condition is met, 1 otherwise.
 :::
-:test-if
+:testif
 IF "%~1"=="/I" SET "I=/I " & SHIFT
 IF "%~1"=="/i" SET "I=/I " & SHIFT
 IF "%~1"=="NOT" SET "NOT=NOT " & SHIFT
@@ -96,7 +96,7 @@ ENDLOCAL & EXIT /B 1
 : Returns:
 :   0, if the command exists, 1 otherwise.
 :::
-:test-command
+:testc
 WHERE %~1 1>NUL 2>NUL
 ENDLOCAL & EXIT /B
 
@@ -110,7 +110,7 @@ ENDLOCAL & EXIT /B
 :   0, if packages were found or were installed successfully, otherwise the last error of the package manager. 
 :   Also returns 1, if the existence of the package could not be verified or no matching package manager was found to install a package.
 :::
-:ensure-installed
+:req
 ECHO Not implemented!
 ENDLOCAL & EXIT /B
 

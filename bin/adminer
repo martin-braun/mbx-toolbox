@@ -40,7 +40,7 @@ done
 test $verbose && trap 'echo "[$] $BASH_COMMAND"' DEBUG
 set -e
 
-if ! test-command php; then
+if ! testc php; then
 	echo [x] PHP missing ...
 	exit 1
 fi
@@ -54,9 +54,9 @@ adminer_php=$(curl -L "$adminer_repo/releases/download/$adminer_tag/adminer-${ad
 echo "$adminer_php" >"$tempfile"
 adminer_host="0.0.0.0"
 adminer_domain="localhost:$port"
-if test-command xdg-open; then
+if testc xdg-open; then
 	xdg-open "http://$adminer_domain"
-elif test-command open; then
+elif testc open; then
 	open "http://$adminer_domain"
 fi
 echo [i] Starting local server, CTRL+C to stop and remove traces.

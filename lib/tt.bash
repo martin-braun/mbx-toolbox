@@ -15,7 +15,7 @@ export MBX_LIBLOAD_TT=1
 # Returns:
 #   0, if the text conversion was successful, 1 otherwise.
 ###
-to-lower() {
+tolower() {
 echo "$1" | tr '[:upper:]' '[:lower:]'
 }
 
@@ -28,7 +28,7 @@ echo "$1" | tr '[:upper:]' '[:lower:]'
 # Returns:
 #   0, if the text conversion was successful, 1 otherwise.
 ###
-to-upper() {
+toupper() {
 echo "$1" | tr '[:lower:]' '[:upper:]'
 }
 

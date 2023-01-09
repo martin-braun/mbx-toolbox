@@ -15,22 +15,22 @@ OPTIONS!BR!^
 
 :getopts
 IF NOT "%1" == "" (
-	( ( CALL "%MBX_LIBPATH%\_" test-if "%1" == "-V" ) || ( CALL "%MBX_LIBPATH%\_" test-if "%1" == "--version" ) ) && (
+	( ( CALL "%MBX_LIBPATH%\_" testif "%1" == "-V" ) || ( CALL "%MBX_LIBPATH%\_" testif "%1" == "--version" ) ) && (
 		ECHO %MBX_VERSION%
 		EXIT /B 0
 	)
-	( ( CALL "%MBX_LIBPATH%\_" test-if "%1" == "-v" ) || ( CALL "%MBX_LIBPATH%\_" test-if "%1" == "--verbose" ) ) && (
+	( ( CALL "%MBX_LIBPATH%\_" testif "%1" == "-v" ) || ( CALL "%MBX_LIBPATH%\_" testif "%1" == "--verbose" ) ) && (
 		SET verbose=1
 		SHIFT && GOTO :getopts
 	)
-	( ( CALL "%MBX_LIBPATH%\_" test-if "%1" == "-h" ) || ( CALL "%MBX_LIBPATH%\_" test-if "%1" == "--help" ) ) && (
+	( ( CALL "%MBX_LIBPATH%\_" testif "%1" == "-h" ) || ( CALL "%MBX_LIBPATH%\_" testif "%1" == "--help" ) ) && (
 		ECHO !usage!
 		EXIT /B 0
 	)
 	ECHO [x] Invalid command line flag %1. >&2 & EXIT /B 1
 )
 
-( CALL "%MBX_LIBPATH%\_" test-if "%verbose%" == "1" ) && @ECHO ON
+( CALL "%MBX_LIBPATH%\_" testif "%verbose%" == "1" ) && @ECHO ON
 
 ECHO [o] Upgrading MBX toolbox ...
 SET "dir=%MBX_LIBPATH%\.."

@@ -65,20 +65,20 @@ fi
 
 if [ ! -f "$path" ]; then
 	echo [o] Changing modes on directories within and incl. $path ...
-	if test-command sudo; then
+	if testc sudo; then
 		sudo find "$path" -type f -exec chmod $file_permissions '{}' \;
 	else
 		find "$path" -type f -exec chmod $file_permissions '{}' \;
 	fi
 	echo [o] Changing modes on files within $path ...
-	if test-command sudo; then
+	if testc sudo; then
 		sudo find "$path" -type d -exec chmod $directory_permissions '{}' \;
 	else
 		find "$path" -type d -exec chmod $directory_permissions '{}' \;
 	fi
 else
 	echo [o] Changing modes on $path ...
-	if test-command sudo; then
+	if testc sudo; then
 		sudo chmod $file_permissions "$path"
 	else
 		chmod $file_permissions "$path"
@@ -87,7 +87,7 @@ fi
 
 if (( $claim_ownership )); then
 	echo [o] Claiming ownership of $path ...
-	if test-command sudo; then
+	if testc sudo; then
 		sudo chown -R "$(whoami)" $path
 	else
 		chown -R "$(whoami)" $path
