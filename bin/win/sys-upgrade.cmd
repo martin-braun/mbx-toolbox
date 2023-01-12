@@ -10,6 +10,8 @@ Upgrades all packages of all supported package managers. Supports:!BR!^
 !BR!^
 - choco!BR!^
 - gem!BR!^
+- flutter!BR!^
+- rustup!BR!^
 !BR!^
 OPTIONS!BR!^
   -V,   --version                 Prints the version of this script suite (MBX).!BR!^
@@ -59,6 +61,17 @@ IF NOT "%ERRORLEVEL%" == "0" (
 ( CALL "%MBX_LIBPATH%\_" testc gem ) && (
 	ECHO [o] Upgrading Ruby gems ...
 	gem update --system || EXIT /B 1
+)
+
+( CALL "%MBX_LIBPATH%\_" testc flutter ) && (
+	ECHO [o] Upgrading Flutter ..."
+	flutter upgrade || EXIT /B 1
+	dart pub global activate rps || EXIT /B 1
+)
+
+( CALL "%MBX_LIBPATH%\_" testc rustup ) && (
+	ECHO [o] Upgrading Rust ...
+	rustup update || EXIT /B 1
 )
 
 IF "%extensive%" == "1" (

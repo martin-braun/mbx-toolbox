@@ -13,6 +13,7 @@ Upgrades all packages of all supported package managers. Supports:
 - gem
 - npm / nvm
 - flutter / fvm
+- rustup
 
 OPTIONS
   -V,   --version                 Prints the version of this script suite (MBX).
@@ -29,7 +30,7 @@ while [ "$#" -gt 0 ]; do
 		-x|--extensive) extensive=1 ;;
 		-r|--reboot) reboot=1 ;;
 		-h|--help) echo "$usage" && exit 0 ;;
-		*) echo "[x] Invalid command line flag $1." >&2; exit 1 ;;
+		*) echo [x] Invalid command line flag $1. >&2; exit 1 ;;
 	esac
 	shift
 done
@@ -39,11 +40,11 @@ set -e
 OIFS="$IFS"
 
 if testc sudo; then
-	sudo echo "[i] Requested root permissions for priviledged tasks."
+	sudo echo [i] Requested root permissions for priviledged tasks.
 fi
 
 if testc apt-get; then
-	echo "[o] Upgrading APT packages ..."
+	echo [o] Upgrading APT packages ...
 	if testc sudo; then
 		sudo apt-get update
 		sudo apt-get dist-upgrade -y
@@ -58,7 +59,7 @@ if testc apt-get; then
 fi
 
 if testc dnf; then
-	echo "[o] Upgrading Red Hat packages ..."
+	echo [o] Upgrading Red Hat packages ...
 	if testc sudo; then
 		sudo dnf up --refresh -y
 		sudo dnf autoremove -y
@@ -67,7 +68,7 @@ if testc dnf; then
 		dnf autoremove -y
 	fi
 elif testc yum; then
-	echo "[o] Upgrading Red Hat packages ..."
+	echo [o] Upgrading Red Hat packages ...
 	if testc sudo; then
 		sudo yum check-update
 		sudo yum upgrade -y
@@ -78,7 +79,7 @@ elif testc yum; then
 fi
 
 if testc brew; then
-	echo "[o] Upgrading Homebrew packages ..."
+	echo [o] Upgrading Homebrew packages ...
 	brew update
 	brew upgrade
 	brew upgrade --cask
@@ -91,7 +92,7 @@ if testc gem; then
 		current_ruby_version=$(rbenv global)
 		installed_ruby_versions=($(rbenv versions | awk -F "[ ]+" '/ /{print $2}'))
 		available_ruby_versions=($(rbenv install -l 2>/dev/null))
-		echo "[o] Updating Ruby builds ..."
+		echo [o] Updating Ruby builds ...
 		for installed in "${installed_ruby_versions[@]}"; do
 			if [ "$installed" = "system" ]; then
 				continue
@@ -119,7 +120,7 @@ if testc gem; then
 			done
 		done
 	fi
-	echo "[o] Upgrading global Ruby gems ..."
+	echo [o] Upgrading global Ruby gems ...
 	if testc sudo; then
 		sudo gem update --system
 	else
@@ -132,12 +133,12 @@ if [ -s "$HOME/.nvm/nvm.sh" ]; then
 fi
 if testc npm; then
 	if testc nvm; then
-		echo "[o] Upgrading node minors ..."
+		echo [o] Upgrading node minors ...
 		nvm install $(nvm current | sed -rn "s/v([[:digit:]]+).*/\1/p") --reinstall-packages-from=$(nvm current) || true
 		nvm install $(nvm current) # upgrade default-packages to major version
 		# TODO: Replace last command with better alternative, see https://github.com/npm/cli/issues/2329#issuecomment-743308323
 	else
-		echo "[x] nvm script found, but unable to load nvm!"
+		echo [x] nvm script found, but unable to load nvm!
 		exit 1
 	fi
 	npm_global_packages=($(npm list -g --depth 0 | awk '/ /{print $2}'))
@@ -188,14 +189,19 @@ fi
 # TODO: Outcomment when https://github.com/nativefier/nativefier/issues/1347 is closed
 
 if testc fvm; then
-	echo "[o] Upgrading Flutter ..."
+	echo [o] Upgrading Flutter ...
 	fvm install beta
 	fvm install stable
 	dart pub global activate rps
 elif testc flutter; then
-	echo "[o] Upgrading Flutter ..."
+	echo [o] Upgrading Flutter ...
 	flutter upgrade
 	dart pub global activate rps
+fi
+
+if testc rustup; then
+	echo [o] Upgrading Rust ...
+	rustup update
 fi
 
 if [ $extensive ]; then
@@ -205,7 +211,7 @@ if [ $extensive ]; then
 		extfiles=( $(find "$extdir" -mindepth 1 -maxdepth 1 -type f -name '*.sh') )
 		for f in "${extfiles[@]}"; do
 			# echo $f
-			[ -f "$f" ] && { . "$f" || { echo "[!] Failed to source $f" && exit 1; }; }
+			[ -f "$f" ] && { . "$f" || { echo [!] Failed to source $f && exit 1; }; }
 		done 
 	fi
 	( IFS=: 
@@ -215,14 +221,14 @@ if [ $extensive ]; then
 			extfiles=( $(find "$extdir" -mindepth 1 -maxdepth 1 -type f -name '*.sh') )
 			for f in "${extfiles[@]}"; do
 				# echo $f
-				[ -f "$f" ] && { . "$f" || { echo "[!] Failed to source $f" && exit 1; }; }
+				[ -f "$f" ] && { . "$f" || { echo [!] Failed to source $f && exit 1; }; }
 			done 
 		fi
 	done; )
 fi
 
 if [ $reboot ]; then
-	echo "[o] Rebooting ..."
+	echo [o] Rebooting ...
 	if testc sudo; then
 		sudo reboot
 	else
@@ -230,5 +236,5 @@ if [ $reboot ]; then
 	fi
 fi
 
-set +e && trap - DEBUG && echo "[o] Done!"
+set +e && trap - DEBUG && echo [o] Done!
 
