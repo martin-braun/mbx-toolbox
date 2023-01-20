@@ -20,8 +20,10 @@ if [ -z "$XDG_RUNTIME_DIR" ]; then
 		tmpdir="$TMPDIR"
 		test -n "$tmpdir" || tmpdir="/tmp"
 		XDG_RUNTIME_DIR="$tmpdir/runtime-$uid"
-		mkdir -p "$XDG_RUNTIME_DIR"
-		chmod 0700 "$XDG_RUNTIME_DIR"
+		if ! [ -d "$XDG_RUNTIME_DIR" ]; then
+			mkdir -p "$XDG_RUNTIME_DIR"
+			chmod 0700 "$XDG_RUNTIME_DIR"
+		fi
 	fi
 fi
 
