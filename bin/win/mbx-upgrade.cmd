@@ -27,14 +27,14 @@ IF NOT "%1" == "" (
 		ECHO !usage!
 		EXIT /B 0
 	)
-	ECHO [x] Invalid command line flag %1. >&2 & EXIT /B 1
+	ECHO ! Invalid command line flag %1. >&2 & EXIT /B 1
 )
 
 ( CALL "%MBX_LIBPATH%\_" testif "%verbose%" == "1" ) && @ECHO ON
 
-ECHO [o] Upgrading MBX toolbox ...
+ECHO - Upgrading MBX toolbox ...
 SET "dir=%MBX_LIBPATH%\.."
 git -C "%dir%" fetch || EXIT /B 1
 git -C "%dir%" reset --hard "@{u}" || EXIT /B 1
 
-@ECHO OFF & ECHO [o] Done^^! & EXIT /B
+@ECHO OFF & ECHO - Done^^! & EXIT /B

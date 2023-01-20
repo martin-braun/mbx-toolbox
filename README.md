@@ -125,7 +125,7 @@ echo '# mbx' >> $HOME/.bashrc
 echo 'export MBX_PATH="/usr/local/mbx"' >> $HOME/.bashrc
 echo 'export PATH=$PATH:$MBX_PATH/bin/deb:$MBX_PATH/bin' >> $HOME/.bashrc
 echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.bashrc
-source $HOME/.bashrc
+\. $HOME/.bashrc
 ```
 
 ### Red Hat (incl. Fedora / Nobara)
@@ -142,7 +142,7 @@ echo '# mbx' >> $HOME/.bashrc
 echo 'export MBX_PATH="/usr/local/mbx"' >> $HOME/.bashrc
 echo 'export PATH=$PATH:$MBX_PATH/bin/rh:$MBX_PATH/bin' >> $HOME/.bashrc
 echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.bashrc
-source $HOME/.bashrc
+\. $HOME/.bashrc
 ```
 
 ### Alpine Linux (BusyBox)
@@ -160,7 +160,7 @@ echo '# mbx' >> $HOME/.profile
 echo 'export MBX_PATH="/usr/local/mbx"' >> $HOME/.profile
 echo 'export PATH=$PATH:$MBX_PATH/bin/alp:$MBX_PATH/bin' >> $HOME/.profile
 echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.profile
-source $HOME/.profile
+\. $HOME/.profile
 ```
 
 ### MacOS
@@ -178,7 +178,7 @@ echo '# mbx' >> $HOME/.zshrc
 echo 'export MBX_PATH="/usr/local/mbx"' >> $HOME/.zshrc
 echo 'export PATH=$PATH:$MBX_PATH/bin/mac:$MBX_PATH/bin' >> $HOME/.zshrc
 echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.zshrc
-source $HOME/.zshrc
+\. $HOME/.zshrc
 ```
 
 ### Windows

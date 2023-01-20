@@ -42,35 +42,35 @@ IF NOT "%1" == "" (
 		ECHO !usage!
 		EXIT /B 0
 	)
-	ECHO [x] Invalid command line flag %1. >&2 & EXIT /B 1
+	ECHO ! Invalid command line flag %1. >&2 & EXIT /B 1
 )
 
 ( CALL "%MBX_LIBPATH%\_" testif "%verbose%" == "1" ) && @ECHO ON
 
 NET SESSION >NUL 2>&1
 IF NOT "%ERRORLEVEL%" == "0" (
-	ECHO [x] Please run this script in an elevated command shell. >&2 & EXIT /B 1
+	ECHO ! Please run this script in an elevated command shell. >&2 & EXIT /B 1
 )
 
 ( CALL "%MBX_LIBPATH%\_" testc choco ) && (
-	ECHO [o] Upgrading Chocolatey packages ...
+	ECHO - Upgrading Chocolatey packages ...
 	choco upgrade chocolatey -y --accept-license || EXIT /B 1
 	choco upgrade all -y --accept-license || EXIT /B 1
 )
 
 ( CALL "%MBX_LIBPATH%\_" testc gem ) && (
-	ECHO [o] Upgrading Ruby gems ...
+	ECHO - Upgrading Ruby gems ...
 	gem update --system || EXIT /B 1
 )
 
 ( CALL "%MBX_LIBPATH%\_" testc flutter ) && (
-	ECHO [o] Upgrading Flutter ..."
+	ECHO - Upgrading Flutter ..."
 	flutter upgrade || EXIT /B 1
 	dart pub global activate rps || EXIT /B 1
 )
 
 ( CALL "%MBX_LIBPATH%\_" testc rustup ) && (
-	ECHO [o] Upgrading Rust ...
+	ECHO - Upgrading Rust ...
 	rustup update || EXIT /B 1
 )
 
@@ -92,4 +92,4 @@ IF "%reboot%" == "1" (
 	SHUTDOWN /R /T 0
 )
 
-@ECHO OFF & ECHO [o] Done^^! & EXIT /B
+@ECHO OFF & ECHO - Done^^! & EXIT /B

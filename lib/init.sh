@@ -10,6 +10,6 @@ export MBX_BINPATH="$MBX_PATH/bin"
 files=( $(find "$MBX_LIBPATH/init.d" -type f -name '*.sh') )
 for f in "${files[@]}"; do
 	# echo $f
-	[ -f $f ] && { . $f || echo "[o] Failed to source $f"; }
+	[ -f $f ] && { . $f || echo "- Failed to source $f"; }
 done 
 
