@@ -1,7 +1,7 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-. "$MBX_LIBPATH/_.bash" || exit 1
-. "$MBX_LIBPATH/tt.bash" || exit 1
+. "$MBX_LIBPATH/_.sh" || exit 1
+. "$MBX_LIBPATH/tt.sh" || exit 1
 
 read -r -d '' usage << EOF
 Usage: $(basename "$0") [OPTIONS]
@@ -33,35 +33,31 @@ while [ "$#" -gt 0 ]; do
 		-l|--lock-backup) lock_backup=1 ;;
 		-s|--shutdown) shutdown=1 ;;
 		-h|--help) echo "$usage" && exit 0 ;;
-		*) echo [x] Invalid command line flag $1. >&2; exit 1 ;;
+		*) echo ! Invalid command line flag $1. >&2; exit 1 ;;
 	esac
 	shift
 done
 
-test $verbose && trap 'echo "[$] $BASH_COMMAND"' DEBUG
+test $verbose && set -x
 set -e
 
 if [[ "$(tolower "$OSTYPE")" == "darwin"* ]]; then # MacOS uses Time Maschine for backups instead
-	echo [o] Backing up using Time Maschine ...
+	echo - Backing up using Time Maschine ...
 	if (( $shutdown )); then
-		sudo zsh -c "tmutil startbackup --block && shutdown -h +5"
+		erun zsh -c "tmutil startbackup --block && shutdown -h +5"
 		echo; read -rsn1 -p "Press any key to cancel ..."; echo
-		sudo killall shutdown
+		erun killall shutdown
 	else
 		tmutil startbackup
 	fi
 	exit
 fi
 
-echo [o] Creating backup directory ...
+echo - Creating backup directory ...
 mkdir -p "$path"
-if testc sudo; then
-	sudo chmod 1700 "$path"
-else
-	chmod 1700 "$path"
-fi
+erun chmod 1700 "$path"
 
-echo [o] Backing up files ...
+echo - Backing up files ...
 excl=( "$path" /dev /proc /sys /tmp /run /mnt /media /lost+found )
 if [[ "$(tolower "$OSTYPE")" == "darwin"* ]]; then # MacOS
 	excl+=( /Volumes /Network /System /Applications /AppleInternal .DS_Store .AppleDouble .LSOverride )
@@ -74,13 +70,8 @@ for i in "${!excl[@]}"; do
 	excl[i]="--exclude=${excl[i]}"
 done
 (( $verbose )) && opts+="v"
-if testc sudo; then
-	sudo rsync $opts --delete --max-size=$max_size "${excl[@]}" / "$path"
-	(( $keep_files )) || sudo find "$path" -type f -size +$max_size -delete
-else
-	rsync $opts --delete --max-size=$max_size "${excl[@]}" / "$path"
-	(( $keep_files )) || find "$path" -type f -size +$max_size -delete
-fi
+erun rsync $opts --delete --max-size=$max_size "${excl[@]}" / "$path"
+(( $keep_files )) || erun find "$path" -type f -size +$max_size -delete
 
 if [ $extensive ]; then
 	extsubpath="mbx/sys-backup/extensions"
@@ -106,25 +97,15 @@ if [ $extensive ]; then
 fi
 
 if [ $lock_backup ]; then
-	echo [o] Locking backup directory ...
-	if testc sudo; then
-		sudo chmod 0000 "$path"
-	else
-		chmod 0000 "$path"
-	fi
+	echo - Locking backup directory ...
+	erun chmod 0000 "$path"
 fi
 
 if (( $shutdown )); then
-	if testc sudo; then
-		sudo shutdown +5
-		echo; read -rsn1 -p "Press any key to cancel ..."; echo
-		sudo killall shutdown
-	else
-		shutdown +5
-		echo; read -rsn1 -p "Press any key to cancel ..."; echo
-		killall shutdown
-	fi	
+	erun shutdown +5
+	echo; read -rsn1 -p "Press any key to cancel ..."; echo
+	erun killall shutdown
 fi
 
-set +e && trap - DEBUG && echo [o] Done!
+set +e && set +x && echo - Done!
 

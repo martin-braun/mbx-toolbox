@@ -18,7 +18,9 @@ meownr() {
 		echo ""
 		return 1
 	fi
-	if command -v "sudo" >/dev/null 2>&1; then
+	if command -v "doas" >/dev/null 2>&1; then
+		doas chown -R "$(whoami)" $1
+	elif command -v "sudo" >/dev/null 2>&1; then
 		sudo chown -R "$(whoami)" $1
 	else
 		chown -R "$(whoami)" $1
@@ -42,7 +44,9 @@ chownr() {
 		echo ""
 		return 1
 	fi
-	if command -v "sudo" >/dev/null 2>&1; then
+	if command -v "doas" >/dev/null 2>&1; then
+		doas chown -R $1 $2
+	elif command -v "sudo" >/dev/null 2>&1; then
 		sudo chown -R $1 $2
 	else
 		chown -R $1 $2

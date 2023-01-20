@@ -113,30 +113,54 @@ Installation
 
 ### Debian (incl. Proxmox)
 
-For Debian-based distros simply run the following commands to install essential dependencies and the toolbox. You can run these commands as root, skip sudo in such case: 
+For Debian-based distros simply run the following commands to install essential dependencies and the toolbox. You can run these commands as root, skip `sudo` in such case: 
 
 ```bash
 sudo apt update && apt install git -y # don't use sudo if you are root
 sudo mkdir -p /usr/local/mbx # don't use sudo if you are root
 sudo chown "$(whoami)" /usr/local/mbx # skip, if you are root
 git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
-echo 'export PATH=$PATH:/usr/local/mbx/bin/deb:/usr/local/mbx/bin' >> $HOME/.bashrc
-echo "test -e /usr/local/mbx/lib/init.bash && . /usr/local/mbx/lib/init.bash" >> $HOME/.bashrc
+echo '' >> $HOME/.bashrc
+echo '# mbx' >> $HOME/.bashrc
+echo 'export MBX_PATH="/usr/local/mbx"' >> $HOME/.bashrc
+echo 'export PATH=$PATH:$MBX_PATH/bin/deb:$MBX_PATH/bin' >> $HOME/.bashrc
+echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.bashrc
 source $HOME/.bashrc
 ```
 
 ### Red Hat (incl. Fedora / Nobara)
 
-For Red Hat-based distros simply run the following commands to install essential dependencies and the toolbox. You can run these commands as root, skip sudo in such case: 
+For Red Hat-based distros simply run the following commands to install essential dependencies and the toolbox. You can run these commands as root, skip `sudo` in such case: 
 
 ```bash
 sudo dnf install git --refresh -y # don't use sudo if you are root
 sudo mkdir -p /usr/local/mbx # don't use sudo if you are root
 sudo chown "$(whoami)" /usr/local/mbx # skip, if you are root
 git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
-echo 'export PATH=$PATH:/usr/local/mbx/bin/rh:/usr/local/mbx/bin' >> $HOME/.bashrc
-echo "test -e /usr/local/mbx/lib/init.bash && . /usr/local/mbx/lib/init.bash" >> $HOME/.bashrc
+echo '' >> $HOME/.bashrc
+echo '# mbx' >> $HOME/.bashrc
+echo 'export MBX_PATH="/usr/local/mbx"' >> $HOME/.bashrc
+echo 'export PATH=$PATH:$MBX_PATH/bin/rh:$MBX_PATH/bin' >> $HOME/.bashrc
+echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.bashrc
 source $HOME/.bashrc
+```
+
+### Alpine Linux (BusyBox)
+
+For BusyBox based distros simply run the following commands to install essential dependencies and the toolbox. You can run these commands as root, skip `doas` in such case.: 
+
+```bash
+doas apk update # don't use doas if you are root
+doas apk add git # don't use doas if you are root
+doas mkdir -p /usr/local/mbx # don't use doas if you are root
+doas chown "$(whoami)" /usr/local/mbx # skip, if you are root
+git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
+echo '' >> $HOME/.profile
+echo '# mbx' >> $HOME/.profile
+echo 'export MBX_PATH="/usr/local/mbx"' >> $HOME/.profile
+echo 'export PATH=$PATH:$MBX_PATH/bin/alp:$MBX_PATH/bin' >> $HOME/.profile
+echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.profile
+source $HOME/.profile
 ```
 
 ### MacOS
@@ -149,8 +173,11 @@ brew install git coreutils
 sudo mkdir -p /usr/local/mbx
 sudo chown "$(whoami)" /usr/local/mbx
 git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
-echo 'export PATH=$PATH:/usr/local/mbx/bin/mac:/usr/local/mbx/bin' >> $HOME/.zshrc
-echo "test -e /usr/local/mbx/lib/init.zsh && . /usr/local/mbx/lib/init.zsh" >> $HOME/.zshrc
+echo '' >> $HOME/.zshrc
+echo '# mbx' >> $HOME/.zshrc
+echo 'export MBX_PATH="/usr/local/mbx"' >> $HOME/.zshrc
+echo 'export PATH=$PATH:$MBX_PATH/bin/mac:$MBX_PATH/bin' >> $HOME/.zshrc
+echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.zshrc
 source $HOME/.zshrc
 ```
 
@@ -171,8 +198,9 @@ Then, within unprivileged command-line terminal (not PowerShell) run the followi
 ```bat
 MKDIR %PROGRAMDATA%\mbx
 git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git %PROGRAMDATA%\mbx
-SETX PATH "%PATH%;%PROGRAMDATA%\mbx\bin\win;%PROGRAMDATA%\mbx\bin"
-ECHO @CALL %PROGRAMDATA%\mbx\lib\init.cmd>>"%USERPROFILE%\autorun.cmd"
+SET "MBX_PATH=%PROGRAMDATA%\mbx"
+SETX PATH "%PATH%;%MBX_PATH%\bin\win;%MBX_PATH%\bin"
+ECHO @CALL %MBX_PATH%\lib\init.cmd>>"%USERPROFILE%\autorun.cmd"
 ```
 
 ### Final steps

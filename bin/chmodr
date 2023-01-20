@@ -1,6 +1,6 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-. "$MBX_LIBPATH/_.bash" || exit 1
+. "$MBX_LIBPATH/_.sh" || exit 1
 
 read -r -d '' usage << EOF
 Usage: $(basename "$0") [OPTIONS] [PATH]
@@ -18,28 +18,28 @@ PATH
   The path to the directory or file to change.
 
 PERMISSION MODES
-     Modes may be absolute or symbolic.  An absolute mode is an octal number constructed from the sum of one or more of
-     the following values:
-           4000    (the setuid bit).  Executable files with this bit set will run with effective uid set to the uid of the
-                   file owner.  Directories with this bit set will force all files and sub-directories created in them to
-                   be owned by the directory owner and not by the uid of the creating process, if the underlying file
-                   system supports this feature: see chmod(2) and the suiddir option to mount(8).
-           2000    (the setgid bit).  Executable files with this bit set will run with effective gid set to the gid of the
-                   file owner.
-           1000    (the sticky bit).  See chmod(2) and sticky(7).
-           0400    Allow read by owner.
-           0200    Allow write by owner.
-           0100    For files, allow execution by owner.  For directories, allow the owner to search in the directory.
-           0040    Allow read by group members.
-           0020    Allow write by group members.
-           0010    For files, allow execution by group members.  For directories, allow group members to search in the
-                   directory.
-           0004    Allow read by others.
-           0002    Allow write by others.
-           0001    For files, allow execution by others.  For directories allow others to search in the directory.
+	 Modes may be absolute or symbolic.  An absolute mode is an octal number constructed from the sum of one or more of
+	 the following values:
+		   4000    (the setuid bit).  Executable files with this bit set will run with effective uid set to the uid of the
+				   file owner.  Directories with this bit set will force all files and sub-directories created in them to
+				   be owned by the directory owner and not by the uid of the creating process, if the underlying file
+				   system supports this feature: see chmod(2) and the suiddir option to mount(8).
+		   2000    (the setgid bit).  Executable files with this bit set will run with effective gid set to the gid of the
+				   file owner.
+		   1000    (the sticky bit).  See chmod(2) and sticky(7).
+		   0400    Allow read by owner.
+		   0200    Allow write by owner.
+		   0100    For files, allow execution by owner.  For directories, allow the owner to search in the directory.
+		   0040    Allow read by group members.
+		   0020    Allow write by group members.
+		   0010    For files, allow execution by group members.  For directories, allow group members to search in the
+				   directory.
+		   0004    Allow read by others.
+		   0002    Allow write by others.
+		   0001    For files, allow execution by others.  For directories allow others to search in the directory.
 
-     For example, the absolute mode that permits read, write and execute by the owner, read and execute by group members,
-     read and execute by others, and no set-uid or set-gid behaviour is 755 (400+200+100+040+010+004+001).
+	 For example, the absolute mode that permits read, write and execute by the owner, read and execute by group members,
+	 read and execute by others, and no set-uid or set-gid behaviour is 755 (400+200+100+040+010+004+001).
 EOF
 
 while [ "$#" -gt 0 ]; do
@@ -50,12 +50,12 @@ while [ "$#" -gt 0 ]; do
 		-f=*|--file-permissions=*) file_permissions="${1#*=}" ;;
 		-c|--claim-ownership) claim_ownership=1 ;;
 		-h|--help) echo "$usage" && exit 0 ;;
-		*) { test -z $path && path=$1; } || { echo [x] Invalid command line flag $1. >&2; exit 1; } ;;
+		*) { test -z $path && path=$1; } || { echo ! Invalid command line flag $1. >&2; exit 1; } ;;
 	esac
 	shift
 done
 
-test $verbose && trap 'echo "[$] $BASH_COMMAND"' DEBUG
+test $verbose && set -x
 set -e
 
 if [ -z "$path" ]; then
@@ -64,35 +64,19 @@ if [ -z "$path" ]; then
 fi
 
 if [ ! -f "$path" ]; then
-	echo [o] Changing modes on directories within and incl. $path ...
-	if testc sudo; then
-		sudo find "$path" -type f -exec chmod $file_permissions '{}' \;
-	else
-		find "$path" -type f -exec chmod $file_permissions '{}' \;
-	fi
-	echo [o] Changing modes on files within $path ...
-	if testc sudo; then
-		sudo find "$path" -type d -exec chmod $directory_permissions '{}' \;
-	else
-		find "$path" -type d -exec chmod $directory_permissions '{}' \;
-	fi
+	echo - Changing modes on directories within and incl. $path ...
+	erun find "$path" -type f -exec chmod $file_permissions '{}' \;
+	echo - Changing modes on files within $path ...
+	erun find "$path" -type d -exec chmod $directory_permissions '{}' \;
 else
-	echo [o] Changing modes on $path ...
-	if testc sudo; then
-		sudo chmod $file_permissions "$path"
-	else
-		chmod $file_permissions "$path"
-	fi
+	echo - Changing modes on $path ...
+	erun chmod $file_permissions "$path"
 fi
 
 if (( $claim_ownership )); then
-	echo [o] Claiming ownership of $path ...
-	if testc sudo; then
-		sudo chown -R "$(whoami)" $path
-	else
-		chown -R "$(whoami)" $path
-	fi
+	echo - Claiming ownership of $path ...
+	erun chown -R "$(whoami)" $path
 fi
 
-set +e && trap - DEBUG && echo [o] Done!
+set +e && set +x && echo - Done!
 

@@ -1,6 +1,6 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-. "$MBX_LIBPATH/_.bash" || exit 1
+. "$MBX_LIBPATH/_.sh" || exit 1
 
 read -r -d '' usage << EOF
 Usage: $(basename "$0") [OPTIONS]
@@ -32,16 +32,16 @@ while [ "$#" -gt 0 ]; do
 		-v|--verbose) verbose=1 ;;
 		-p=*|--port=*) port="${1#*=}" ;;
 		-h|--help) echo "$usage" && exit 0 ;;
-		*) echo [x] Invalid command line flag $1. >&2; exit 1 ;;
+		*) echo ! Invalid command line flag $1. >&2; exit 1 ;;
 	esac
 	shift
 done
 
-test $verbose && trap 'echo "[$] $BASH_COMMAND"' DEBUG
+test $verbose && set -x
 set -e
 
 if ! testc php; then
-	echo [x] PHP missing ...
+	echo ! PHP missing ...
 	exit 1
 fi
 
@@ -59,9 +59,9 @@ if testc xdg-open; then
 elif testc open; then
 	open "http://$adminer_domain"
 fi
-echo [i] Starting local server, CTRL+C to stop and remove traces.
+echo - Starting local server, CTRL+C to stop and remove traces.
 php -S "$adminer_host:$port" "$tempfile"
 rm $tempfile
 
-set +e && trap - DEBUG && echo [o] Done!
+set +e && set +x && echo - Done!
 

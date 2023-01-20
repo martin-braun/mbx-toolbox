@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 #
 # Text transform library.
 
@@ -16,7 +16,7 @@ export MBX_LIBLOAD_TT=1
 #   0, if the text conversion was successful, 1 otherwise.
 ###
 tolower() {
-echo "$1" | tr '[:upper:]' '[:lower:]'
+	echo "$1" | awk '{print tolower($0)}'
 }
 
 ###
@@ -29,6 +29,6 @@ echo "$1" | tr '[:upper:]' '[:lower:]'
 #   0, if the text conversion was successful, 1 otherwise.
 ###
 toupper() {
-echo "$1" | tr '[:lower:]' '[:upper:]'
+	echo "$1" | awk '{print toupper($0)}'
 }
 
