@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-#
 # Interactive helper functions/aliases around networking.
 
 ###

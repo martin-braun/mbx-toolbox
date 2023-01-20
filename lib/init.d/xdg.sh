@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-#
 # Interactive Cross-Desktop Group variables.
 
 export XDG_DATA_HOME=${XDG_DATA_HOME:="$HOME/.local/share"}
