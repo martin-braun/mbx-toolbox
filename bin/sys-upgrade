@@ -77,14 +77,13 @@ fi
 if testc gem; then
 	if testc rbenv; then
 		current_ruby_version=$(rbenv global)
-		installed_ruby_versions=($(rbenv versions | awk -F "[ ]+" '/ /{print $2}'))
-		available_ruby_versions=($(rbenv install -l 2>/dev/null))
+		available_ruby_versions=$(rbenv install -l 2>/dev/null)
 		echo - Updating Ruby builds ...
-		for installed in "${installed_ruby_versions[@]}"; do
+		for installed in $(rbenv versions | awk -F "[ ]+" '/ /{print $2}'); do
 			if [ "$installed" = "system" ]; then
 				continue
 			fi
-			for available in "${available_ruby_versions[@]}"; do
+			for available in $available_ruby_versions; do
 				if [ "$installed" = "$available" ]; then
 					continue
 				fi
@@ -120,9 +119,8 @@ if testc npm; then
 		echo ! nvm script found, but unable to load nvm! >&2
 		exit 1
 	fi
-	npm_global_packages=($(npm list -g --depth 0 | awk '/ /{print $2}'))
 	echo "- Upgrading global npm packages (minor) ..."
-	for val in "${npm_global_packages[@]}"; do
+	for val in $(npm list -g --depth 0 | awk '/ /{print $2}'); do
 		npm i -g --force $(echo $val | tr "." "\n" | head -1)
 	done
 fi
@@ -179,8 +177,7 @@ if [ $extensive ]; then
 	extsubpath="mbx/sys-upgrade/extensions"
 	extdir="$XDG_CONFIG_HOME/$extsubpath" 
 	if [ -d "$extdir" ]; then
-		extfiles=( $(find "$extdir" -mindepth 1 -maxdepth 1 -type f -name '*.sh') )
-		for f in "${extfiles[@]}"; do
+		for f in $(find "$extdir" -mindepth 1 -maxdepth 1 -type f -name '*.sh'); do
 			# echo $f
 			[ -f "$f" ] && { . "$f" || { echo [!] Failed to source $f && exit 1; }; }
 		done 
@@ -189,8 +186,8 @@ if [ $extensive ]; then
 	for confdir in $XDG_CONFIG_DIRS; do
 		extdir="$confdir/$extsubpath"
 		if [ -d "$extdir" ]; then
-			extfiles=( $(find "$extdir" -mindepth 1 -maxdepth 1 -type f -name '*.sh') )
-			for f in "${extfiles[@]}"; do
+			extfiles=$(find "$extdir" -mindepth 1 -maxdepth 1 -type f -name '*.sh')
+			for f in $extfiles; do
 				# echo $f
 				[ -f "$f" ] && { . "$f" || { echo [!] Failed to source $f && exit 1; }; }
 			done 
