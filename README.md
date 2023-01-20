@@ -5,30 +5,6 @@ Martin Braun's eXtensive toolbox
 
 Bash/Batch helper libraries/aliases/functions for Windows, MacOS and Debian (based) and Red Hat (based) distributions.
 
-Table of Contents
------------------
-
-- [MBX TOOLBOX](#mbx-toolbox)
-	- [Table of Contents](#table-of-contents)
-	- [Disclaimer](#disclaimer)
-	- [Commands](#commands)
-		- [Aliases / DOSKEYs](#aliases--doskeys)
-		- [Aliases / DOSKEYs](#aliases--doskeys)
-		- [Interactive Functions](#interactive-functions)
-		- [Helper Functions](#helper-functions)
-		- [Scripts](#scripts)
-	- [Installation](#installation)
-		- [Debian (incl. Proxmox)](#debian-incl-proxmox)
-		- [Red Hat (incl. Fedora / Nobara)](#red-hat-incl-fedora-nobara)
-		- [MacOS](#macos)
-		- [Windows](#windows)
-		- [Final steps](#final-steps)
-	- [Update](#update)
-	- [Uninstall](#uninstall)
-		- [\*nix (Debian / MacOS / etc.)](#nix-debian--macos--etc)
-		- [Windows](#windows-1)
-	- [Contribute](#contribute)
-
 Disclaimer
 ----------
 
@@ -77,7 +53,9 @@ Commands
 |`gitlog <text>`|`all`|Finds all commits of all branches with a given string in the description.|
 |`gitfuse <branch>`|`all`|Merges the current branch into the given branch. Repository must not have working changes active.|
 |`meownr <path>`|`all`|Recursively claim ownership of any files and folders within and of a path.|
+|`megrpr <path>`|`nix`|Recursively claim ownership via group of any files and folders within and of a path.|
 |`chownr <user>:<group> <path>`|`all`|Recursively change ownership of any files and folders within and of a path to a specific user/group.|
+|`chgrpr <group> <path>`|`nix`|Recursively change ownership of any files and folders within and of a path to a specific group.|
 
 ### Helper Functions
 
@@ -92,9 +70,9 @@ Commands
 |`_`|`subset <variableName> "<command>" [ /F ]`|`win`|Sets a variable to the output of a command substitution. (`/F` for slower file mode to return a correct errorlevel)|
 |`_`|`testif [ /I ] [ NOT ] [ EXISTS ] <string1> [ == \| EQU \| NEQ \| LSS \| LEQ \| GTR \| GEQ ] <string2>`|`win`|Performs conditional processing in batch programs. Is callable for inline use.|
 |`_`|`testc <command>`|`all`|Test if a command can be executed. Do not pass additional arguments.|
-|`_`|`req <packages>...`|`deb`,`rh`,`mac`|Ensure packages are installed using the default package manager and re-source rc.|
-|`tt`|`tolower <string>`|`deb`,`rh`,`mac`|Transforms the given text into the lowercase format.|
-|`tt`|`toupper <string>`|`deb`,`rh`,`mac`|Transforms the given text into the uppercase format.|
+|`_`|`req <packages>...`|`nix`|Ensure packages are installed using the default package manager and re-source rc.|
+|`tt`|`tolower <string>`|`nix`|Transforms the given text into the lowercase format.|
+|`tt`|`toupper <string>`|`nix`|Transforms the given text into the uppercase format.|
 
 ### Scripts
 
@@ -111,7 +89,9 @@ Commands
 Installation
 ------------
 
-### Debian (incl. Proxmox)
+### \*nix Systems
+
+#### Debian (incl. Proxmox)
 
 For Debian-based distros simply run the following commands to install essential dependencies and the toolbox. You can run these commands as root, skip `sudo` in such case: 
 
@@ -128,7 +108,7 @@ echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.bashrc
 \. $HOME/.bashrc
 ```
 
-### Red Hat (incl. Fedora / Nobara)
+#### Red Hat (incl. Fedora / Nobara)
 
 For Red Hat-based distros simply run the following commands to install essential dependencies and the toolbox. You can run these commands as root, skip `sudo` in such case: 
 
@@ -145,7 +125,7 @@ echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.bashrc
 \. $HOME/.bashrc
 ```
 
-### Alpine Linux (BusyBox)
+#### Alpine Linux (BusyBox)
 
 For BusyBox based distros simply run the following commands to install essential dependencies and the toolbox. You can run these commands as root, skip `doas` in such case.: 
 
@@ -163,7 +143,7 @@ echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.profil
 \. $HOME/.profile
 ```
 
-### MacOS
+#### MacOS
 
 For MacOS, you should install Homebrew and use it to install a few essential dependencies to use this toolbox. Skip the fist command if Homebrew is already installed:
 
