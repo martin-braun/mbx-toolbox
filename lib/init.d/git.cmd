@@ -59,7 +59,7 @@ GOTO:EOF
 : Returns:
 :   1, if the query failed or nothing was found, 0 otherwise
 :::
-:git-search
+:gitlog
 git log -G"%~1" -p --all
 EXIT /B
 
@@ -73,7 +73,7 @@ EXIT /B
 : Returns:
 :   1, if the merge failed, 0 otherwise
 :::
-:git-merge-to
+:gitfuse
 FOR /F "tokens=4 delims=*" %%i IN ('git-branch') DO @SET "branch=%%i"
 git checkout %1 && git merge %branch% && git checkout %branch%
 EXIT /B
