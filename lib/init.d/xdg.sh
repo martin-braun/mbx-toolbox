@@ -13,10 +13,15 @@ export XDG_CONFIG_DIRS=${XDG_CONFIG_DIRS:="/etc/xdg"}
 export XDG_CACHE_HOME=${XDG_CACHE_HOME:="$HOME/.cache"}
 mkdir -p "$XDG_CACHE_HOME"
 if [ -z "$XDG_RUNTIME_DIR" ]; then
-	if [ -d "/run/user/$UID" ]; then
-		export XDG_RUNTIME_DIR="/run/user/$UID"
+	uid="$(id -u)"
+	if [ -d "/run/user/$uid" ]; then
+		export XDG_RUNTIME_DIR="/run/user/$uid"
 	else
-		export XDG_RUNTIME_DIR=$(ls -d ${TMPDIR}runtime-$UID 2>/dev/null || mktemp -d ${TMPDIR}runtime-$UID | tee >(xargs chmod 0700))
+		tmpdir="$TMPDIR"
+		test -n "$tmpdir" || tmpdir="/tmp"
+		XDG_RUNTIME_DIR="$tmpdir/runtime-$uid"
+		mkdir -p "$XDG_RUNTIME_DIR"
+		chmod 0700 "$XDG_RUNTIME_DIR"
 	fi
 fi
 
