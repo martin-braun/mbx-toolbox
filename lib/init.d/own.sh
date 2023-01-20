@@ -28,7 +28,7 @@ meownr() {
 }
 
 ###
-# Recursively claim ownership of any files within a path for a specific user/group.
+# Recursively change ownership of any files within a path for a specific user/group.
 # Arguments:
 #   $1 - User and group to give ownership to
 #   $2 - Path to claim ownership to
