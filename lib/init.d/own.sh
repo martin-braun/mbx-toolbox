@@ -88,7 +88,7 @@ chownr() {
 # Returns:
 #   Result of chown or 1, if help was outputed
 ###
-chownr() {
+chgrpr() {
 	if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
 		echo "Recursively claim ownership of any files within a path for a specific group."
 		echo "Usage: chgrpr <group> <path>"

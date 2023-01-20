@@ -54,7 +54,7 @@ Commands
 |`gitfuse <branch>`|`all`|Merges the current branch into the given branch. Repository must not have working changes active.|
 |`meownr <path>`|`all`|Recursively claim ownership of any files and folders within and of a path.|
 |`megrpr <path>`|`nix`|Recursively claim ownership via group of any files and folders within and of a path.|
-|`chownr <user>:<group> <path>`|`all`|Recursively change ownership of any files and folders within and of a path to a specific user/group.|
+|`chownr <user>:<group> <path>`|`nix`|Recursively change ownership of any files and folders within and of a path to a specific user/group.|
 |`chgrpr <group> <path>`|`nix`|Recursively change ownership of any files and folders within and of a path to a specific group.|
 
 ### Helper Functions
