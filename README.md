@@ -3,7 +3,7 @@ MBX TOOLBOX
 
 Martin Braun's eXtensive toolbox
 
-Bash/Batch helper libraries/aliases/functions for Windows, MacOS and Debian (based) and Red Hat (based) distributions.
+Bash/Batch helper libraries/aliases/functions for Windows, MacOS, Debian (based), Red Hat (based) distributions and Alpine Linux.
 
 Disclaimer
 ----------

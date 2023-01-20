@@ -26,6 +26,7 @@ set -e
 echo - Upgrading MBX toolbox ...
 git -C "$MBX_PATH" fetch
 git -C "$MBX_PATH" reset --hard "@{u}"
+\. $MBX_PATH/lib/init.sh
 
 set +e && set +x && echo - Done!
 
