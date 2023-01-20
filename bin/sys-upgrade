@@ -39,24 +39,30 @@ test $verbose && set -x
 set -e
 OIFS="$IFS"
 
-	erun echo - Requested root permissions for priviledged tasks.
+erun echo - Requested root permissions for priviledged tasks.
+
+if testc apk; then
+	echo - Upgrading APK packages ...
+	erun apk update
+	erun apk upgrade
+fi
 
 if testc apt-get; then
 	echo - Upgrading APT packages ...
-		erun apt-get update
-		erun apt-get dist-upgrade -y
-		erun apt-get autoremove -y
-		erun apt-get clean
+	erun apt-get update
+	erun apt-get dist-upgrade -y
+	erun apt-get autoremove -y
+	erun apt-get clean
 fi
 
 if testc dnf; then
 	echo - Upgrading Red Hat packages ...
-		erun dnf up --refresh -y
-		erun dnf autoremove -y
+	erun dnf up --refresh -y
+	erun dnf autoremove -y
 elif testc yum; then
 	echo - Upgrading Red Hat packages ...
-		erun yum check-update
-		erun yum upgrade -y
+	erun yum check-update
+	erun yum upgrade -y
 fi
 
 if testc brew; then
@@ -92,13 +98,13 @@ if testc gem; then
 									if [ "$current_ruby_version" = "$installed" ]; then
 										rbenv global $available
 									fi
-										erun rbenv uninstall -f $installed
+									erun rbenv uninstall -f $installed
 				fi
 			done
 		done
 	fi
 	echo - Upgrading global Ruby gems ...
-		erun gem update --system
+	erun gem update --system
 fi
 
 if [ -s "$HOME/.nvm/nvm.sh" ]; then
@@ -106,7 +112,7 @@ if [ -s "$HOME/.nvm/nvm.sh" ]; then
 fi
 if testc npm; then
 	if testc nvm; then
-		echo [o] Upgrading node minors ...
+		echo - Upgrading node minors ...
 		nvm install $(nvm current | sed -rn "s/v([[:digit:]]+).*/\1/p") --reinstall-packages-from=$(nvm current) || true
 		nvm install $(nvm current) # upgrade default-packages to major version
 		# TODO: Replace last command with better alternative, see https://github.com/npm/cli/issues/2329#issuecomment-743308323
@@ -194,7 +200,7 @@ fi
 
 if [ $reboot ]; then
 	echo - Rebooting ...
-		erun reboot
+	erun reboot
 fi
 
 set +e && set +x && echo - Done!
