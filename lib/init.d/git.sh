@@ -55,7 +55,7 @@ alias git-pusha="git push --all"
 # Returns:
 #   1, if the query failed or nothing was found, 0 otherwise
 ###
-git-search() {
+gitlog() {
 	git log -G"$1" -p --all
 }
 
@@ -69,7 +69,7 @@ git-search() {
 # Returns:
 #   1, if the merge failed, 0 otherwise
 ###
-git-merge-to() {
+gitfuse() {
 	branch="$(git-branch)"
 	git checkout $1 && git merge $branch && git checkout $branch
 }
