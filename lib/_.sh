@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-#
 # Common bash extension library.
 
 # Skip when already sourced:

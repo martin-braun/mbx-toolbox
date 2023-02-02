@@ -7,6 +7,8 @@ read -r -d '' usage << EOF
 Usage: $(basename "$0") [OPTIONS]
 Upgrades all packages of all supported package managers. Supports:
 
+- nix-env
+- apk
 - apt-get
 - dnf
 - brew
@@ -40,6 +42,11 @@ set -e
 OIFS="$IFS"
 
 erun echo - Requested root permissions for priviledged tasks.
+
+if testc nix-env; then
+	echo - Upgrading NIX packages ...
+	erun nix-env -u
+fi
 
 if testc apk; then
 	echo - Upgrading APK packages ...
@@ -125,37 +132,36 @@ if testc npm; then
 	done
 fi
 
-# if testc nativefier; then
-# 	if [ -n "$NATIVEFIER_APPS_DIR" ]; then
-# 		echo - Upgrading electron in nativefier applications ...
-# 		IFS=$'\n'
-# 		if [[ "$(tolower "$OSTYPE")" == "darwin"* ]]; then
-# 			for d in ${NATIVEFIER_APPS_DIR%/}/*; do
-# 				for f in $(ls -1F "$d" | grep "\.app/"); do
-# 					app="$d/${f//\/}"
-# 					if [ -d "$app/Contents/Frameworks/Electron Framework.framework" ]; then
-# 						echo Upgrading $app ...
-#						erun nativefier --upgrade "$app"
-# 					fi
-# 				done
-# 			done
-# 		else
-# 			for d in ${NATIVEFIER_APPS_DIR%/}/*; do
-# 				if [ -f "$d/v8_context_snapshot.bin" ]; then
-# 					for f in $(ls -1F "$d" | grep "*"); do
-# 						app=$d/${f//\*}
-# 						echo Upgrading $app ...
-#						erun nativefier --upgrade "$app"
-# 					done
-# 				fi
-# 			done
-# 		fi
-# 		IFS="$OIFS"
-# 	else
-# 		echo [i] Found nativefier, but NATIVEFIER_APPS_DIR is unset, so electron upgrades of nativefier applications will be skipped.
-# 	fi
-# fi
-# TODO: Outcomment when https://github.com/nativefier/nativefier/issues/1347 is closed
+if testc nativefier; then
+	if [ -n "$NATIVEFIER_APPS_DIR" ]; then
+		echo - Upgrading electron in nativefier applications ...
+		IFS=$'\n'
+		if [[ "$(tolower "$OSTYPE")" == "darwin"* ]]; then
+			for d in ${NATIVEFIER_APPS_DIR%/}/*; do
+				for f in $(ls -1F "$d" | grep "\.app/"); do
+					app="$d/${f//\/}"
+					if [ -d "$app/Contents/Frameworks/Electron Framework.framework" ]; then
+						echo - Upgrading $app ...
+						erun nativefier --upgrade "$app"
+					fi
+				done
+			done
+		else
+			for d in ${NATIVEFIER_APPS_DIR%/}/*; do
+				if [ -f "$d/v8_context_snapshot.bin" ]; then
+					for f in $(ls -1F "$d" | grep "*"); do
+						app=$d/${f//\*}
+						echo - Upgrading $app ...
+						erun nativefier --upgrade "$app"
+					done
+				fi
+			done
+		fi
+		IFS="$OIFS"
+	else
+		echo - Found nativefier, but NATIVEFIER_APPS_DIR is unset, so electron upgrades of nativefier applications will be skipped.
+	fi
+fi
 
 if testc fvm; then
 	echo - Upgrading Flutter ...

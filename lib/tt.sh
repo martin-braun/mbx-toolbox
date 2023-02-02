@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-#
 # Text transform library.
 
 # Skip when already sourced:
