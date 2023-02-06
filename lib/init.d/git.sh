@@ -53,7 +53,13 @@ alias git-pusha="git push --all"
 # Returns:
 #   1, if the query failed or nothing was found, 0 otherwise
 ###
-gitlog() {
+gitfind() {
+	if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+		echo "Finds all commits of all branches with a given string in the description."
+		echo "Usage: gitfind <search>"
+		echo ""
+		return 1
+	fi
 	git log -G"$1" -p --all
 }
 
@@ -68,6 +74,12 @@ gitlog() {
 #   1, if the merge failed, 0 otherwise
 ###
 gitfuse() {
+	if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+		echo "Merges the current branch into the given branch."
+		echo "Usage: gitfuse <into_branch>"
+		echo ""
+		return 1
+	fi
 	branch="$(git-branch)"
 	git checkout $1 && git merge $branch && git checkout $branch
 }

@@ -50,7 +50,7 @@ Commands
 |Command|Platforms|Description|
 |-|-|-|
 |`locport [ port ]`|`all`|Outputs process and connection information (of the given local port).|
-|`gitlog <text>`|`all`|Finds all commits of all branches with a given string in the description.|
+|`gitfind <text>`|`all`|Finds all commits of all branches with a given string in the description.|
 |`gitfuse <branch>`|`all`|Merges the current branch into the given branch. Repository must not have working changes active.|
 |`meownr <path>`|`all`|Recursively claim ownership of any files and folders within and of a path.|
 |`megrpr <path>`|`nix`|Recursively claim ownership via group of any files and folders within and of a path.|
