@@ -84,7 +84,6 @@ Commands
 |`sys-upgrade [ -V \| -v \| -r \| -h`|`all`|Upgrades all packages of all supported package managers. (`-r` reboots the system after successful upgrade.)|
 |`sys-backup [ -V \| -v \| -p=* \| -m=* \| -k \| -l \| -s \| -h ]`|`deb`,`rh`,`mac`|Backups all files given a certain maximum size from the root directory of this system. On MacOS it launches Time Maschine backup instead. (`-p=*` sets the path to the backup directory if possible (default: `$HOME/.sys-backup`).; `-m=*` sets the maximum size of every backup-ed file (default: `10M`).; `-k` keeps the old backup files that are not overwritten. Ignored on MacOS.; `-l` locks the backup by rejecting access permissions to the current user. Ignored on MacOS.; `-s` shutdowns the system 5 minutes after successful system backup.)|
 |`chmodr [ -V \| -v \| -d=* \| -f=* \| -c \| -h ]`|`deb`,`rh`,`mac`|Recursively changes modes on directories and files individually. (`-d=*` sets the directory permissions.; `-f=*` sets the file permissions.; `-c` claims ownership of the directories and files.)|
-|`adminer [ -V \| -v \| -p=* \| -h ]`|`all`|Downloads the latest release of Adminer and launches it with the default PHP server on the system. (`-p=*` defines the local port that should be used to serve Adminer.)|
 
 Installation
 ------------
