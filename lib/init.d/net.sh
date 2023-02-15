@@ -9,7 +9,7 @@
 # Returns:
 #   1, if the every command failed, 0 otherwise
 ###
-alias locip="hostname -I 2>/dev/null || osascript -e 'IPv4 address of (system info)'"
+alias locip="hostname -I 2> /dev/null || osascript -e 'IPv4 address of (system info)'"
 
 ###
 # Outputs the public IPv4 address. Requires a working internet connection.

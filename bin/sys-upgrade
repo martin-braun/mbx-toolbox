@@ -85,7 +85,7 @@ fi
 if testc gem; then
 	if testc rbenv; then
 		current_ruby_version=$(rbenv global)
-		available_ruby_versions=$(rbenv install -l 2>/dev/null)
+		available_ruby_versions=$(rbenv install -l 2> /dev/null)
 		echo - Updating Ruby builds ...
 		for installed in $(rbenv versions | awk -F "[ ]+" '/ /{print $2}'); do
 			if [ "$installed" = "system" ]; then

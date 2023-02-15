@@ -1,7 +1,7 @@
 # Essential helper library for bash terminals and scripts.
 
 # Skip when already sourced:
-command -v "mbx-version" >/dev/null 2>&1 && return 1
+command -v "mbx-version" > /dev/null 2>&1 && return 1
 
 export MBX_LIBPATH="$MBX_PATH/lib"
 export MBX_BINPATH="$MBX_PATH/bin"

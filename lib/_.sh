@@ -14,7 +14,7 @@ export MBX_LIBLOAD_BASE=1
 #   0, if the command exists.
 ###
 testc() {
-	command -v "$1" &>/dev/null
+	command -v "$1" > /dev/null 2>&1
 }
 
 ###
@@ -27,7 +27,7 @@ testc() {
 #   The result if the command or 1001 if no elevated subexecutor was found, although required.
 ###
 erun() {
-	if [ "$(id -u)" == "0" ]; then
+	if [ "$(id -u)" = "0" ]; then
 		$@
 	elif testc doas; then
 		doas $@
