@@ -3,7 +3,7 @@
 \. "$MBX_LIBPATH/_.sh" || exit 1
 \. "$MBX_LIBPATH/tt.sh" || exit 1
 
-read -r -d '' usage << EOF
+usage="$(cat << EOF
 Usage: $(basename "$0") [OPTIONS]
 Upgrades all packages of all supported package managers. Supports:
 
@@ -24,6 +24,7 @@ OPTIONS
   -r,   --reboot                  Reboots the system after successful upgrade.
   -h,   --help                    Prints this help message.
 EOF
+)"
 
 while [ "$#" -gt 0 ]; do
 	case "$1" in

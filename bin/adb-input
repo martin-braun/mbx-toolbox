@@ -2,7 +2,7 @@
 
 . "$MBX_LIBPATH/_.sh" || exit 1
 
-read -r -d '' usage << EOF
+usage="$(cat << EOF
 Usage: $(basename "$0") [OPTIONS]
 Sends input data to an Android device via shell (keystrokes).
 Additionally, allows to send text directly. 
@@ -16,6 +16,7 @@ OPTIONS
   -t=*, --text=*                  Sends the given text instead of spawning an input shell.
   -h,   --help                    Prints this help message.
 EOF
+)"
 
 text=""
 while [ "$#" -gt 0 ]; do
