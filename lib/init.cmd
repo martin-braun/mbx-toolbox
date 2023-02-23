@@ -3,8 +3,7 @@
 : Essential helper library for batch terminals.
 
 : Skip when already called:
-mbx-version 1>NUL 2>NUL
-IF NOT %ERRORLEVEL% == 0 DO EXIT /B
+IF NOT "%MBX_VERSION%" == "" DO EXIT /B
 
 SET "MBX_LIBPATH=%MBX_PATH%\lib"
 SET "MBX_BINPATH=%MBX_PATH%\bin"
