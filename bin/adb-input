@@ -33,7 +33,7 @@ done
 test $verbose && set -x
 set -e
 
-if ! testc adb; then
+if ! testcmd adb; then
 	echo ! ADB missing ... >&2; exit 1
 fi
 

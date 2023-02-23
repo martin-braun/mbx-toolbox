@@ -13,7 +13,7 @@ export MBX_LIBLOAD_BASE=1
 # Returns:
 #   0, if the command exists.
 ###
-testc() {
+testcmd() {
 	command -v "$1" > /dev/null 2>&1
 }
 
@@ -29,9 +29,9 @@ testc() {
 erun() {
 	if [ "$(id -u)" = "0" ]; then
 		$@
-	elif testc doas; then
+	elif testcmd doas; then
 		doas $@
-	elif testc sudo; then
+	elif testcmd sudo; then
 		sudo $@
 	else
 		echo "No doas or sudo found." >&2

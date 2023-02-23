@@ -52,24 +52,24 @@ IF NOT "%ERRORLEVEL%" == "0" (
 	ECHO ! Please run this script in an elevated command shell. >&2 & EXIT /B 1
 )
 
-( CALL "%MBX_LIBPATH%\_" testc choco ) && (
+( CALL "%MBX_LIBPATH%\_" testcmd choco ) && (
 	ECHO - Upgrading Chocolatey packages ...
 	choco upgrade chocolatey -y --accept-license || EXIT /B 1
 	choco upgrade all -y --accept-license || EXIT /B 1
 )
 
-( CALL "%MBX_LIBPATH%\_" testc gem ) && (
+( CALL "%MBX_LIBPATH%\_" testcmd gem ) && (
 	ECHO - Upgrading Ruby gems ...
 	gem update --system || EXIT /B 1
 )
 
-( CALL "%MBX_LIBPATH%\_" testc flutter ) && (
+( CALL "%MBX_LIBPATH%\_" testcmd flutter ) && (
 	ECHO - Upgrading Flutter ..."
 	flutter upgrade || EXIT /B 1
 	dart pub global activate rps || EXIT /B 1
 )
 
-( CALL "%MBX_LIBPATH%\_" testc rustup ) && (
+( CALL "%MBX_LIBPATH%\_" testcmd rustup ) && (
 	ECHO - Upgrading Rust ...
 	rustup update || EXIT /B 1
 )

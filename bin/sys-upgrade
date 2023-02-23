@@ -44,18 +44,18 @@ OIFS="$IFS"
 
 erun echo - Requested root permissions for priviledged tasks.
 
-if testc nix-env; then
+if testcmd nix-env; then
 	echo - Upgrading NIX packages ...
 	erun nix-env -u
 fi
 
-if testc apk; then
+if testcmd apk; then
 	echo - Upgrading APK packages ...
 	erun apk update
 	erun apk upgrade
 fi
 
-if testc apt-get; then
+if testcmd apt-get; then
 	echo - Upgrading APT packages ...
 	erun apt-get update
 	erun apt-get dist-upgrade -y
@@ -63,17 +63,17 @@ if testc apt-get; then
 	erun apt-get clean
 fi
 
-if testc dnf; then
+if testcmd dnf; then
 	echo - Upgrading Red Hat packages ...
 	erun dnf up --refresh -y
 	erun dnf autoremove -y
-elif testc yum; then
+elif testcmd yum; then
 	echo - Upgrading Red Hat packages ...
 	erun yum check-update
 	erun yum upgrade -y
 fi
 
-if testc brew; then
+if testcmd brew; then
 	echo - Upgrading Homebrew packages ...
 	brew update
 	brew upgrade
@@ -82,8 +82,8 @@ if testc brew; then
 	brew cleanup
 fi
 
-if testc gem; then
-	if testc rbenv; then
+if testcmd gem; then
+	if testcmd rbenv; then
 		current_ruby_version=$(rbenv global)
 		available_ruby_versions=$(rbenv install -l 2> /dev/null)
 		echo - Updating Ruby builds ...
@@ -117,8 +117,8 @@ fi
 if [ -s "$HOME/.nvm/nvm.sh" ]; then
 	\. "$NVM_DIR/nvm.sh" # ensure nvm is loaded
 fi
-if testc npm; then
-	if testc nvm; then
+if testcmd npm; then
+	if testcmd nvm; then
 		echo - Upgrading node minors ...
 		nvm install $(nvm current | sed -rn "s/v([[:digit:]]+).*/\1/p") --reinstall-packages-from=$(nvm current) || true
 		nvm install $(nvm current) # upgrade default-packages to major version
@@ -133,7 +133,7 @@ if testc npm; then
 	done
 fi
 
-if testc nativefier; then
+if testcmd nativefier; then
 	if [ -n "$NATIVEFIER_APPS_DIR" ]; then
 		echo - Upgrading electron in nativefier applications ...
 		IFS=$'\n'
@@ -164,18 +164,18 @@ if testc nativefier; then
 	fi
 fi
 
-if testc fvm; then
+if testcmd fvm; then
 	echo - Upgrading Flutter ...
 	fvm install beta
 	fvm install stable
 	dart pub global activate rps
-elif testc flutter; then
+elif testcmd flutter; then
 	echo - Upgrading Flutter ...
 	flutter upgrade
 	dart pub global activate rps
 fi
 
-if testc rustup; then
+if testcmd rustup; then
 	echo - Upgrading Rust ...
 	rustup update
 fi

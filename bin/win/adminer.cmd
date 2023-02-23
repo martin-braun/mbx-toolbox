@@ -50,7 +50,7 @@ IF NOT "%1" == "" (
 
 ( CALL "%MBX_LIBPATH%\_" testif "%verbose%" EQU "1" ) && @ECHO ON
 
-( CALL "%MBX_LIBPATH%\_" testc php ) || (
+( CALL "%MBX_LIBPATH%\_" testcmd php ) || (
 	ECHO ! PHP missing ...
 	EXIT /B 1
 )
