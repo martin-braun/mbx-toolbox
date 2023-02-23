@@ -1,8 +1,5 @@
 # Essential helper library for shell terminals and scripts.
 
-# Skip when already sourced:
-test -n "$MBX_VERSION" && return
-
 export MBX_LIBPATH="$MBX_PATH/lib"
 export MBX_BINPATH="$MBX_PATH/bin"
 

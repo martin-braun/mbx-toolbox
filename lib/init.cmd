@@ -2,9 +2,6 @@
 : 
 : Essential helper library for batch terminals.
 
-: Skip when already called:
-IF NOT "%MBX_VERSION%" == "" DO EXIT /B
-
 SET "MBX_LIBPATH=%MBX_PATH%\lib"
 SET "MBX_BINPATH=%MBX_PATH%\bin"
 
