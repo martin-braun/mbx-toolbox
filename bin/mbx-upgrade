@@ -2,7 +2,7 @@
 
 usage="$(cat << EOF
 Usage: $(basename "$0") [OPTIONS]
-Upgrades Martin Braun's eXtensive toolbox.
+Upgrades Martin Braun\'s eXtensive toolbox.
 
 OPTIONS
   -V,   --version                 Prints the version of this script suite (MBX).
