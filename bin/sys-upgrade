@@ -123,9 +123,6 @@ if testcmd npm; then
 		nvm install $(nvm current | sed -rn "s/v([[:digit:]]+).*/\1/p") --reinstall-packages-from=$(nvm current) || true
 		nvm install $(nvm current) # upgrade default-packages to major version
 		# TODO: Replace last command with better alternative, see https://github.com/npm/cli/issues/2329#issuecomment-743308323
-	else
-		echo ! nvm script found, but unable to load nvm! >&2
-		exit 1
 	fi
 	echo "- Upgrading global npm packages (minor) ..."
 	for val in $(npm list -g --depth 0 | awk '/ /{print $2}'); do
