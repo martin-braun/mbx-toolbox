@@ -15,7 +15,7 @@ Upgrades all packages of all supported package managers. Supports:
 - gem
 - npm / nvm
 - flutter / fvm
-- rustup
+- cargo / rustup
 
 OPTIONS
   -V,   --version                 Prints the version of this script suite (MBX).
@@ -175,6 +175,8 @@ fi
 if testcmd rustup; then
 	echo - Upgrading Rust ...
 	rustup update
+	echo - Upgrading global Cargo packages ...
+	cargo install $(cargo install --list | egrep '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ')
 fi
 
 if [ $extensive ]; then
