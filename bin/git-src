@@ -95,7 +95,7 @@ elif [ "$command" = "up" ]; then
 elif [ "$command" = "del" ]; then
 	test -d "$fullpath" || { echo ! Repository doesn\'t exist on the local system. >&2; exit 2; }
 	echo - Deleting $fullpath ...
-	rm -r "$fullpath"
+	rm -rf "$fullpath"
 	echo - Cleaning up ...
 	rm "$link"
 	rmdir "$path/$lookupdir" 2>/dev/null || true
