@@ -1,7 +1,7 @@
 # Common bash extension library.
 
 # Skip when already sourced:
-test ! $MBX_LIBLOAD_BASE || return
+test $MBX_LIBLOAD_BASE && return
 export MBX_LIBLOAD_BASE=1
 
 ###

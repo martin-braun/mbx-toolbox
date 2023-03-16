@@ -50,7 +50,7 @@ while [ "$#" -gt 0 ]; do
 		-d=*|--directory-permissions=*) directory_permissions="${1#*=}" ;;
 		-f=*|--file-permissions=*) file_permissions="${1#*=}" ;;
 		-c|--claim-ownership) claim_ownership=1 ;;
-		-h|--help) echo "$usage" && exit 0 ;;
+		-h|--help) echo "$usage" && exit 129 ;;
 		*) { test -z $path && path=$1; } || { echo ! Invalid command line flag $1. >&2; exit 1; } ;;
 	esac
 	shift

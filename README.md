@@ -53,9 +53,9 @@ Commands
 |`gitfind <text>`|`all`|Finds all commits of all branches with a given string in the description.|
 |`gitfuse <branch>`|`all`|Merges the current branch into the given branch. Repository must not have working changes active.|
 |`meownr <path>`|`all`|Recursively claim ownership of any files and folders within and of a path.|
-|`megrpr <path>`|`nix`|Recursively claim ownership via group of any files and folders within and of a path.|
-|`chownr <user>:<group> <path>`|`nix`|Recursively change ownership of any files and folders within and of a path to a specific user/group.|
-|`chgrpr <group> <path>`|`nix`|Recursively change ownership of any files and folders within and of a path to a specific group.|
+|`megrpr <path>`|`*nix`|Recursively claim ownership via group of any files and folders within and of a path.|
+|`chownr <user>:<group> <path>`|`*nix`|Recursively change ownership of any files and folders within and of a path to a specific user/group.|
+|`chgrpr <group> <path>`|`*nix`|Recursively change ownership of any files and folders within and of a path to a specific group.|
 
 ### Helper Functions
 
@@ -70,8 +70,8 @@ Commands
 |`_`|`subset <variableName> "<command>" [ /F ]`|`win`|Sets a variable to the output of a command substitution. (`/F` for slower file mode to return a correct errorlevel)|
 |`_`|`testif [ /I ] [ NOT ] [ EXISTS ] <string1> [ == \| EQU \| NEQ \| LSS \| LEQ \| GTR \| GEQ ] <string2>`|`win`|Performs conditional processing in batch programs. Is callable for inline use.|
 |`_`|`testcmd <command>`|`all`|Test if a command can be executed. Do not pass additional arguments.|
-|`tt`|`tolower <string>`|`nix`|Transforms the given text into the lowercase format.|
-|`tt`|`toupper <string>`|`nix`|Transforms the given text into the uppercase format.|
+|`tt`|`tolower <string>`|`*nix`|Transforms the given text into the lowercase format.|
+|`tt`|`toupper <string>`|`*nix`|Transforms the given text into the uppercase format.|
 
 ### Scripts
 
@@ -79,10 +79,11 @@ Commands
 
 |Command|Platforms|Description|
 |-|-|-|
+|`chmodr [ -V \| -v \| -d=* \| -f=* \| -c \| -h ]`|`deb`,`rh`,`mac`|Recursively changes modes on directories and files individually. (`-d=*` sets the directory permissions.; `-f=*` sets the file permissions.; `-c` claims ownership of the directories and files.)|
+|`git-src [ ls \| add \| up \| del ] <REPO?> [ -V \| -v \| -p \| -b \| -h ]`|`*nix`|Adds, updates or deletes git source files of third party vendors. (`ls` lists all locally added repositories/branches.; `add` clones the given repository/branch with all its submodules with depth of 1 into the localized source storage.; `up` resets and pulls the latest changes on the given repository/branch.; `del` deletes the given repository/branch from the system.; `-p=*` sets the working directory path (root) of the localized source storage (default: /usr/local/src/git).; `-b=*` sets the branch of the repo to work with.)|
 |`mbx-upgrade [ -V \| -v \| -h ]`|`all`|Upgrades Martin Braun's eXtensive toolbox.|
 |`sys-upgrade [ -V \| -v \| -r \| -h`|`all`|Upgrades all packages of all supported package managers. (`-r` reboots the system after successful upgrade.)|
 |`sys-backup [ -V \| -v \| -p=* \| -m=* \| -k \| -l \| -s \| -h ]`|`deb`,`rh`,`mac`|Backups all files given a certain maximum size from the root directory of this system. On MacOS it launches Time Maschine backup instead. (`-p=*` sets the path to the backup directory if possible (default: `$HOME/.sys-backup`).; `-m=*` sets the maximum size of every backup-ed file (default: `10M`).; `-k` keeps the old backup files that are not overwritten. Ignored on MacOS.; `-l` locks the backup by rejecting access permissions to the current user. Ignored on MacOS.; `-s` shutdowns the system 5 minutes after successful system backup.)|
-|`chmodr [ -V \| -v \| -d=* \| -f=* \| -c \| -h ]`|`deb`,`rh`,`mac`|Recursively changes modes on directories and files individually. (`-d=*` sets the directory permissions.; `-f=*` sets the file permissions.; `-c` claims ownership of the directories and files.)|
 
 Installation
 ------------
@@ -210,10 +211,11 @@ mbx-update
 Uninstall
 ---------
 
-### \*nix (Debian / Red Hat / MacOS / etc.)
+### \*nix (Alpine / Debian / Red Hat / MacOS / etc.)
 
 ```sh
 rm -r /usr/local/mbx
+rm -r /usr/local/src/git # optional sources installed by git-src
 ```
 
 Also remove the lines you added to your .bashrc/.zshrc during installation process.

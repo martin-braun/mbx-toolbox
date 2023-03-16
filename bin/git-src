@@ -1,0 +1,109 @@
+#!/usr/bin/env sh
+
+. "$MBX_LIBPATH/_.sh" || exit 1
+
+usage="$(cat << EOF
+Usage: $(basename "$0") [COMMAND] [REPO] [OPTIONS]
+Adds, updates or deletes git source files of third party vendors.
+This tool is meant to clone third party sources to compile or use without further modification.
+If you want to load a workspace, consider forking and cloning using the normal git utility instead.
+
+COMMAND
+  ls                              Lists all locally added repositories/branches.
+  add                             Clones the given repository/branch with all its submodules with depth of 1 into the localized source storage.
+  up                              Resets and pulls the latest changes on the given repository/branch.
+  del                             Deletes the given repository/branch from the system.
+
+REPO
+  Unused on the ls-command.
+  For the add-command, needs to be a HTTPS URL or SSH destination ending with .git.
+  For any other command it can also be just the sub path (without branch) on the file system.
+
+OPTIONS
+  -V,   --version                 Prints the version of this script suite (MBX).
+  -v,   --verbose                 Prints verbose information.
+  -p=*, --path=*                  Sets the working directory path (root) of the localized source storage (default: /usr/local/src/git).
+  -b=*, --branch=*                Sets the branch of the repo to work with.
+  -h,   --help                    Prints this help message.
+EOF
+)"
+
+path="/usr/local/src/git"
+
+while [ "$#" -gt 0 ]; do
+	case "$1" in
+		-V|--version) echo $MBX_VERSION && exit 0 ;;
+		-v|--verbose) verbose=1 ;;
+		-p=*|--path=*) path="${1#*=}" ;;
+		-b=*|--branch=*) branch="${1#*=}" ;;
+		-h|--help) echo "$usage" && exit 129 ;;
+		*) 
+			if [ "$command" = "" ]; then
+				command="$1"
+			elif [ "$repo" = "" ]; then
+				repo="$1"
+			else
+				echo ! Invalid command line flag $1. >&2; 
+				exit 1
+			fi
+			;;
+	esac
+	shift
+done
+
+test $verbose && set -x
+set -e
+
+lookupdir=".git-src"
+test ! "$command" = "" || { echo ! Missing command. >&2; exit 1; } 
+
+if [ ! -d "$path" ]; then
+	echo - Setting up git-src ...
+	erun mkdir -p "$path"
+	erun chown -R "$(whoami)" "$path"
+	mkdir -p "$path/$lookupdir"
+fi
+
+if [ "$command" = "ls" ]; then
+	ls -1 "$path/$lookupdir/" | sed 's/,,/ -b=/' | tr , /
+	exit 0
+fi
+
+test ! "$repo" = "" || { echo ! Missing repo. >&2; exit 1; } 
+test "$repo" = "${repo% *}" || { echo ! Cannot have spaces in repo. >&2; exit 1; }
+subpath="$repo"
+subpath="${subpath#*//}" # remove ^https://
+subpath="${subpath#*@}" # remove ^git@
+subpath="${subpath%.git}" # remove .git$
+subpath=$(printf "$subpath" | tr : /) # replace : with /
+test ! "$(printf "$subpath" | tr -d / | tr -d '.')" = "" || { echo ! Local subpath results in empty or invalid path. >&2; exit 1; } 
+test ! "$branch" = "" || branch="$(LC_ALL=C git ls-remote --symref https://$subpath.git HEAD | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}')" 
+link="$path/$lookupdir/$(printf "$subpath,,$branch" | tr / ,)"
+fullpath="$path/$subpath/$branch"
+
+if [ "$command" = "add" ]; then
+	test ! -d "$fullpath" || { echo ! Repository already added to the local system, consider updating it using the udp-command instead. >&2; exit 2; }
+	echo - Adding $repo \($branch\) to $fullpath ...
+	mkdir -p "$fullpath"
+	git clone --recursive --depth 1 $repo "$fullpath"
+	ln -s "../$subpath" "$link"
+elif [ "$command" = "up" ]; then
+	test -d "$fullpath" || { echo ! Repository doesn\'t exist on the local system. >&2; exit 2; }
+	echo - Updating $fullpath ...
+	git -C "$fullpath" reset --hard HEAD
+	git -C "$fullpath" pull --ff-only
+elif [ "$command" = "del" ]; then
+	test -d "$fullpath" || { echo ! Repository doesn\'t exist on the local system. >&2; exit 2; }
+	echo - Deleting $fullpath ...
+	rm -r "$fullpath"
+	echo - Cleaning up ...
+	rm "$link"
+	rmdir "$path/$lookupdir" 2>/dev/null || true
+	find "$path/" -depth -mindepth 1 -type d -exec rmdir {} + 2>/dev/null || true
+else
+	echo ! Unknown command $command. >&2 
+	exit 1 
+fi
+
+set +e && set +x && echo - Done!
+

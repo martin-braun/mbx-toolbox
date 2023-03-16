@@ -15,7 +15,7 @@ while [ "$#" -gt 0 ]; do
 	case "$1" in
 		-V|--version) echo $MBX_VERSION && exit 0 ;;
 		-v|--verbose) verbose=1 ;;
-		-h|--help) echo "$usage" && exit 0 ;;
+		-h|--help) echo "$usage" && exit 129 ;;
 		*) echo ! Invalid command line flag $1. >&2; exit 1 ;;
 	esac
 	shift

@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
 
+function sub() { sed "s/^/| /"; }
 \. "$MBX_LIBPATH/_.sh" || exit 1
 \. "$MBX_LIBPATH/tt.sh" || exit 1
 
@@ -16,10 +17,12 @@ Upgrades all packages of all supported package managers. Supports:
 - npm / nvm
 - flutter / fvm
 - cargo / rustup
+- git-src (optional)
 
 OPTIONS
   -V,   --version                 Prints the version of this script suite (MBX).
   -v,   --verbose                 Prints verbose information.
+  -g,   --gitsources              Also upgrades local git sources that have been installed via git-src (MBX).
   -x,   --extensive               Also runs extensions (*.sh files) within \$XDG_CONFIG_HOME/mbx/sys-upgrade/extensions and \$XDG_CONFIG_DIRS/mbx/sys-upgrade/extensions.
   -r,   --reboot                  Reboots the system after successful upgrade.
   -h,   --help                    Prints this help message.
@@ -30,9 +33,10 @@ while [ "$#" -gt 0 ]; do
 	case "$1" in
 		-V|--version) echo $MBX_VERSION && exit 0 ;;
 		-v|--verbose) verbose=1 ;;
+		-g|--gitsources) gitsources=1 ;;
 		-x|--extensive) extensive=1 ;;
 		-r|--reboot) reboot=1 ;;
-		-h|--help) echo "$usage" && exit 0 ;;
+		-h|--help) echo "$usage" && exit 129 ;;
 		*) echo ! Invalid command line flag $1. >&2; exit 1 ;;
 	esac
 	shift
@@ -45,48 +49,54 @@ OIFS="$IFS"
 erun echo - Requested root permissions for priviledged tasks.
 
 if testcmd nix-env; then
-	echo - Upgrading NIX packages ...
-	erun nix-env -u
+	echo +-- Upgrading nix packages ...
+	nix-env -u | sub
+	echo +--
 fi
 
 if testcmd apk; then
-	echo - Upgrading APK packages ...
-	erun apk update
-	erun apk upgrade
+	echo +-- Upgrading apk packages ...
+	erun apk update | sub
+	erun apk upgrade | sub
+	echo +--
 fi
 
 if testcmd apt-get; then
-	echo - Upgrading APT packages ...
-	erun apt-get update
-	erun apt-get dist-upgrade -y
-	erun apt-get autoremove -y
-	erun apt-get clean
+	echo +-- Upgrading apt packages ...
+	erun apt-get update | sub
+	erun apt-get dist-upgrade -y | sub
+	erun apt-get autoremove -y | sub
+	erun apt-get clean | sub
+	echo +--
 fi
 
 if testcmd dnf; then
-	echo - Upgrading Red Hat packages ...
-	erun dnf up --refresh -y
-	erun dnf autoremove -y
+	echo +-- Upgrading RedHat packages ...
+	erun dnf up --refresh -y | sub
+	erun dnf autoremove -y | sub
+	echo +--
 elif testcmd yum; then
-	echo - Upgrading Red Hat packages ...
-	erun yum check-update
-	erun yum upgrade -y
+	echo +-- Upgrading RedHat packages ...
+	erun yum check-update | sub
+	erun yum upgrade -y | sub
+	echo +--
 fi
 
 if testcmd brew; then
-	echo - Upgrading Homebrew packages ...
-	brew update
-	brew upgrade
-	brew upgrade --cask
-	brew autoremove
-	brew cleanup
+	echo +-- Upgrading brew packages ...
+	brew update | sub
+	brew upgrade | sub
+	brew upgrade --cask | sub
+	brew autoremove | sub
+	brew cleanup | sub
+	echo +--
 fi
 
 if testcmd gem; then
 	if testcmd rbenv; then
 		current_ruby_version=$(rbenv global)
 		available_ruby_versions=$(rbenv install -l 2> /dev/null)
-		echo - Updating Ruby builds ...
+		echo +-- Updating ruby builds ...
 		for installed in $(rbenv versions | awk -F "[ ]+" '/ /{print $2}'); do
 			if [ "$installed" = "system" ]; then
 				continue
@@ -100,18 +110,20 @@ if testcmd gem; then
 					= \
 					"$(echo $available | tr '.' '\n' | head -2)" \
 					]; then
-									rbenv install $available
+									rbenv install $available | sub
 									# TODO: Install all global packages from $installed to $available
 									if [ "$current_ruby_version" = "$installed" ]; then
-										rbenv global $available
+										rbenv global $available | sub
 									fi
-									erun rbenv uninstall -f $installed
+									erun rbenv uninstall -f $installed | sub
 				fi
 			done
 		done
+		echo +--
 	fi
-	echo - Upgrading global Ruby gems ...
-	erun gem update --system
+	echo +-- Upgrading global ruby gems ...
+	erun gem update --system | sub
+	echo +--
 fi
 
 if [ -s "$HOME/.nvm/nvm.sh" ]; then
@@ -119,28 +131,30 @@ if [ -s "$HOME/.nvm/nvm.sh" ]; then
 fi
 if testcmd npm; then
 	if testcmd nvm; then
-		echo - Upgrading node minors ...
-		nvm install $(nvm current | sed -rn "s/v([[:digit:]]+).*/\1/p") --reinstall-packages-from=$(nvm current) || true
-		nvm install $(nvm current) # upgrade default-packages to major version
+		echo +-- Upgrading node minors ...
+		nvm install $(nvm current | sed -rn "s/v([[:digit:]]+).*/\1/p") --reinstall-packages-from=$(nvm current) | sub || true
+		nvm install $(nvm current) | sub # upgrade default-packages to major version
 		# TODO: Replace last command with better alternative, see https://github.com/npm/cli/issues/2329#issuecomment-743308323
+		echo +--
 	fi
-	echo "- Upgrading global npm packages (minor) ..."
+	echo +-- Upgrading global npm packages \(minor\) ...
 	for val in $(npm list -g --depth 0 | awk '/ /{print $2}'); do
-		npm i -g --force $(echo $val | tr "." "\n" | head -1)
+		npm i -g --force $(echo $val | tr "." "\n" | head -1) | sub
 	done
+	echo +--
 fi
 
 if testcmd nativefier; then
 	if [ -n "$NATIVEFIER_APPS_DIR" ]; then
-		echo - Upgrading electron in nativefier applications ...
+		echo +-- Upgrading electron in nativefier applications ...
 		IFS=$'\n'
 		if [[ "$(tolower "$OSTYPE")" == "darwin"* ]]; then
 			for d in ${NATIVEFIER_APPS_DIR%/}/*; do
 				for f in $(ls -1F "$d" | grep "\.app/"); do
 					app="$d/${f//\/}"
 					if [ -d "$app/Contents/Frameworks/Electron Framework.framework" ]; then
-						echo - Upgrading $app ...
-						erun nativefier --upgrade "$app"
+						echo \| - Upgrading $app ...
+						erun nativefier --upgrade "$app" | sub
 					fi
 				done
 			done
@@ -150,42 +164,54 @@ if testcmd nativefier; then
 					for f in $(ls -1F "$d" | grep "*"); do
 						app=$d/${f//\*}
 						echo - Upgrading $app ...
-						erun nativefier --upgrade "$app"
+						erun nativefier --upgrade "$app" | sub
 					done
 				fi
 			done
 		fi
 		IFS="$OIFS"
+		echo +--
 	else
 		echo - Found nativefier, but NATIVEFIER_APPS_DIR is unset, so electron upgrades of nativefier applications will be skipped.
 	fi
 fi
 
 if testcmd fvm; then
-	echo - Upgrading Flutter ...
-	fvm install beta
-	fvm install stable
-	dart pub global activate rps
+	echo +-- Upgrading Flutter ...
+	fvm install beta | sub
+	fvm install stable | sub
+	dart pub global activate rps | sub
+	echo +--
 elif testcmd flutter; then
-	echo - Upgrading Flutter ...
-	flutter upgrade
-	dart pub global activate rps
+	echo +-- Upgrading Flutter ...
+	flutter upgrade | sub
+	dart pub global activate rps | sub
+	echo +--
 fi
 
 if testcmd rustup; then
-	echo - Upgrading Rust ...
-	rustup update
-	echo - Upgrading global Cargo packages ...
-	cargo install $(cargo install --list | egrep '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ')
+	echo +-- Upgrading Rust ...
+	rustup update | sub
+	echo +--
+	echo +-- Upgrading global cargo packages ...
+	cargo install $(cargo install --list | egrep '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ') | sub
+	echo +--
+fi
+
+if [ $gitsources ]; then
+	echo +-- Upgrading git sources ...
+	git-src ls | xargs -L1 git-src up | sub
+	echo +--
 fi
 
 if [ $extensive ]; then
+	echo +-- Upgrading miscellaneous files ...
 	extsubpath="mbx/sys-upgrade/extensions"
 	extdir="$XDG_CONFIG_HOME/$extsubpath" 
 	if [ -d "$extdir" ]; then
 		for f in $(find "$extdir" -mindepth 1 -maxdepth 1 -type f -name '*.sh'); do
 			# echo $f
-			[ -f "$f" ] && { . "$f" || { echo [!] Failed to source $f && exit 1; }; }
+			test -f "$f" && { . "$f" | sub || { echo ! Failed to source $f && exit 1; }; }
 		done 
 	fi
 	( IFS=: 
@@ -195,10 +221,11 @@ if [ $extensive ]; then
 			extfiles=$(find "$extdir" -mindepth 1 -maxdepth 1 -type f -name '*.sh')
 			for f in $extfiles; do
 				# echo $f
-				[ -f "$f" ] && { . "$f" || { echo [!] Failed to source $f && exit 1; }; }
+				test -f "$f" && { . "$f" | sub || { echo ! Failed to source $f && exit 1; }; }
 			done 
 		fi
 	done; )
+	echo +--
 fi
 
 if [ $reboot ]; then

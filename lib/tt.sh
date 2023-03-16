@@ -1,7 +1,7 @@
 # Text transform library.
 
 # Skip when already sourced:
-test ! $MBX_LIBLOAD_TT || return
+test $MBX_LIBLOAD_TT && return
 export MBX_LIBLOAD_TT=1
 
 ###
