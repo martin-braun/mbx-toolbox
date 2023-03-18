@@ -6,6 +6,7 @@ usage="$(cat << EOF
 Usage: $(basename "$0") [COMMAND] [REPO] [OPTIONS]
 Adds, updates or deletes git source files of third party vendors.
 This tool is meant to clone third party sources to compile or use without further modification.
+It will try to checkout the latest tag and fallback to the latest branch, unless a prefered branch/tag is given.
 If you want to load a workspace, consider forking and cloning using the normal git utility instead.
 
 COMMAND
@@ -23,7 +24,7 @@ OPTIONS
   -V,   --version                 Prints the version of this script suite (MBX).
   -v,   --verbose                 Prints verbose information.
   -p=*, --path=*                  Sets the working directory path (root) of the localized source storage (default: /usr/local/src/git).
-  -b=*, --branch=*                Sets the branch of the repo to work with.
+  -b=*, --branch=*                Sets the branch/tag of the repo to work with.
   -h,   --help                    Prints this help message.
 EOF
 )"
@@ -54,18 +55,18 @@ done
 test $verbose && set -x
 set -e
 
-lookupdir=".git-src"
+lookupdir="share"
 test ! "$command" = "" || { echo ! Missing command. >&2; exit 1; } 
 
-if [ ! -d "$path" ]; then
-	echo - Setting up git-src ...
+if [ ! -d "$path/$lookupdir" ]; then
+	echo - Setting up $lookupdir directory ...
 	erun mkdir -p "$path"
 	erun chown -R "$(whoami)" "$path"
 	mkdir -p "$path/$lookupdir"
 fi
 
 if [ "$command" = "ls" ]; then
-	ls -1 "$path/$lookupdir/" | sed 's/,,/ -b=/' | tr , /
+	ls -1 "$path/$lookupdir/" | sed 's/::/ -b=/' | tr : /
 	exit 0
 fi
 
@@ -77,29 +78,49 @@ subpath="${subpath#*@}" # remove ^git@
 subpath="${subpath%.git}" # remove .git$
 subpath=$(printf "$subpath" | tr : /) # replace : with /
 test ! "$(printf "$subpath" | tr -d / | tr -d '.')" = "" || { echo ! Local subpath results in empty or invalid path. >&2; exit 1; } 
-test ! "$branch" = "" || branch="$(LC_ALL=C git ls-remote --symref https://$subpath.git HEAD | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}')" 
-link="$path/$lookupdir/$(printf "$subpath,,$branch" | tr / ,)"
+if [ "$branch" = "" ]; then
+	branch="$(LC_ALL=C git ls-remote --tags --sort="v:refname" https://$subpath.git | tail -n1 | awk -F '/' '{print $3}')"  # get latest tag
+	test ! "$branch" = "" || branch="$(LC_ALL=C git ls-remote --symref https://$subpath.git HEAD | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}')" # or get default branch
+	link="$path/$lookupdir/$(printf "$subpath" | tr / :)" # will not include branch/tag for rolling release
+else
+	link="$path/$lookupdir/$(printf "$subpath::$branch" | tr / :)"
+fi
 fullpath="$path/$subpath/$branch"
 
 if [ "$command" = "add" ]; then
-	test ! -d "$fullpath" || { echo ! Repository already added to the local system, consider updating it using the udp-command instead. >&2; exit 2; }
+	test ! -d "$link" || { echo ! Repository already added to the local system, consider updating it using the udp-command instead. >&2; exit 2; }
 	echo - Adding $repo \($branch\) to $fullpath ...
-	mkdir -p "$fullpath"
-	git clone --recursive --depth 1 $repo "$fullpath"
-	ln -s "../$subpath" "$link"
+	if [ ! -d "$fullpath" ]; then
+		mkdir -p "$fullpath"
+		git clone --recursive --depth 1 --branch $branch $repo "$fullpath"
+	else
+		echo - Repository already found, version link will be added ...
+	fi
+	ln -s "../$subpath/$branch" "$link"
 elif [ "$command" = "up" ]; then
-	test -d "$fullpath" || { echo ! Repository doesn\'t exist on the local system. >&2; exit 2; }
+	test -d "$link" || { echo ! Repository doesn\'t exist on the local system. >&2; exit 2; }
 	echo - Updating $fullpath ...
-	git -C "$fullpath" reset --hard HEAD
-	git -C "$fullpath" pull --ff-only
+	if [ ! -d "$fullpath" ]; then # link exists but determined fullpath does not?
+		rm -rf "$path/$lookupdir/$(readlink $link)" || true # try to remove old version
+		rm $link
+		# TODO: don't delete old version if it is installed seperately
+		mkdir -p "$fullpath"
+		git clone --recursive --depth 1 --branch $branch $repo "$fullpath"
+		ln -s "../$subpath/$branch" "$link"
+	else
+		git -C "$fullpath" reset --hard HEAD
+		git -C "$fullpath" pull --ff-only
+	fi
 elif [ "$command" = "del" ]; then
-	test -d "$fullpath" || { echo ! Repository doesn\'t exist on the local system. >&2; exit 2; }
+	test -d "$link" || { echo ! Repository doesn\'t exist on the local system. >&2; exit 2; }
+	fullpath="$path$(readlink $link | sed 's/^..//')" # get real fullpath in case of older rolling
 	echo - Deleting $fullpath ...
 	rm -rf "$fullpath"
 	echo - Cleaning up ...
-	rm "$link"
+	rm -rf "$link"
 	rmdir "$path/$lookupdir" 2>/dev/null || true
 	find "$path/" -depth -mindepth 1 -type d -exec rmdir {} + 2>/dev/null || true
+	# TODO: Tackle invisible files
 else
 	echo ! Unknown command $command. >&2 
 	exit 1 
