@@ -1,5 +1,7 @@
 # Interactive helper functions/aliases around git.
 
+export GIT_SOURCE_DATA="/usr/local/src/git/share"
+
 ###
 # Outputs the current branch in the current directory.
 # Arguments:

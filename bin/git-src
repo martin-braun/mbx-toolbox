@@ -25,6 +25,7 @@ OPTIONS
   -v,   --verbose                 Prints verbose information.
   -p=*, --path=*                  Sets the working directory path (root) of the localized source storage (default: /usr/local/src/git).
   -b=*, --branch=*                Sets the branch/tag of the repo to work with.
+  -f=*, --force                   Forces the up-operation that will result in destructive behavior in regards of local changes that cannot be rebased with incoming changes.
   -h,   --help                    Prints this help message.
 EOF
 )"
@@ -37,6 +38,7 @@ while [ "$#" -gt 0 ]; do
 		-v|--verbose) verbose=1 ;;
 		-p=*|--path=*) path="${1#*=}" ;;
 		-b=*|--branch=*) branch="${1#*=}" ;;
+		-f|--force) force=1 ;;
 		-h|--help) echo "$usage" && exit 129 ;;
 		*) 
 			if [ "$command" = "" ]; then
@@ -66,7 +68,7 @@ if [ ! -d "$path/$lookupdir" ]; then
 fi
 
 if [ "$command" = "ls" ]; then
-	ls -1 "$path/$lookupdir/" | sed 's/::/ -b=/' | tr : /
+	ls -1 "$path/$lookupdir/" | sed 's/,,/ -b=/' | tr , /
 	exit 0
 fi
 
@@ -81,9 +83,9 @@ test ! "$(printf "$subpath" | tr -d / | tr -d '.')" = "" || { echo ! Local subpa
 if [ "$branch" = "" ]; then
 	branch="$(LC_ALL=C git ls-remote --tags --sort="v:refname" https://$subpath.git | tail -n1 | awk -F '/' '{print $3}')"  # get latest tag
 	test ! "$branch" = "" || branch="$(LC_ALL=C git ls-remote --symref https://$subpath.git HEAD | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}')" # or get default branch
-	link="$path/$lookupdir/$(printf "$subpath" | tr / :)" # will not include branch/tag for rolling release
+	link="$path/$lookupdir/$(printf "$subpath" | tr / ,)" # will not include branch/tag for rolling release
 else
-	link="$path/$lookupdir/$(printf "$subpath::$branch" | tr / :)"
+	link="$path/$lookupdir/$(printf "$subpath,,$branch" | tr / ,)"
 fi
 fullpath="$path/$subpath/$branch"
 
@@ -108,8 +110,15 @@ elif [ "$command" = "up" ]; then
 		git clone --recursive --depth 1 --branch $branch $repo "$fullpath"
 		ln -s "../$subpath/$branch" "$link"
 	else
-		git -C "$fullpath" reset --hard HEAD
-		git -C "$fullpath" pull --ff-only
+		if ! git -C "$fullpath" pull --rebase; then
+			if $force; then
+				git -C "$fullpath" pull --ff-only
+			else
+				git rebase --abort
+				echo ! Update failed, because incoming changes cannot be merged with local changes. Use the -f flag to force a reset of local changes or manually rebase and solve the conflicts. >&2
+				exit 3
+			fi
+		fi
 	fi
 elif [ "$command" = "del" ]; then
 	test -d "$link" || { echo ! Repository doesn\'t exist on the local system. >&2; exit 2; }
