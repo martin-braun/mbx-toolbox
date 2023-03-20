@@ -26,7 +26,7 @@ OPTIONS
   -v,   --verbose                 Prints verbose information.
   -p=*, --path=*                  Sets the working directory path (root) of the localized source storage (default: /usr/local/src/git).
   -b=*, --branch=*                Sets the branch/tag of the repo to work with.
-  -f=*, --force                   Forces the up-operation that will result in destructive behavior in regards of local changes that cannot be rebased with incoming changes.
+  -f=*, --force                   Forces the operation that will potentially result in destructive behavior to ensure a successful operation.
   -h,   --help                    Prints this help message.
 EOF
 )"
@@ -91,6 +91,10 @@ fi
 fullpath="$path/$subpath/$branch"
 
 if [ "$command" = "add" ]; then
+	if $force; then
+		rm -rf "$fullpath" || true
+		rm -rf "$link" || true
+	fi
 	test ! -d "$link" || { echo ! Repository already added to the local system, consider updating it using the udp-command instead. >&2; exit 2; }
 	echo - Adding $repo \($branch\) to $fullpath ...
 	if [ ! -d "$fullpath" ]; then
@@ -122,12 +126,12 @@ elif [ "$command" = "up" ]; then
 		fi
 	fi
 elif [ "$command" = "del" ]; then
-	test -d "$link" || { echo ! Repository doesn\'t exist on the local system. >&2; exit 2; }
-	fullpath="$path$(readlink $link | sed 's/^..//')" # get real fullpath in case of older rolling
+	test -d "$link" || test $force || { echo ! Repository doesn\'t exist on the local system. >&2; exit 2; }
+	test -d "$link" && fullpath="$path$(readlink $link | sed 's/^..//')" # get real fullpath in case of older rolling
 	echo - Deleting $fullpath ...
-	rm -rf "$fullpath"
+	rm -rf "$fullpath" || test $force
 	echo - Cleaning up ...
-	rm -rf "$link"
+	rm -rf "$link" || test $force
 	rmdir "$path/$lookupdir" 2>/dev/null || true
 	find "$path/" -depth -mindepth 1 -type d -exec rmdir {} + 2>/dev/null || true
 	# TODO: Tackle invisible files
