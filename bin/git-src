@@ -26,7 +26,7 @@ OPTIONS
   -v,   --verbose                 Prints verbose information.
   -p=*, --path=*                  Sets the working directory path (root) of the localized source storage (default: /usr/local/src/git).
   -b=*, --branch=*                Sets the branch/tag of the repo to work with.
-  -f=*, --force                   Forces the operation that will potentially result in destructive behavior to ensure a successful operation.
+  -f, --force                   Forces the operation that will potentially result in destructive behavior to ensure a successful operation.
   -h,   --help                    Prints this help message.
 EOF
 )"
@@ -91,11 +91,11 @@ fi
 fullpath="$path/$subpath/$branch"
 
 if [ "$command" = "add" ]; then
-	if $force; then
+	if [ $force ]; then
 		rm -rf "$fullpath" || true
 		rm -rf "$link" || true
 	fi
-	test ! -d "$link" || { echo ! Repository already added to the local system, consider updating it using the udp-command instead. >&2; exit 2; }
+	test ! -d "$link" || { echo ! Repository already added to the local system, consider updating it using the up-command instead or add the -f flag to forcefully re-install. >&2; exit 2; }
 	echo - Adding $repo \($branch\) to $fullpath ...
 	if [ ! -d "$fullpath" ]; then
 		mkdir -p "$fullpath"
@@ -116,7 +116,7 @@ elif [ "$command" = "up" ]; then
 		ln -s "../$subpath/$branch" "$link"
 	else
 		if ! git -C "$fullpath" pull --rebase; then
-			if $force; then
+			if [ $force ]; then
 				git -C "$fullpath" pull --ff-only
 			else
 				git rebase --abort
@@ -126,7 +126,7 @@ elif [ "$command" = "up" ]; then
 		fi
 	fi
 elif [ "$command" = "del" ]; then
-	test -d "$link" || test $force || { echo ! Repository doesn\'t exist on the local system. >&2; exit 2; }
+	test -d "$link" || test $force || { echo ! Repository doesn\'t exist on the local system. Use the -f flag to forcefully try delete and clean up anyways. >&2; exit 2; }
 	test -d "$link" && fullpath="$path$(readlink $link | sed 's/^..//')" # get real fullpath in case of older rolling
 	echo - Deleting $fullpath ...
 	rm -rf "$fullpath" || test $force

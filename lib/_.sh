@@ -30,9 +30,9 @@ erun() {
 	if [ "$(id -u)" = "0" ]; then
 		$@
 	elif testcmd doas; then
-		doas $@
+		doas "$@"
 	elif testcmd sudo; then
-		sudo $@
+		sudo "$@"
 	else
 		echo "No doas or sudo found." >&2
 		return 1001

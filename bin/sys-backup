@@ -45,10 +45,10 @@ set -e
 
 if [[ "$(tolower "$OSTYPE")" == "darwin"* ]]; then # MacOS uses Time Maschine for backups instead
 	echo - Backing up using Time Maschine ...
-	if (( $shutdown )); then
-		erun zsh -c "tmutil startbackup --block && shutdown -h +5"
+	if [ $shutdown ]; then
+		erun zsh -c 'tmutil startbackup -b && shutdown -h +5'
 		echo; read -rsn1 -p "Press any key to cancel ..."; echo
-		erun killall shutdown
+		erun killall shutdown || true
 	else
 		tmutil startbackup
 	fi
