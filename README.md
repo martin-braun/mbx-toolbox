@@ -96,12 +96,12 @@ For Debian-based distros simply run the following commands to install essential 
 
 ```bash
 sudo apt update && apt install git -y # don't use sudo if you are root
-sudo mkdir -p /usr/local/mbx # don't use sudo if you are root
-sudo chown "$(whoami)" /usr/local/mbx # skip, if you are root
-git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
+sudo mkdir -p /usr/local/share/mbx # don't use sudo if you are root
+sudo chown "$(whoami)" /usr/local/share/mbx # skip, if you are root
+git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/share/mbx
 echo '' >> $HOME/.bashrc
 echo '# mbx' >> $HOME/.bashrc
-echo 'export MBX_PATH="/usr/local/mbx"' >> $HOME/.bashrc
+echo 'export MBX_PATH="/usr/local/share/mbx"' >> $HOME/.bashrc
 echo 'export PATH=$PATH:$MBX_PATH/bin/deb:$MBX_PATH/bin' >> $HOME/.bashrc
 echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.bashrc
 \. $HOME/.bashrc
@@ -113,12 +113,12 @@ For Red Hat-based distros simply run the following commands to install essential
 
 ```bash
 sudo dnf install git --refresh -y # don't use sudo if you are root
-sudo mkdir -p /usr/local/mbx # don't use sudo if you are root
-sudo chown "$(whoami)" /usr/local/mbx # skip, if you are root
-git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
+sudo mkdir -p /usr/local/share/mbx # don't use sudo if you are root
+sudo chown "$(whoami)" /usr/local/share/mbx # skip, if you are root
+git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/share/mbx
 echo '' >> $HOME/.bashrc
 echo '# mbx' >> $HOME/.bashrc
-echo 'export MBX_PATH="/usr/local/mbx"' >> $HOME/.bashrc
+echo 'export MBX_PATH="/usr/local/share/mbx"' >> $HOME/.bashrc
 echo 'export PATH=$PATH:$MBX_PATH/bin/rh:$MBX_PATH/bin' >> $HOME/.bashrc
 echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.bashrc
 \. $HOME/.bashrc
@@ -131,12 +131,12 @@ For BusyBox based distros simply run the following commands to install essential
 ```bash
 doas apk update # don't use doas if you are root
 doas apk add git # don't use doas if you are root
-doas mkdir -p /usr/local/mbx # don't use doas if you are root
-doas chown "$(whoami)" /usr/local/mbx # skip, if you are root
-git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
+doas mkdir -p /usr/local/share/mbx # don't use doas if you are root
+doas chown "$(whoami)" /usr/local/share/mbx # skip, if you are root
+git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/share/mbx
 echo '' >> $HOME/.profile
 echo '# mbx' >> $HOME/.profile
-echo 'export MBX_PATH="/usr/local/mbx"' >> $HOME/.profile
+echo 'export MBX_PATH="/usr/local/share/mbx"' >> $HOME/.profile
 echo 'export PATH=$PATH:$MBX_PATH/bin/alp:$MBX_PATH/bin' >> $HOME/.profile
 echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.profile
 \. $HOME/.profile
@@ -149,12 +149,12 @@ For MacOS, you should install Homebrew and use it to install a few essential dep
 ```zsh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew install git coreutils
-sudo mkdir -p /usr/local/mbx
-sudo chown "$(whoami)" /usr/local/mbx
-git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/mbx
+sudo mkdir -p /usr/local/share/mbx
+sudo chown "$(whoami)" /usr/local/share/mbx
+git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/share/mbx
 echo '' >> $HOME/.zshrc
 echo '# mbx' >> $HOME/.zshrc
-echo 'export MBX_PATH="/usr/local/mbx"' >> $HOME/.zshrc
+echo 'export MBX_PATH="/usr/local/share/mbx"' >> $HOME/.zshrc
 echo 'export PATH=$PATH:$MBX_PATH/bin/mac:$MBX_PATH/bin' >> $HOME/.zshrc
 echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.zshrc
 \. $HOME/.zshrc
@@ -190,7 +190,7 @@ To validate your installation, restart your terminal and run `mbx-version`. It s
 
 If you want to test the latest changes, you can switch to the `dev` branch, but things might break. 
 
-After installation run this in the MBX toolbox path (`/usr/local/mbx` or `%PROGRAMDATA%\mbx`):
+After installation run this in the MBX toolbox path (`/usr/local/share/mbx` or `%PROGRAMDATA%\mbx`):
 
 ```
 git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
@@ -214,7 +214,7 @@ Uninstall
 ### \*nix (Alpine / Debian / Red Hat / MacOS / etc.)
 
 ```sh
-rm -r /usr/local/mbx
+rm -r /usr/local/share/mbx
 rm -r /usr/local/src/git # optional sources installed by git-src
 ```
 
