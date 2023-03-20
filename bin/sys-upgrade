@@ -92,6 +92,12 @@ if testcmd brew; then
 	echo +--
 fi
 
+if testcmd pip; then
+	echo +-- Updating pip ...
+	python3 -m pip install --upgrade pip | sub
+	echo +--
+fi
+
 if testcmd gem; then
 	if testcmd rbenv; then
 		current_ruby_version=$(rbenv global)
