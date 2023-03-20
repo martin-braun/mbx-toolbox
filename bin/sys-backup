@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+export LC_ALL=C
 
 . "$MBX_LIBPATH/_.sh" || exit 1
 . "$MBX_LIBPATH/tt.sh" || exit 1

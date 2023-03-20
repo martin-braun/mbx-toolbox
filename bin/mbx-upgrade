@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+export LC_ALL=C
 
 usage="$(cat << EOF
 Usage: $(basename "$0") [OPTIONS]
