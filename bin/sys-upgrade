@@ -4,7 +4,7 @@ export LC_ALL=C
 \. "$MBX_LIBPATH/_.sh" || exit 1
 \. "$MBX_LIBPATH/tt.sh" || exit 1
 
-function sub() { sed "s/^/| /"; }
+sub() { sed "s/^/| /"; }
 
 usage="$(cat << EOF
 Usage: $(basename "$0") [OPTIONS]
