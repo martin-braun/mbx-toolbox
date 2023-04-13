@@ -26,7 +26,7 @@ OPTIONS
   -v,   --verbose                 Prints verbose information.
   -p=*, --path=*                  Sets the working directory path (root) of the localized source storage (default: /usr/local/src/git).
   -b=*, --branch=*                Sets the branch/tag of the repo to work with.
-  -f, --force                   Forces the operation that will potentially result in destructive behavior to ensure a successful operation.
+  -f,   --force                   Forces the operation that will potentially result in destructive behavior to ensure a successful operation.
   -h,   --help                    Prints this help message.
 EOF
 )"
