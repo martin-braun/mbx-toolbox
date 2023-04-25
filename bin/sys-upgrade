@@ -101,36 +101,23 @@ if testcmd pip; then
 fi
 
 if testcmd gem; then
-	if testcmd rbenv; then
-		current_ruby_version=$(rbenv global)
-		available_ruby_versions=$(rbenv install -l 2> /dev/null)
-		echo +-- Updating ruby builds ...
-		for installed in $(rbenv versions | awk -F "[ ]+" '/ /{print $2}'); do
-			if [ "$installed" = "system" ]; then
-				continue
-			fi
-			for available in $available_ruby_versions; do
-				if [ "$installed" = "$available" ]; then
-					continue
-				fi
-				if [ \
-					"$(echo $installed | tr '.' '\n' | head -2)" \
-					= \
-					"$(echo $available | tr '.' '\n' | head -2)" \
-					]; then
-									rbenv install $available | sub
-									# TODO: Install all global packages from $installed to $available
-									if [ "$current_ruby_version" = "$installed" ]; then
-										rbenv global $available | sub
-									fi
-									erun rbenv uninstall -f $installed | sub
-				fi
-			done
-		done
-		echo +--
+	if testcmd rvm; then
+		echo +-- Upgrading rvm ...
+		rvm get stable | sub
+		echo +-- Switching to default Ruby version ...
+		rvm use default
+		echo +-- Upgrading RubyGems system software ...
+		update_rubygems | sub
+		gem update --system | sub
+		echo +-- Upgrading global ruby gems ...
+		gem update | sub
+	else
+		echo +-- Upgrading RubyGems system software ...
+		erun update_rubygems | sub
+		erun gem update --system | sub
+		echo +-- Upgrading global ruby gems ...
+		erun gem update | sub
 	fi
-	echo +-- Upgrading global ruby gems ...
-	erun gem update --system | sub
 	echo +--
 fi
 
