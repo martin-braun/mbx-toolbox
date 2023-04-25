@@ -66,10 +66,14 @@ if [ -z "$path" ]; then
 fi
 
 if [ ! -f "$path" ]; then
-	echo - Changing modes on directories within and incl. $path ...
-	erun find "$path" -type f -exec chmod $file_permissions '{}' \;
-	echo - Changing modes on files within $path ...
-	erun find "$path" -type d -exec chmod $directory_permissions '{}' \;
+	if [ -n "$file_permissions" ]; then
+		echo - Changing modes on directories within and incl. $path ...
+		erun find "$path" -type f -exec chmod $file_permissions '{}' \;
+	fi
+	if [ -n "$directory_permissions" ]; then
+		echo - Changing modes on files within $path ...
+		erun find "$path" -type d -exec chmod $directory_permissions '{}' \;
+	fi
 else
 	echo - Changing modes on $path ...
 	erun chmod $file_permissions "$path"
