@@ -42,10 +42,12 @@ if [ -n "$text" ]; then
 	echo - Sending \"$text\" to input ...
 	echo "$text" | fold -w 1 | while read c; do
 	\
-		if [ -z $c ]; then
+		if [ -z "$c" ]; then
 			c="%s"
+		elif [ "$c" == "#" ]; then
+			c="\#"
 		fi
-		adb shell -n input text $c
+		adb shell -n input text "$c"
 	done
 else
 	echo -n ">"
