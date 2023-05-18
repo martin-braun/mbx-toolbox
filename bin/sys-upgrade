@@ -58,8 +58,9 @@ fi
 
 if testcmd apk; then
 	echo +-- Upgrading apk packages ...
-	erun apk update | sub
-	erun apk upgrade | sub
+	erun apk --upgrade apk-tools | sub
+	erun apk upgrade --available | sub
+	rm /var/cache/apk/* | sub
 	echo +--
 fi
 
