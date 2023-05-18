@@ -16,7 +16,7 @@ Upgrades all packages of all supported package managers. Supports:
 - dnf
 - brew
 - gem
-- npm / nvm
+- npm / nvm / pm2
 - flutter / fvm
 - cargo / rustup
 - git-src (optional)
@@ -138,6 +138,9 @@ if testcmd npm; then
 		npm i -g --force $(echo $val | tr "." "\n" | head -1) | sub
 	done
 	echo +--
+	if testcmd pm2; then
+		pm2 update | sub
+	fi
 fi
 
 if testcmd nativefier; then
