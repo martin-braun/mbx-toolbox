@@ -103,7 +103,7 @@ echo '' >> $HOME/.bashrc
 echo '# mbx' >> $HOME/.bashrc
 echo 'export MBX_PATH="/usr/local/share/mbx"' >> $HOME/.bashrc
 echo 'export PATH=$PATH:$MBX_PATH/bin/deb:$MBX_PATH/bin' >> $HOME/.bashrc
-echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.bashrc
+echo 'test -e "$MBX_PATH/lib/init.sh" && . "$MBX_PATH/lib/init.sh"' >> $HOME/.bashrc
 \. $HOME/.bashrc
 ```
 
@@ -120,7 +120,7 @@ echo '' >> $HOME/.bashrc
 echo '# mbx' >> $HOME/.bashrc
 echo 'export MBX_PATH="/usr/local/share/mbx"' >> $HOME/.bashrc
 echo 'export PATH=$PATH:$MBX_PATH/bin/rh:$MBX_PATH/bin' >> $HOME/.bashrc
-echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.bashrc
+echo 'test -e "$MBX_PATH/lib/init.sh" && . "$MBX_PATH/lib/init.sh"' >> $HOME/.bashrc
 \. $HOME/.bashrc
 ```
 
@@ -138,7 +138,7 @@ echo '' >> $HOME/.profile
 echo '# mbx' >> $HOME/.profile
 echo 'export MBX_PATH="/usr/local/share/mbx"' >> $HOME/.profile
 echo 'export PATH=$PATH:$MBX_PATH/bin/alp:$MBX_PATH/bin' >> $HOME/.profile
-echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.profile
+echo 'test -e "$MBX_PATH/lib/init.sh" && . "$MBX_PATH/lib/init.sh"' >> $HOME/.profile
 \. $HOME/.profile
 ```
 
@@ -156,7 +156,7 @@ echo '' >> $HOME/.zshrc
 echo '# mbx' >> $HOME/.zshrc
 echo 'export MBX_PATH="/usr/local/share/mbx"' >> $HOME/.zshrc
 echo 'export PATH=$PATH:$MBX_PATH/bin/mac:$MBX_PATH/bin' >> $HOME/.zshrc
-echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.zshrc
+echo 'test -e "$MBX_PATH/lib/init.sh" && . "$MBX_PATH/lib/init.sh"' >> $HOME/.zshrc
 \. $HOME/.zshrc
 ```
 
@@ -165,21 +165,33 @@ echo 'test -e $MBX_PATH/lib/init.sh && . $MBX_PATH/lib/init.sh' >> $HOME/.zshrc
 For Windows, you should install Chocolatey and use it to install a few essential dependencies to use this toolbox. For this run the following commands within a privileged command-line terminal (not PowerShell), skip the first command if Chocolatey is already installed:
 
 ```bat
-@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%PROGRAMDATA%\chocolatey\bin"
-choco install git awk -y
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d @^%USERPROFILE^%\autorun.cmd" "2^>NUL /f
-```
-
-The last command will ensure that an autorun.cmd is sourced in a similar fashion like .bashrc on Linux. This is to enable alias support (DOSKEY) in your interactive shell.
-
-Then, within unprivileged command-line terminal (not PowerShell) run the following commands to install this toolbox and autoload its DOSKEY entries via autorun.cmd:
-
-```bat
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%PROGRAMDATA%\chocolatey\bin" && refreshenv
+choco install git awk -y && refreshenv
 MKDIR %PROGRAMDATA%\mbx
 git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git %PROGRAMDATA%\mbx
 SET "MBX_PATH=%PROGRAMDATA%\mbx"
 SETX PATH "%PATH%;%MBX_PATH%\bin\win;%MBX_PATH%\bin"
-ECHO @CALL %MBX_PATH%\lib\init.cmd>>"%USERPROFILE%\autorun.cmd"
+ECHO. >> %USERPROFILE%\autorun.cmd
+ECHO @REM mbx >> %USERPROFILE%\autorun.cmd
+ECHO @SET "MBX_PATH=%PROGRAMDATA%\mbx" >> "%USERPROFILE%\autorun.cmd"
+ECHO @CALL ^%MBX_PATH^%\lib\init.cmd>>"%USERPROFILE%\autorun.cmd"
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d @^%USERPROFILE^%\autorun.cmd" "2^>NUL /f
+```
+
+> Note: You have to replace `^%` with `%%` if this will be automated in a batch script.
+
+The last command will ensure that an autorun.cmd is sourced in a similar fashion like .bashrc on Linux. This is to enable alias support (DOSKEY) in your interactive shell.
+
+#### MINGW64 (Git Bash)
+
+Additionally to above steps, you can enable \*nix tools in Windows through Git Bash. This is very experimental and can cause problems. Things like `mbx-upgrade` or `sys-upgrade` won't work in Git Bash for obvious reasons:
+
+```sh
+echo '' >> $HOME/.zshrc
+echo '# mbx' >> $HOME/.bashrc
+echo 'export MBX_PATH="$ProgramData/mbx"' >> $HOME/.bashrc
+echo 'export PATH=$PATH:$MBX_PATH/bin/deb:$MBX_PATH/bin' >> $HOME/.bashrc
+echo 'test -e "$MBX_PATH/lib/init.sh" && . "$MBX_PATH/lib/init.sh"' >> $HOME/.bashrc
 ```
 
 ### Final steps

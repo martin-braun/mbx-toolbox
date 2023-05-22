@@ -8,6 +8,7 @@ SET usage=^
 Usage: %~n0 [OPTIONS]!BR!^
 Upgrades all packages of all supported package managers. Supports:!BR!^
 !BR!^
+- winget!BR!^
 - choco!BR!^
 - gem!BR!^
 - flutter!BR!^
@@ -50,6 +51,11 @@ IF NOT "%1" == "" (
 NET SESSION >NUL 2>&1
 IF NOT "%ERRORLEVEL%" == "0" (
 	ECHO ! Please run this script in an elevated command shell. >&2 & EXIT /B 1
+)
+
+( CALL "%MBX_LIBPATH%\_" testcmd winget ) && (
+	ECHO - Upgrading Winget packages ...
+    winget upgrade --all || EXIT /B 1
 )
 
 ( CALL "%MBX_LIBPATH%\_" testcmd choco ) && (
