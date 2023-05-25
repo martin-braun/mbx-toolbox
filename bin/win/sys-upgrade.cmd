@@ -1,6 +1,6 @@
 @ECHO OFF
-SETLOCAL ENABLEEXTENSIONS
-SETLOCAL ENABLEDELAYEDEXPANSION
+SETLOCAL EnableExtensions
+SETLOCAL EnableDelayedExpansion
 
 CALL "%MBX_LIBPATH%\_" load || EXIT /B
 
@@ -22,7 +22,7 @@ OPTIONS!BR!^
   -h,   --help                    Prints this help message
 
 :getopts
-IF NOT "%1" == "" (
+IF not "%1" == "" (
 	( ( CALL "%MBX_LIBPATH%\_" testif "%1" == "-V" ) || ( CALL "%MBX_LIBPATH%\_" testif "%1" == "--version" ) ) && (
 		ECHO %MBX_VERSION%
 		EXIT /B 0
@@ -48,8 +48,8 @@ IF NOT "%1" == "" (
 
 ( CALL "%MBX_LIBPATH%\_" testif "%verbose%" == "1" ) && @ECHO ON
 
-NET SESSION >NUL 2>&1
-IF NOT "%ERRORLEVEL%" == "0" (
+net session >NUL 2>&1
+IF not "%ERRORLEVEL%" == "0" (
 	ECHO ! Please run this script in an elevated command shell. >&2 & EXIT /B 1
 )
 

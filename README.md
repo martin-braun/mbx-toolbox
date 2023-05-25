@@ -68,7 +68,7 @@ Commands
 |Library|Command|Platforms|Description|
 |-|-|-|-|
 |`_`|`subset <variableName> "<command>" [ /F ]`|`win`|Sets a variable to the output of a command substitution. (`/F` for slower file mode to return a correct errorlevel)|
-|`_`|`testif [ /I ] [ NOT ] [ EXISTS ] <string1> [ == \| EQU \| NEQ \| LSS \| LEQ \| GTR \| GEQ ] <string2>`|`win`|Performs conditional processing in batch programs. Is callable for inline use.|
+|`_`|`testif [ /I ] [ NOT ] [ EXIST ] <string1> [ == \| EQU \| NEQ \| LSS \| LEQ \| GTR \| GEQ ] <string2>`|`win`|Performs conditional processing in batch programs. Is callable for inline use.|
 |`_`|`testcmd <command>`|`all`|Test if a command can be executed. Do not pass additional arguments.|
 |`tt`|`tolower <string>`|`*nix`|Transforms the given text into the lowercase format.|
 |`tt`|`toupper <string>`|`*nix`|Transforms the given text into the uppercase format.|
@@ -90,12 +90,12 @@ Installation
 
 ### \*nix Systems
 
-#### Debian (incl. Proxmox)
+#### Debian based
 
 For Debian-based distros simply run the following commands to install essential dependencies and the toolbox. You can run these commands as root, skip `sudo` in such case: 
 
 ```bash
-sudo apt update && apt install git -y # don't use sudo if you are root
+sudo apt update && sudo apt install git -y # don't use sudo if you are root
 sudo mkdir -p /usr/local/share/mbx # don't use sudo if you are root
 sudo chown "$(whoami)" /usr/local/share/mbx # skip, if you are root
 git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git /usr/local/share/mbx
@@ -104,10 +104,10 @@ echo '# mbx' >> $HOME/.bashrc
 echo 'export MBX_PATH="/usr/local/share/mbx"' >> $HOME/.bashrc
 echo 'export PATH=$PATH:$MBX_PATH/bin/deb:$MBX_PATH/bin' >> $HOME/.bashrc
 echo 'test -e "$MBX_PATH/lib/init.sh" && . "$MBX_PATH/lib/init.sh"' >> $HOME/.bashrc
-\. $HOME/.bashrc
+. $HOME/.bashrc
 ```
 
-#### Red Hat (incl. Fedora / Nobara)
+#### Red Hat based
 
 For Red Hat-based distros simply run the following commands to install essential dependencies and the toolbox. You can run these commands as root, skip `sudo` in such case: 
 
@@ -121,7 +121,7 @@ echo '# mbx' >> $HOME/.bashrc
 echo 'export MBX_PATH="/usr/local/share/mbx"' >> $HOME/.bashrc
 echo 'export PATH=$PATH:$MBX_PATH/bin/rh:$MBX_PATH/bin' >> $HOME/.bashrc
 echo 'test -e "$MBX_PATH/lib/init.sh" && . "$MBX_PATH/lib/init.sh"' >> $HOME/.bashrc
-\. $HOME/.bashrc
+. $HOME/.bashrc
 ```
 
 #### Alpine Linux (BusyBox)
@@ -139,7 +139,7 @@ echo '# mbx' >> $HOME/.profile
 echo 'export MBX_PATH="/usr/local/share/mbx"' >> $HOME/.profile
 echo 'export PATH=$PATH:$MBX_PATH/bin/alp:$MBX_PATH/bin' >> $HOME/.profile
 echo 'test -e "$MBX_PATH/lib/init.sh" && . "$MBX_PATH/lib/init.sh"' >> $HOME/.profile
-\. $HOME/.profile
+. $HOME/.profile
 ```
 
 #### MacOS
@@ -157,7 +157,7 @@ echo '# mbx' >> $HOME/.zshrc
 echo 'export MBX_PATH="/usr/local/share/mbx"' >> $HOME/.zshrc
 echo 'export PATH=$PATH:$MBX_PATH/bin/mac:$MBX_PATH/bin' >> $HOME/.zshrc
 echo 'test -e "$MBX_PATH/lib/init.sh" && . "$MBX_PATH/lib/init.sh"' >> $HOME/.zshrc
-\. $HOME/.zshrc
+. $HOME/.zshrc
 ```
 
 ### Windows
@@ -170,12 +170,12 @@ choco install git awk -y && refreshenv
 MKDIR %PROGRAMDATA%\mbx
 git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git %PROGRAMDATA%\mbx
 SET "MBX_PATH=%PROGRAMDATA%\mbx"
-SETX PATH "%PATH%;%MBX_PATH%\bin\win;%MBX_PATH%\bin"
+setx PATH "%PATH%;%MBX_PATH%\bin\win;%MBX_PATH%\bin"
 ECHO. >> %USERPROFILE%\autorun.cmd
 ECHO @REM mbx >> %USERPROFILE%\autorun.cmd
 ECHO @SET "MBX_PATH=%PROGRAMDATA%\mbx" >> "%USERPROFILE%\autorun.cmd"
 ECHO @CALL ^%MBX_PATH^%\lib\init.cmd>>"%USERPROFILE%\autorun.cmd"
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d @^%USERPROFILE^%\autorun.cmd" "2^>NUL /f
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d @^%USERPROFILE^%\autorun.cmd" "2^>NUL /f
 ```
 
 > Note: You have to replace `^%` with `%%` if this will be automated in a batch script.
@@ -244,7 +244,7 @@ Now remove the paths `%PROGRAMDATA%\mbx\bin\win` and `%PROGRAMDATA%\mbx\bin` fro
 If you don't like to keep the auto-loader of the `autorun.cmd`, just remove the file and finalize your purge in an elevated shell with: 
 
 ```bat
-REG REMOVE "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun
+reg remove "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun
 ```
 
 Contribute

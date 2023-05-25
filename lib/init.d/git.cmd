@@ -1,7 +1,7 @@
 @ECHO OFF
 : 
 : Interactive helper functions/aliases around git.
-IF NOT "%1" == "" SHIFT & GOTO:%1
+IF not "%1" == "" SHIFT & GOTO:%1
 
 :::
 : Outputs the current branch in the current directory.

@@ -1,11 +1,11 @@
 @ECHO OFF
-SETLOCAL ENABLEEXTENSIONS
+SETLOCAL EnableExtensions
 SHIFT & GOTO:%1
 : Common batch extension library.
 
 :load
 : Skip when already called:
-IF DEFINED MBX_LIBLOAD_BASE (
+IF defined MBX_LIBLOAD_BASE (
 	EXIT /B
 )
 ENDLOCAL
@@ -30,8 +30,8 @@ EXIT /B
 :   0, if the command was successful or if the file mode is disabled, 1 otherwise.
 :::
 :subset
-IF NOT "%3" == "/F" (
-	IF NOT "%3" == "/f" (
+IF not "%3" == "/F" (
+	IF not "%3" == "/f" (
 		FOR /F "usebackq tokens=*" %%a IN (`%~2`) DO (
 			ENDLOCAL & SET "%~1=%%a"
 		)
@@ -69,10 +69,10 @@ ENDLOCAL & SET /P %~1=<"%tempfile%" & DEL /Q "%tempfile%" & EXIT /B %ERRORLEVEL%
 :testif
 IF "%~1"=="/I" SET "I=/I " & SHIFT
 IF "%~1"=="/i" SET "I=/I " & SHIFT
-IF "%~1"=="NOT" SET "NOT=NOT " & SHIFT
-IF "%~1"=="not" SET "NOT=NOT " & SHIFT
-IF "%~1"=="EXIST" SET "EXIST=EXIST " & SHIFT
-IF "%~1"=="exist" SET "EXIST=EXIST " & SHIFT
+IF "%~1"=="NOT" SET "NOT=not " & SHIFT
+IF "%~1"=="not" SET "NOT=not " & SHIFT
+IF "%~1"=="EXIST" SET "EXIST=exist " & SHIFT
+IF "%~1"=="exist" SET "EXIST=exist " & SHIFT
 
 SET "string1=%~1%"
 IF "%~3"=="" (
@@ -97,6 +97,6 @@ ENDLOCAL & EXIT /B 1
 :   0, if the command exists, 1 otherwise.
 :::
 :testcmd
-WHERE %~1 1>NUL 2>NUL
+where %~1 1>NUL 2>NUL
 ENDLOCAL & EXIT /B
 

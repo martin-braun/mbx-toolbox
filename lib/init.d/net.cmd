@@ -1,7 +1,7 @@
 @ECHO OFF
 : 
 : Interactive helper functions/aliases around networking.
-IF NOT "%1" == "" SHIFT & GOTO:%1
+IF not "%1" == "" SHIFT & GOTO:%1
 
 :::
 : Outputs the primary local IPv4 address.

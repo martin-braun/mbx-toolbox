@@ -1,6 +1,6 @@
 @ECHO OFF
-SETLOCAL ENABLEEXTENSIONS
-SETLOCAL ENABLEDELAYEDEXPANSION
+SETLOCAL EnableExtensions
+SETLOCAL EnableDelayedExpansion
 
 CALL "%MBX_LIBPATH%\_" load || EXIT /B
 
@@ -14,7 +14,7 @@ OPTIONS!BR!^
   -h,   --help                    Prints this help message
 
 :getopts
-IF NOT "%1" == "" (
+IF not "%1" == "" (
 	( ( CALL "%MBX_LIBPATH%\_" testif "%1" == "-V" ) || ( CALL "%MBX_LIBPATH%\_" testif "%1" == "--version" ) ) && (
 		ECHO %MBX_VERSION%
 		EXIT /B 0

@@ -1,7 +1,7 @@
 @ECHO OFF
 : 
 : Interactive helper functions/aliases around networking.
-IF NOT "%1" == "" SHIFT & GOTO:%1
+IF not "%1" == "" SHIFT & GOTO:%1
 
 GOTO:EOF
 ::: FUNCTIONS :::
@@ -16,12 +16,12 @@ GOTO:EOF
 :   Result of chown or 1, if help was outputed
 :::
 :meownr
-SETLOCAL ENABLEEXTENSIONS
+SETLOCAL EnableExtensions
 SET "attr=%~a1"
 IF "%attr:~0,1%" == "d" (
-	TAKEOWN /F "%~1" /R /D y
+	takeown /F "%~1" /R /D y
 ) ELSE (
-	TAKEOWN /F "%~1"
+	takeown /F "%~1"
 )
 ENDLOCAL & EXIT /B
 
