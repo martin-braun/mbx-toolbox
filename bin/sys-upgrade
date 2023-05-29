@@ -15,6 +15,7 @@ Upgrades all packages of all supported package managers. Supports:
 - apt-get
 - dnf
 - brew
+- pacman
 - gem
 - npm / nvm / pm2
 - flutter / fvm
@@ -92,6 +93,12 @@ if testcmd brew; then
 	brew upgrade --cask | sub
 	brew autoremove | sub
 	brew cleanup | sub
+	echo +--
+fi
+
+if testcmd brew; then
+	echo +-- Upgrading pacman packages ...
+	pacman -Syu
 	echo +--
 fi
 

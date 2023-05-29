@@ -182,9 +182,9 @@ reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t 
 
 The last command will ensure that an autorun.cmd is sourced in a similar fashion like .bashrc on Linux. This is to enable alias support (DOSKEY) in your interactive shell.
 
-#### MINGW64 (Git Bash)
+#### MINGW64 (Git for Windows SDK, build-extra Git Bash)
 
-Additionally to above steps, you can enable \*nix tools in Windows through Git Bash. This is very experimental and can cause problems. Things like `mbx-upgrade` or `sys-upgrade` won't work in Git Bash for obvious reasons:
+Additionally to above steps, you can access \*nix tools in Windows through Git Bash (Git for Windows SDK). This is very experimental and can cause problems. Some scripts won't work in Git Bash:
 
 ```sh
 echo '' >> $HOME/.zshrc
