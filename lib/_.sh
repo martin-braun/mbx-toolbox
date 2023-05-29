@@ -28,13 +28,13 @@ testcmd() {
 ###
 erun() {
 	if [ "$(id -u)" = "0" ]; then
-		$@
+		"$@"
 	elif testcmd doas; then
 		doas "$@"
 	elif testcmd sudo; then
 		sudo "$@"
 	elif net session &> /dev/null; then # MINGW64 Admin Session
-		$@
+		"$@"
 	else
 		echo "No doas or sudo found nor higher privileges available." >&2
 		return 1001

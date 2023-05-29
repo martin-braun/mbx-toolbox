@@ -96,7 +96,7 @@ if testcmd brew; then
 	echo +--
 fi
 
-if testcmd brew; then
+if testcmd pacman; then
 	echo +-- Upgrading pacman packages ...
 	pacman -Syu
 	echo +--
