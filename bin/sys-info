@@ -1,0 +1,96 @@
+export LC_ALL=C
+
+\. "$MBX_LIBPATH/_.sh" || exit 1
+\. "$MBX_LIBPATH/tt.sh" || exit 1
+
+sub() { sed "s/^/| /"; }
+
+usage="$(cat << EOF
+Usage: $(basename "$0") [OPTIONS]
+Prints rich system information from various sources. Supports:
+
+neofetch
+nix
+apk
+apt-get
+brew
+python
+python2
+python3
+ruby
+nvm
+node
+npm
+fvm
+flutter
+rustc
+rustup
+
+OPTIONS
+  -V,   --version                 Prints the version of this script suite (MBX).
+  -v,   --verbose                 Prints verbose information.
+  -h,   --help                    Prints this help message.
+EOF
+)"
+
+while [ "$#" -gt 0 ]; do
+	case "$1" in
+		-V|--version) echo $MBX_VERSION && exit 0 ;;
+		-v|--verbose) verbose=1 ;;
+		-h|--help) echo "$usage" && exit 129 ;;
+		*) echo ! Invalid command line flag $1. >&2; exit 1 ;;
+	esac
+	shift
+done
+
+test $verbose && set -x
+OIFS="$IFS"
+
+if testcmd neofetch; then
+	echo === Overview ===
+	neofetch
+fi
+
+binaries=( 
+nix
+apk
+apt-get
+brew
+python
+python2
+python3
+ruby
+nvm
+node
+npm
+fvm
+flutter
+rustc
+rustup
+)
+
+if [ -s "$HOME/.nvm/nvm.sh" ]; then
+	\. "$NVM_DIR/nvm.sh" # ensure nvm is loaded
+fi
+
+echo === Versions ===
+for pkg in "${binaries[@]}"; do
+	if testcmd "$pkg"; then
+		echo $pkg ::: $("$pkg" --version)
+	fi
+done
+
+if testcmd npm; then
+	echo ''
+	echo === npm global packages ===
+	npm ls -g --depth=0
+fi
+
+if testcmd flutter; then
+	echo ''
+	echo === Flutter Doctor ===
+	flutter doctor -v
+fi
+
+set +x
+
