@@ -20,12 +20,12 @@ GOTO:EOF
 :::
 :nvm-use
 SET V=%1
-IF "%V" == "" (
+IF "%V%" == "" (
 	IF EXIST ".nvmrc" (
 		SET /P V=<.nvmrc
 	)
 )
-nvm install %V
+nvm install %V%
 EXIT /B
 
 :::
@@ -38,13 +38,13 @@ EXIT /B
 : Returns:
 :   Greater than 1, if the nvm command failed, 0 otherwise
 :::
-:nvm-use
+:nvm-install
 SET V=%1
-IF "%V" == "" (
+IF "%V%" == "" (
 	IF EXIST ".nvmrc" (
 		SET /P V=<.nvmrc
 	)
 )
-nvm use %V
+nvm use %V%
 EXIT /B
 
