@@ -56,6 +56,8 @@ Commands
 |`megrpr <path>`|`*nix`|Recursively claim ownership via group of any files and folders within and of a path.|
 |`chownr <user>:<group> <path>`|`*nix`|Recursively change ownership of any files and folders within and of a path to a specific user/group.|
 |`chgrpr <group> <path>`|`*nix`|Recursively change ownership of any files and folders within and of a path to a specific group.|
+|`nvm-install [ port ]`|`win`|Smart nvm-install that will use the contents of .nvmrc as argument.|
+|`nvm-use [ port ]`|`win`|Smart nvm-use that will use the contents of .nvmrc as argument.|
 
 ### Helper Functions
 
