@@ -169,14 +169,14 @@ For Windows, you should install Chocolatey and use it to install a few essential
 ```bat
 @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%PROGRAMDATA%\chocolatey\bin" && refreshenv
 choco install git awk -y && refreshenv
-MKDIR %PROGRAMDATA%\mbx
-git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git %PROGRAMDATA%\mbx
+MKDIR "%PROGRAMDATA%\mbx"
+git clone --depth 1 https://github.com/martin-braun/mbx-toolbox.git "%PROGRAMDATA%\mbx"
 SET "MBX_PATH=%PROGRAMDATA%\mbx"
-setx PATH "%PATH%;%MBX_PATH%\bin\win;%MBX_PATH%\bin"
 ECHO. >> %USERPROFILE%\autorun.cmd
 ECHO @REM mbx >> %USERPROFILE%\autorun.cmd
 ECHO @SET "MBX_PATH=%PROGRAMDATA%\mbx" >> "%USERPROFILE%\autorun.cmd"
-ECHO @CALL ^%MBX_PATH^%\lib\init.cmd>>"%USERPROFILE%\autorun.cmd"
+ECHO @SET "PATH=^%PATH^%;^%MBX_PATH^%\bin\win;^%MBX_PATH^%\bin" >> "%USERPROFILE%\autorun.cmd"
+ECHO @CALL "^%MBX_PATH^%\lib\init.cmd" >> "%USERPROFILE%\autorun.cmd"
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d @^%USERPROFILE^%\autorun.cmd" "2^>NUL /f
 ```
 
@@ -247,10 +247,9 @@ Also remove the lines you added to your .bashrc/.zshrc during installation proce
 
 ```cmd
 DEL /S %PROGRAMDATA%\mbx
-rundll32 sysdm.cpl,EditEnvironmentVariables
 ```
 
-Now remove the paths `%PROGRAMDATA%\mbx\bin\win` and `%PROGRAMDATA%\mbx\bin` from your `%PATH%` variable. Also remove the added lines in `%USERPROFILE%\autorun.cmd`.
+Now remove the added lines in `%USERPROFILE%\autorun.cmd`.
 
 If you don't like to keep the auto-loader of the `autorun.cmd`, just remove the file and finalize your purge in an elevated shell with: 
 
