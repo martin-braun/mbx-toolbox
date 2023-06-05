@@ -43,7 +43,55 @@ done
 test $verbose && set -x
 set -e
 
-if [[ "$(tolower "$OSTYPE")" == "darwin"* ]]; then # MacOS uses Time Maschine for backups instead
+if [ "${os#*"darwin"}" == "$os" ]; then # Not MacOS
+
+	echo - Creating backup directory ...
+	mkdir -p "$path"
+	erun chmod 1700 "$path"
+	os="$(tolower "$OSTYPE")"
+
+	echo - Backing up files ...
+	excl=( "$path" /dev /proc /sys /tmp /run /mnt /media /lost+found )
+	if [ "${os#*"darwin"}" != "$os" ]; then # MacOS
+		excl+=( /Volumes /Network /System /Applications /AppleInternal .DS_Store .AppleDouble .LSOverride )
+		opts="-aEH"
+	else # Others
+		excl+=( /var/lib/lxcfs /var/lib/vz ) # proxmox dumps
+		opts="-aAXH"
+	fi
+	for i in "${!excl[@]}"; do
+		excl[i]="--exclude=${excl[i]}"
+	done
+	(( $verbose )) && opts+="v"
+	erun rsync $opts --delete --max-size=$max_size "${excl[@]}" / "$path"
+	(( $keep_files )) || erun find "$path" -type f -size +$max_size -delete
+
+fi
+
+if [ $extensive ]; then
+	extsubpath="mbx/sys-backup/extensions"
+	extdir="$XDG_CONFIG_HOME/$extsubpath" 
+	if [ -d "$extdir" ]; then
+		extfiles=( $(find "$extdir" -mindepth 1 -maxdepth 1 -type f -name '*.sh') )
+		for f in "${extfiles[@]}"; do
+			# echo $f
+			[ -f "$f" ] && { . "$f" || { echo "! Failed to source $f" && exit 1; }; }
+		done 
+	fi
+	( IFS=: 
+	for confdir in $XDG_CONFIG_DIRS; do
+		extdir="$confdir/$extsubpath"
+		if [ -d "$extdir" ]; then
+			extfiles=( $(find "$extdir" -mindepth 1 -maxdepth 1 -type f -name '*.sh') )
+			for f in "${extfiles[@]}"; do
+				# echo $f
+				[ -f "$f" ] && { . "$f" || { echo "! Failed to source $f" && exit 1; }; }
+			done 
+		fi
+	done; )
+fi
+
+if [ "${os#*"darwin"}" != "$os" ]; then # MacOS uses Time Maschine for backups instead
 	echo - Backing up using Time Maschine ...
 	if [ $shutdown ]; then
 		erun zsh -c 'tmutil startbackup -b && shutdown -h +5'
@@ -55,48 +103,6 @@ if [[ "$(tolower "$OSTYPE")" == "darwin"* ]]; then # MacOS uses Time Maschine fo
 	exit
 fi
 
-echo - Creating backup directory ...
-mkdir -p "$path"
-erun chmod 1700 "$path"
-
-echo - Backing up files ...
-excl=( "$path" /dev /proc /sys /tmp /run /mnt /media /lost+found )
-if [[ "$(tolower "$OSTYPE")" == "darwin"* ]]; then # MacOS
-	excl+=( /Volumes /Network /System /Applications /AppleInternal .DS_Store .AppleDouble .LSOverride )
-	opts="-aEH"
-else # Others
-	excl+=( /var/lib/lxcfs /var/lib/vz ) # proxmox dumps
-	opts="-aAXH"
-fi
-for i in "${!excl[@]}"; do
-	excl[i]="--exclude=${excl[i]}"
-done
-(( $verbose )) && opts+="v"
-erun rsync $opts --delete --max-size=$max_size "${excl[@]}" / "$path"
-(( $keep_files )) || erun find "$path" -type f -size +$max_size -delete
-
-if [ $extensive ]; then
-	extsubpath="mbx/sys-backup/extensions"
-	extdir="$XDG_CONFIG_HOME/$extsubpath" 
-	if [ -d "$extdir" ]; then
-		extfiles=( $(find "$extdir" -mindepth 1 -maxdepth 1 -type f -name '*.sh') )
-		for f in "${extfiles[@]}"; do
-			# echo $f
-			[ -f "$f" ] && { . "$f" || { echo "[!] Failed to source $f" && exit 1; }; }
-		done 
-	fi
-	( IFS=: 
-	for confdir in $XDG_CONFIG_DIRS; do
-		extdir="$confdir/$extsubpath"
-		if [ -d "$extdir" ]; then
-			extfiles=( $(find "$extdir" -mindepth 1 -maxdepth 1 -type f -name '*.sh') )
-			for f in "${extfiles[@]}"; do
-				# echo $f
-				[ -f "$f" ] && { . "$f" || { echo "[!] Failed to source $f" && exit 1; }; }
-			done 
-		fi
-	done; )
-fi
 
 if [ $lock_backup ]; then
 	echo - Locking backup directory ...
