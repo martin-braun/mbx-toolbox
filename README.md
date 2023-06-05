@@ -196,6 +196,15 @@ echo 'export PATH=$PATH:$MBX_PATH/bin/deb:$MBX_PATH/bin' >> $HOME/.bashrc
 echo 'test -e "$MBX_PATH/lib/init.sh" && . "$MBX_PATH/lib/init.sh"' >> $HOME/.bashrc
 ```
 
+> Warning: XDG paths will collide between environments. You can complete this merge for maximum interoperability, just run this in your MSYS2 environment:
+> 
+> ```sh
+> echo 'export XDG_CONFIG_DIRS="$XDG_CONFIG_DIRS:$ProgramData/xdg"' >> $HOME/.bashrc
+> echo 'export XDG_DATA_DIRS="$XDG_DATA_DIRS:$ProgramData"' >> $HOME/.bashrc
+> ``` 
+> 
+> But keep in mind that XDG paths will be shared between environments. If you have to have conflicting files, you can skip the above step and make sure to install this toolbox after installing the Git for Windows SDK. This way, XDG paths won't be linked together at the expense that XDG files cannot be shared between the environments. 
+
 ### Final steps
 
 To validate your installation, restart your terminal and run `mbx-version`. It should print out the [current version](VERSION) to the console.
