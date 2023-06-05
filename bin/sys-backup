@@ -43,13 +43,13 @@ done
 
 test $verbose && set -x
 set -e
+os="$(tolower "$OSTYPE")"
 
 if [ "${os#*"darwin"}" == "$os" ]; then # Not MacOS
 
 	echo - Creating backup directory ...
 	mkdir -p "$path"
 	erun chmod 1700 "$path"
-	os="$(tolower "$OSTYPE")"
 
 	echo - Backing up files ...
 	excl=( "$path" /dev /proc /sys /tmp /run /mnt /media /lost+found )
