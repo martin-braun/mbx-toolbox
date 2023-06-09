@@ -51,7 +51,7 @@ Commands
 |-|-|-|
 |`locport [ port ]`|`all`|Outputs process and connection information (of the given local port).|
 |`gitfind <text>`|`all`|Finds all commits of all branches with a given string in the description.|
-|`gitfuse <branch>`|`all`|Merges the current branch into the given branch. Repository must not have working changes active.|
+|`gitfuse <branch...>`|`all`|Merges the current branch into the given branch or branches. Repository must not have working changes active.|
 |`meownr <path>`|`all`|Recursively claim ownership of any files and folders within and of a path.|
 |`megrpr <path>`|`*nix`|Recursively claim ownership via group of any files and folders within and of a path.|
 |`chownr <user>:<group> <path>`|`*nix`|Recursively change ownership of any files and folders within and of a path to a specific user/group.|

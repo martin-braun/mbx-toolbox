@@ -64,17 +64,23 @@ git log -G"%~1" -p --all
 EXIT /B
 
 :::
-: Merges the current branch into the given branch.
+: Merges the current branch into the given branches.
 : Repository must not have working changes active.
 : Arguments:
-:   %1 - Branchname of the branch to merge into
+:   %* - Branchnames of the branches to merge into
 : Outputs:
-:   Verbose information or e~ror
+:   Verbose information or error
 : Returns:
 :   1, if the merge failed, 0 otherwise
 :::
 :gitfuse
-FOR /F "tokens=4 delims=*" %%i IN ('git-branch') DO @SET "branch=%%i"
-git checkout %1 && git merge %branch% && git checkout %branch%
+FOR /F "tokens=4 delims=*" %%i IN ('git-branch') DO @SET "current_branch=%%i"
+FOR %%b in ("%*") DO (
+	IF not "%%b" == "%current_branch%" (
+		git checkout %%~b
+		git merge %current_branch%
+	)
+)
+git checkout %current_branch%
 EXIT /B
 

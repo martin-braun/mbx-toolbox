@@ -69,7 +69,7 @@ gitfind() {
 # Merges the current branch into the given branch.
 # Repository must not have working changes active.
 # Arguments:
-#   $1 - Branchname of the branch to merge into
+#   $@ - Branchnames of the branches to merge into
 # Outputs:
 #   Verbose information or error
 # Returns:
@@ -78,11 +78,16 @@ gitfind() {
 gitfuse() {
 	if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
 		echo "Merges the current branch into the given branch."
-		echo "Usage: gitfuse <into_branch>"
+		echo "Usage: gitfuse <into_branch...>"
 		echo ""
 		return 1
 	fi
-	branch="$(git-branch)"
-	git checkout $1 && git merge $branch && git checkout $branch
+	current_branch="$(git-branch)"
+	for branch in "$@"; do
+		if [ "$branch" != "$current_branch" ]; then
+			git checkout $branch && git merge $current_branch
+		fi
+	done
+	git checkout $current_branch
 }
 
