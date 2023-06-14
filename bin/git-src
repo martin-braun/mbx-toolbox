@@ -82,7 +82,7 @@ subpath="${subpath%.git}" # remove .git$
 subpath=$(printf "$subpath" | tr : /) # replace : with /
 test ! "$(printf "$subpath" | tr -d / | tr -d '.')" = "" || { echo ! Local subpath results in empty or invalid path. >&2; exit 1; } 
 if [ "$branch" = "" ]; then
-	branch="$(git ls-remote --tags --sort="v:refname" https://$subpath.git | tail -n1 | awk -F '/' '{print $3}')"  # get latest tag
+	branch="$(git ls-remote --tags --sort="v:refname" https://$subpath.git | tail -n1 | awk -F '[/\^]' '{print $3}')"  # get latest tag
 	test ! "$branch" = "" || branch="$(git ls-remote --symref https://$subpath.git HEAD | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}')" # or get default branch
 	link="$path/$lookupdir/$(printf "$subpath" | tr / ,)" # will not include branch/tag for rolling release
 else
@@ -106,6 +106,7 @@ if [ "$command" = "add" ]; then
 	ln -s "../$subpath/$branch" "$link"
 elif [ "$command" = "up" ]; then
 	test -d "$link" || { echo ! Repository doesn\'t exist on the local system. >&2; exit 2; }
+	# TODO: Detect if on a tag at the moment. If so, check if there is a new tag. If so, update to new tag.
 	echo - Updating $fullpath ...
 	if [ ! -d "$fullpath" ]; then # link exists but determined fullpath does not?
 		rm -rf "$path/$lookupdir/$(readlink $link)" || true # try to remove old version
@@ -117,6 +118,7 @@ elif [ "$command" = "up" ]; then
 	else
 		if ! git -C "$fullpath" pull --rebase; then
 			if [ $force ]; then
+				git -C "$fullpath" reset --hard
 				git -C "$fullpath" pull --ff-only
 			else
 				git rebase --abort
