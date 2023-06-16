@@ -112,8 +112,9 @@ if testcmd gem; then
 	if testcmd rvm; then
 		echo +-- Upgrading rvm ...
 		rvm get stable | sub
-		echo +-- Switching to default Ruby version ...
-		rvm use default
+		# echo +-- Switching to default Ruby version ...
+		# . $HOME/.rvm/scripts/rvm
+		# rvm use default | sub
 		echo +-- Upgrading RubyGems system software ...
 		update_rubygems | sub
 		gem update --system | sub
@@ -184,8 +185,11 @@ fi
 
 if testcmd fvm; then
 	echo +-- Upgrading Flutter ...
-	fvm install beta | sub
-	fvm install stable | sub
+	fvm global beta | sub
+	fvm flutter upgrade | sub
+	dart pub global activate rps | sub
+	fvm global stable | sub
+	fvm flutter upgrade | sub
 	dart pub global activate rps | sub
 	echo +--
 elif testcmd flutter; then
