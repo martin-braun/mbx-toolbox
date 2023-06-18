@@ -51,6 +51,12 @@ if testcmd neofetch; then
 	neofetch
 fi
 
+if testcmd system_profiler; then
+	echo === System Profiler ===
+	system_profiler SPSoftwareDataType
+	system_profiler SPHardwareDataType
+fi
+
 binaries=( 
 nix
 apk
