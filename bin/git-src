@@ -12,6 +12,7 @@ If you want to load a workspace, consider forking and cloning using the normal g
 
 COMMAND
   ls                              Lists all locally added repositories/branches.
+  sh                              Switches to the given repository/branch in a new shell.
   add                             Clones the given repository/branch with all its submodules with depth of 1 into the localized source storage.
   up                              Resets and pulls the latest changes on the given repository/branch.
   del                             Deletes the given repository/branch from the system.
@@ -90,7 +91,11 @@ else
 fi
 fullpath="$path/$subpath/$branch"
 
-if [ "$command" = "add" ]; then
+if [ "$command" = "sh" ]; then
+	test -d "$link" || { echo ! Repository doesn\'t exist on the local system. >&2; exit 2; }
+	cd "$path/$lookupdir/$(readlink "$link")"
+	"$SHELL" -i && exit 0
+elif [ "$command" = "add" ]; then
 	if [ $force ]; then
 		rm -rf "$fullpath" || true
 		rm -rf "$link" || true
