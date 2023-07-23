@@ -76,11 +76,13 @@ GOTO:EOF
 SET "verb="
 SET "scope="
 FOR /F "tokens=1-2 delims=@" %%i IN ("%~1") DO (
-    SET "verb=%%~i"
-    SET "scope=%%~j"
+	SET "verb=%%~i"
+	SET "scope=%%~j"
 )
 IF NOT "%scope%" == "" (
-    SET "verb=%verb%(%scope%)"
+	IF NOT "%verb%" == "%scope%" (
+		SET "verb=%verb%(%scope%)"
+	)
 )
 SHIFT
 git commit -m "%verb%: %*"
@@ -112,10 +114,10 @@ EXIT /B
 :gitfuse
 FOR /F "tokens=1 delims=*" %%i IN ('gitbr') DO @SET "current_branch=%%i"
 FOR %%b in ("%*") DO (
-    IF not "%%b" == "%current_branch%" (
-        git checkout %%~b
-        git merge %current_branch%
-    )
+	IF not "%%b" == "%current_branch%" (
+		git checkout %%~b
+		git merge %current_branch%
+	)
 )
 git checkout %current_branch%
 EXIT /B

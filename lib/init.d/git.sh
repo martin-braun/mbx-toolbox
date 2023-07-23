@@ -96,7 +96,9 @@ gitcomm() {
 	verb="$(echo $1 | cut -d'@' -f1)"
 	scope="$(echo $1 | cut -d'@' -f2)"
 	if [ -n "$scope" ]; then
-		verb="$verb($scope)"
+		if ! [ "$verb" = "$scope" ]; then
+			verb="$verb($scope)"
+		fi
 	fi
 	shift
 	git commit -m "$verb: $*"
