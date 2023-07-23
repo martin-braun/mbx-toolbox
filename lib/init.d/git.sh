@@ -80,7 +80,7 @@ gitfind() {
 # Commits the current working changes using semantic commit messages.
 # Arguments:
 #   $1 - Semantic scoped verb [ feat | fix | docs | style | refactor | test | chore ][!][@<scope>]?
-#   $@ - Commit message
+#   $* - Commit message
 # Outputs:
 #   Verbose information or error
 # Returns:
@@ -99,7 +99,7 @@ gitcomm() {
 		verb="$verb($scope)"
 	fi
 	shift
-	git commit -m "$verb: $@"
+	git commit -m "$verb: $*"
 }
 
 ###
