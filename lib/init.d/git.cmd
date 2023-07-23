@@ -12,7 +12,7 @@ IF not "%1" == "" SHIFT & GOTO:%1
 : Returns:
 :   1, if the underlying git command failed, 0 otherwise
 :::
-DOSKEY gitbranch=git rev-parse --abbrev-ref HEAD
+DOSKEY gitbr=git rev-parse --abbrev-ref HEAD
 
 :::
 : Pulls all branches and rebases the commits on the working changes.
@@ -23,7 +23,7 @@ DOSKEY gitbranch=git rev-parse --abbrev-ref HEAD
 : Returns:
 :   1, if the underlying git command failed, 0 otherwise
 :::
-DOSKEY gitpullr=git pull --rebase
+DOSKEY gitpb=git pull --rebase
 
 :::
 : Attempts to pulls all branches and cancels the action on existing working changes.
@@ -34,7 +34,7 @@ DOSKEY gitpullr=git pull --rebase
 : Returns:
 :   1, if the underlying git command failed (i.e. when working changes are available), 0 otherwise
 :::
-DOSKEY gitpullf=git pull --ff-only
+DOSKEY gitpf=git pull --ff-only
 
 :::
 : Pushes all branches to the remote.
@@ -45,7 +45,7 @@ DOSKEY gitpullf=git pull --ff-only
 : Returns:
 :   1, if the underlying git command failed, 0 otherwise
 :::
-DOSKEY gitpusha=git push --all
+DOSKEY gitpa=git push --all
 
 :::
 : Ammends the working changes into the last commit.
@@ -56,10 +56,35 @@ DOSKEY gitpusha=git push --all
 : Returns:
 :   1, if the underlying git command failed, 0 otherwise
 :::
-DOSKEY gitamend=git commit --amend --no-edit
+DOSKEY gitam=git commit --amend --no-edit
 
 GOTO:EOF
 ::: FUNCTIONS :::
+
+:::
+: 
+: Commits the current working changes using semantic commit messages.
+: Arguments:
+:   %1 - Semantic scoped verb [ feat | fix | docs | style | refactor | test | chore ][!][@<scope>]?
+:   %* - Commit message
+: Outputs:
+:   Verbose information or error
+: Returns:
+:   1, if the merge failed, 0 otherwise
+:::
+:gitcomm
+SET "verb="
+SET "scope="
+FOR /F "tokens=1-2 delims=@" %%i IN ("%~1") DO (
+    SET "verb=%%~i"
+    SET "scope=%%~j"
+)
+IF NOT "%scope%" == "" (
+    SET "verb=%verb%(%scope%)"
+)
+SHIFT
+git commit -m "%verb%: %*"
+EXIT /B
 
 :::
 : Finds all commits of all branches with a given string in the description.
@@ -85,13 +110,14 @@ EXIT /B
 :   1, if the merge failed, 0 otherwise
 :::
 :gitfuse
-FOR /F "tokens=4 delims=*" %%i IN ('git-branch') DO @SET "current_branch=%%i"
+FOR /F "tokens=1 delims=*" %%i IN ('gitbr') DO @SET "current_branch=%%i"
 FOR %%b in ("%*") DO (
-	IF not "%%b" == "%current_branch%" (
-		git checkout %%~b
-		git merge %current_branch%
-	)
+    IF not "%%b" == "%current_branch%" (
+        git checkout %%~b
+        git merge %current_branch%
+    )
 )
 git checkout %current_branch%
 EXIT /B
 
+:TODO: Add usage messages to functions.

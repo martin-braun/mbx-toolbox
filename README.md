@@ -38,11 +38,11 @@ Commands
 |`mbx-version`|`all`|Prints the version of this script suite. (MBX)|
 |`locip`|`all`|Outputs the primary local IPv4 address.|
 |`pubip`|`all`|Outputs the public IPv4 address. Requires a working internet connection.|
-|`gitbranch`|`all`|Outputs the current branch in the current directory.|
-|`gitpullr`|`all`|Pulls all branches and rebases the commits on the working changes|
-|`gitpullf`|`all`|Attempts to pull all branches and cancels the action on existing working changes.|
-|`gitpusha`|`all`|Pushes all branches to the remote.|
-|`gitamend`|`all`|Ammends the working changes into the last commit.|
+|`gitbr`|`all`|Outputs the current branch in the current directory.|
+|`gitpb`|`all`|Pulls all branches and rebases the commits on the working changes|
+|`gitpf`|`all`|Attempts to pull all branches and cancels the action on existing working changes.|
+|`gitpa`|`all`|Pushes all branches to the remote.|
+|`gitam`|`all`|Ammends the working changes into the last commit.|
 
 ### Interactive Functions
 
@@ -50,15 +50,16 @@ Commands
 
 |Command|Platforms|Description|
 |-|-|-|
-|`locport [ port ]`|`all`|Outputs process and connection information (of the given local port).|
-|`gitfind <text>`|`all`|Finds all commits of all branches with a given string in the description.|
+|`locport <port>?`|`all`|Outputs process and connection information (of the given local port).|
+|`gitcomm [ feat | fix | docs | style | refactor | test | chore ][!][@<scope>]? <...message>`|`all`|Commits the current working changes using semantic commit messages.|
 |`gitfuse <branch...>`|`all`|Merges the current branch into the given branch or branches. Repository must not have working changes active.|
+|`gitfind <text>`|`all`|Finds all commits of all branches with a given string in the description.|
 |`meownr <path>`|`all`|Recursively claim ownership of any files and folders within and of a path.|
 |`megrpr <path>`|`*nix`|Recursively claim ownership via group of any files and folders within and of a path.|
-|`chownr <user>:<group> <path>`|`*nix`|Recursively change ownership of any files and folders within and of a path to a specific user/group.|
+|`chownr <user>[:<group>]? <path>`|`*nix`|Recursively change ownership of any files and folders within and of a path to a specific user/group.|
 |`chgrpr <group> <path>`|`*nix`|Recursively change ownership of any files and folders within and of a path to a specific group.|
-|`nvm-install [ port ]`|`win`|Smart nvm-install that will use the contents of .nvmrc as argument.|
-|`nvm-use [ port ]`|`win`|Smart nvm-use that will use the contents of .nvmrc as argument.|
+|`nvm-install`|`win`|Smart nvm-install that will use the contents of .nvmrc as argument.|
+|`nvm-use`|`win`|Smart nvm-use that will use the contents of .nvmrc as argument.|
 
 ### Helper Functions
 
