@@ -38,10 +38,11 @@ Commands
 |`mbx-version`|`all`|Prints the version of this script suite. (MBX)|
 |`locip`|`all`|Outputs the primary local IPv4 address.|
 |`pubip`|`all`|Outputs the public IPv4 address. Requires a working internet connection.|
-|`git-branch`|`all`|Outputs the current branch in the current directory.|
-|`git-pullr`|`all`|Pulls all branches and rebases the commits on the working changes|
-|`git-pullf`|`all`|Attempts to pull all branches and cancels the action on existing working changes.|
-|`git-pusha`|`all`|Pushes all branches to the remote.|
+|`gitbranch`|`all`|Outputs the current branch in the current directory.|
+|`gitpullr`|`all`|Pulls all branches and rebases the commits on the working changes|
+|`gitpullf`|`all`|Attempts to pull all branches and cancels the action on existing working changes.|
+|`gitpusha`|`all`|Pushes all branches to the remote.|
+|`gitamend`|`all`|Ammends the working changes into the last commit.|
 
 ### Interactive Functions
 

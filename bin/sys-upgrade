@@ -52,8 +52,9 @@ OIFS="$IFS"
 erun echo - Requested root permissions for priviledged tasks.
 
 if testcmd nix-env; then
-	echo +-- Upgrading nix packages ...
-	nix-env -u | sub
+	echo +-- Upgrading local nix packages ...
+	nix-env -u '*' | sub
+	# TODO: Handle NixOS
 	echo +--
 fi
 
@@ -75,8 +76,7 @@ if testcmd apt-get; then
 fi
 
 if testcmd dnf; then
-	echo +-- Upgrading RedHat packages ...
-	erun dnf up --refresh -y | sub
+	echo +-- Upgrading RedHat packages ... erun dnf up --refresh -y | sub
 	erun dnf autoremove -y | sub
 	echo +--
 elif testcmd yum; then

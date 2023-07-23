@@ -12,7 +12,7 @@ IF not "%1" == "" SHIFT & GOTO:%1
 : Returns:
 :   1, if the underlying git command failed, 0 otherwise
 :::
-DOSKEY git-branch=git rev-parse --abbrev-ref HEAD
+DOSKEY gitbranch=git rev-parse --abbrev-ref HEAD
 
 :::
 : Pulls all branches and rebases the commits on the working changes.
@@ -23,7 +23,7 @@ DOSKEY git-branch=git rev-parse --abbrev-ref HEAD
 : Returns:
 :   1, if the underlying git command failed, 0 otherwise
 :::
-DOSKEY git-pullr=git pull --rebase
+DOSKEY gitpullr=git pull --rebase
 
 :::
 : Attempts to pulls all branches and cancels the action on existing working changes.
@@ -34,7 +34,7 @@ DOSKEY git-pullr=git pull --rebase
 : Returns:
 :   1, if the underlying git command failed (i.e. when working changes are available), 0 otherwise
 :::
-DOSKEY git-pullf=git pull --ff-only
+DOSKEY gitpullf=git pull --ff-only
 
 :::
 : Pushes all branches to the remote.
@@ -45,7 +45,18 @@ DOSKEY git-pullf=git pull --ff-only
 : Returns:
 :   1, if the underlying git command failed, 0 otherwise
 :::
-DOSKEY git-pusha=git push --all
+DOSKEY gitpusha=git push --all
+
+:::
+: Ammends the working changes into the last commit.
+: Arguments:
+:   None
+: Outputs:
+:   Nothing
+: Returns:
+:   1, if the underlying git command failed, 0 otherwise
+:::
+DOSKEY gitamend=git commit --amend --no-edit
 
 GOTO:EOF
 ::: FUNCTIONS :::
@@ -59,7 +70,7 @@ GOTO:EOF
 : Returns:
 :   1, if the query failed or nothing was found, 0 otherwise
 :::
-:gitlog
+:gitfind
 git log -G"%~1" -p --all
 EXIT /B
 
