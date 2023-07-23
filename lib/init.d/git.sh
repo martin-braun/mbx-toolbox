@@ -44,7 +44,7 @@ alias gitpf="git pull --ff-only"
 # Returns:
 #   1, if the underlying git command failed, 0 otherwise
 ###
-alias gitpu="git push --all"
+alias gitpa="git push --all"
 
 ###
 # Ammends the working changes into the last commit.
