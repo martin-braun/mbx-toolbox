@@ -121,7 +121,7 @@ gitfuse() {
 		echo ""
 		return 129
 	fi
-	current_branch="$(git-branch)"
+	current_branch="$(git rev-parse --abbrev-ref HEAD)"
 	for branch in "$@"; do
 		if [ "$branch" != "$current_branch" ]; then
 			git checkout $branch && git merge $current_branch

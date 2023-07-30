@@ -112,7 +112,7 @@ EXIT /B
 :   1, if the merge failed, 0 otherwise
 :::
 :gitfuse
-FOR /F "tokens=1 delims=*" %%i IN ('gitbr') DO @SET "current_branch=%%i"
+FOR /F "tokens=1 delims=*" %%i IN ('git rev-parse --abbrev-ref HEAD') DO @SET "current_branch=%%i"
 FOR %%b in ("%*") DO (
 	IF not "%%b" == "%current_branch%" (
 		git checkout %%~b
