@@ -86,10 +86,10 @@ gitfind() {
 # Returns:
 #   1, if the query failed or nothing was found, 0 otherwise
 ###
-gitcomm() {
+gitco() {
 	if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
 		echo "Commits the current working changes using semantic commit messages."
-		echo "Usage: gitcomm [ feat | fix | docs | style | refactor | test | chore ][!][@<scope>]? <...message>"
+		echo "Usage: gitco [ feat | fix | docs | style | refactor | test | chore ][!][@<scope>]? <...message>"
 		echo ""
 		return 129
 	fi

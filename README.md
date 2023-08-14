@@ -51,7 +51,7 @@ Commands
 |Command|Platforms|Description|
 |-|-|-|
 |`locport <port>?`|`all`|Outputs process and connection information (of the given local port).|
-|`gitcomm [ feat | fix | docs | style | refactor | test | chore ][!][@<scope>]? <...message>`|`all`|Commits the current working changes using semantic commit messages.|
+|`gitco [ feat | fix | docs | style | refactor | test | chore ][!][@<scope>]? <...message>`|`all`|Commits the current working changes using semantic commit messages.|
 |`gitfuse <branch...>`|`all`|Merges the current branch into the given branch or branches. Repository must not have working changes active.|
 |`gitfind <text>`|`all`|Finds all commits of all branches with a given string in the description.|
 |`meownr <path>`|`all`|Recursively claim ownership of any files and folders within and of a path.|

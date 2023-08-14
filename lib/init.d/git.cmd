@@ -56,7 +56,7 @@ DOSKEY gitpa=git push --all
 : Returns:
 :   1, if the underlying git command failed, 0 otherwise
 :::
-DOSKEY gitam=git commit --amend --no-edit
+DOSKEY gita=git commit --amend --no-edit
 
 GOTO:EOF
 ::: FUNCTIONS :::
@@ -72,7 +72,7 @@ GOTO:EOF
 : Returns:
 :   1, if the merge failed, 0 otherwise
 :::
-:gitcomm
+:gitco
 SET "verb="
 SET "scope="
 FOR /F "tokens=1-2 delims=@" %%i IN ("%~1") DO (
