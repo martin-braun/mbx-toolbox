@@ -14,6 +14,12 @@ if [ -z "$XDG_RUNTIME_DIR" ]; then
 	uid="$(id -u)"
 	if [ -d "/run/user/$uid" ]; then
 		export XDG_RUNTIME_DIR="/run/user/$uid"
+	elif [ -d "$HOME/Library/Caches/TemporaryItems" ]; then
+		export XDG_RUNTIME_DIR="$HOME/Library/Caches/TemporaryItems/$uid"
+		if ! [ -d "$XDG_RUNTIME_DIR" ]; then
+			mkdir -p "$XDG_RUNTIME_DIR"
+			chmod 0700 "$XDG_RUNTIME_DIR"
+		fi
 	else
 		tmpdir="$TMPDIR"
 		test -n "$tmpdir" || tmpdir="/tmp"
