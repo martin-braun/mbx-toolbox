@@ -12,14 +12,14 @@ export XDG_CACHE_HOME=${XDG_CACHE_HOME:="$HOME/.cache"}
 mkdir -p "$XDG_CACHE_HOME"
 if [ -z "$XDG_RUNTIME_DIR" ]; then
 	uid="$(id -u)"
-	if [ -d "/run/user/$uid" ]; then
-		export XDG_RUNTIME_DIR="/run/user/$uid"
-	elif [ -d "$HOME/Library/Caches/TemporaryItems" ]; then
-		export XDG_RUNTIME_DIR="$HOME/Library/Caches/TemporaryItems/$uid"
+	if [ -d "$HOME/Library/Caches/TemporaryItems" ]; then
+		export XDG_RUNTIME_DIR="$HOME/Library/Caches/TemporaryItems/runtime"
 		if ! [ -d "$XDG_RUNTIME_DIR" ]; then
 			mkdir -p "$XDG_RUNTIME_DIR"
 			chmod 0700 "$XDG_RUNTIME_DIR"
 		fi
+	elif [ -d "/run/user/$uid" ]; then
+		export XDG_RUNTIME_DIR="/run/user/$uid"
 	else
 		tmpdir="$TMPDIR"
 		test -n "$tmpdir" || tmpdir="/tmp"
