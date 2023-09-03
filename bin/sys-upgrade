@@ -49,7 +49,7 @@ test $verbose && set -x
 set -e
 OIFS="$IFS"
 
-erun echo - Requested root permissions for priviledged tasks.
+while true; do erun test 0; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 if testcmd nix-env; then
 	echo +-- Upgrading local nix packages ...

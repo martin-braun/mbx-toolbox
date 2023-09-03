@@ -17,7 +17,9 @@ OPTIONS
   -k,   --keep-files              Keeps the old backup files that are not overwritten. Ignored on MacOS.
   -x,   --extensive               Also runs extensions (*.sh files) within \$XDG_CONFIG_HOME/mbx/sys-backup/extensions and \$XDG_CONFIG_DIRS/mbx/sys-backup/extensions.
   -l,   --lock-backup             Locks the backup by rejecting access permissions to the current user. Ignored on MacOS.
-  -s,   --shutdown                Shutdowns the system 5 minutes after successful system backup.
+  -u,   --upgrade                 Finalize the backup by upgrading all packages of all supported package managers. This will run sys-upgrade.
+  -X,   --extensive-upgrade       Sets the -x option for sys-upgrade.
+  -s,   --shutdown                Shutdowns the system 5 minutes after successful system backup. Will respect the --upgrade option.
   -h,   --help                    Prints this help message.
 EOF
 )"
@@ -34,6 +36,8 @@ while [ "$#" -gt 0 ]; do
 		-k|--keep-files) keep_files=1 ;;
 		-x|--extensive) extensive=1 ;;
 		-l|--lock-backup) lock_backup=1 ;;
+		-u|--upgrade) upgrade=1 ;;
+		-X|--extensive-upgrade) extensive_upgrade=1 ;;
 		-s|--shutdown) shutdown=1 ;;
 		-h|--help) echo "$usage" && exit 129 ;;
 		*) echo ! Invalid command line flag $1. >&2; exit 1 ;;
@@ -45,12 +49,12 @@ test $verbose && set -x
 set -e
 os="$(tolower "$OSTYPE")"
 
-if [ "${os#*"darwin"}" == "$os" ]; then # Not MacOS
+while true; do erun test 0; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
+if [ "${os#*"darwin"}" == "$os" ]; then # Not MacOS
 	echo - Creating backup directory ...
 	mkdir -p "$path"
 	erun chmod 1700 "$path"
-
 	echo - Backing up files ...
 	excl=( "$path" /dev /proc /sys /tmp /run /mnt /media /lost+found )
 	if [ "${os#*"darwin"}" != "$os" ]; then # MacOS
@@ -66,7 +70,6 @@ if [ "${os#*"darwin"}" == "$os" ]; then # Not MacOS
 	(( $verbose )) && opts+="v"
 	erun rsync $opts --delete --max-size=$max_size "${excl[@]}" / "$path"
 	(( $keep_files )) || erun find "$path" -type f -size +$max_size -delete
-
 fi
 
 if [ $extensive ]; then
@@ -95,11 +98,27 @@ fi
 if [ "${os#*"darwin"}" != "$os" ]; then # MacOS uses Time Maschine for backups instead
 	echo - Backing up using Time Maschine ...
 	if [ $shutdown ]; then
-		erun zsh -c 'tmutil startbackup -b && shutdown -h +5'
+		if [ $upgrade ]; then
+			if [ $extensive_upgrade ]; then
+				erun zsh -c 'tmutil startbackup -b && sys-upgrade -x && shutdown -h +5'
+			else
+				erun zsh -c 'tmutil startbackup -b && sys-upgrade && shutdown -h +5'
+			fi
+		else
+			erun zsh -c 'tmutil startbackup -b && shutdown -h +5'
+		fi
 		echo; read -rsn1 -p "Press any key to cancel ..."; echo
 		erun killall shutdown || true
 	else
-		tmutil startbackup
+		if [ $upgrade ]; then
+			if [ $extensive_upgrade ]; then
+				erun zsh -c 'tmutil startbackup -b && sys-upgrade -x'
+			else
+				erun zsh -c 'tmutil startbackup -b && sys-upgrade'
+			fi
+		else
+			tmutil startbackup
+		fi
 	fi
 	exit
 fi
@@ -110,7 +129,15 @@ if [ $lock_backup ]; then
 	erun chmod 0000 "$path"
 fi
 
-if (( $shutdown )); then
+if [ $upgrade ]; then
+	if [ $extensive_upgrade ]; then
+		sys-upgrade -x
+	else
+		sys-upgrade
+	fi
+fi
+
+if [ $shutdown ]; then
 	erun shutdown +5
 	echo; read -rsn1 -p "Press any key to cancel ..."; echo
 	erun killall shutdown
