@@ -108,7 +108,7 @@ elif [ "$command" = "add" ]; then
 	else
 		echo - Repository already found, version link will be added ...
 	fi
-	ln -s "../$subpath/$branch" "$link"
+	ln -sf "../$subpath/$branch" "$link"
 elif [ "$command" = "up" ]; then
 	test -d "$link" || { echo ! Repository doesn\'t exist on the local system. >&2; exit 2; }
 	# TODO: Detect if on a tag at the moment. If so, check if there is a new tag. If so, update to new tag.
@@ -119,7 +119,7 @@ elif [ "$command" = "up" ]; then
 		# TODO: don't delete old version if it is installed seperately
 		mkdir -p "$fullpath"
 		git clone --recursive --depth 1 --branch $branch $repo "$fullpath"
-		ln -s "../$subpath/$branch" "$link"
+		ln -sf "../$subpath/$branch" "$link"
 	else
 		if ! git -C "$fullpath" pull --rebase; then
 			if [ $force ]; then
@@ -148,4 +148,3 @@ else
 fi
 
 set +e && set +x && echo - Done!
-
