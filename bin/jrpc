@@ -1,0 +1,75 @@
+#!/usr/bin/env sh
+export LC_ALL=C
+
+\. "$MBX_LIBPATH/_.sh" || exit 1
+\. "$MBX_LIBPATH/tt.sh" || exit 1
+
+sub() { sed "s/^/| /"; }
+
+usage="$(cat << EOF
+Usage: $(basename "$0") [OPTIONS]
+Simple CLI tool for testing output from JSON RPC 2.0 services.
+
+OPTIONS
+  -V,   --version                 Prints the version of this script suite (MBX).
+  -v,   --verbose                 Prints verbose information.
+  -u=*, --url                     Specifies the URL to use, default is "http://localhost:8080".
+  -s=*, --scheme                  Specifies the scheme to use, default is "http", ignored when --url is set.
+  -h=*, --host                    Specifies the host to use, default is "localhost", ignored when --url is set.
+  -P=*, --port                    Specifies the port to use, default is "8080", ignored when --url is set.
+  -p=*, --path                    Specifies the path to use, default is "/json_rpc", ignored when --url is set.
+  -m=*, --method                  Specifies the method to use.
+  -j=*, --params                  Specifies the parameters to use (JSON object). I.e. '{"width": 1, "height": 1}', default is "{}".
+  -h,   --help                    Prints this help message.
+EOF
+)"
+
+scheme="http"
+host="localhost"
+port="8080"
+path="/json_rpc"
+params="{}"
+
+while [ "$#" -gt 0 ]; do
+	case "$1" in
+		-V|--version) echo $MBX_VERSION && exit 0 ;;
+		-v|--verbose) verbose=1 ;;
+		-u=*|--url=*) url="${1#*=}" ;;
+		-s=*|--scheme=*) scheme="${1#*=}" ;;
+		-h=*|--host=*) host="${1#*=}" ;;
+		-P=*|--port=*) port="${1#*=}" ;;
+		-p=*|--path=*) path="${1#*=}" ;;
+		-m=*|--method=*) method="${1#*=}" ;;
+		-j=*|--params=*) params="${1#*=}" ;;
+		-h|--help) echo "$usage" && exit 129 ;;
+		*) echo ! Invalid command line flag $1. >&2; exit 1 ;;
+	esac
+	shift
+done
+
+if [ "$method" = "" ]; then
+	echo "No method specified." >&2
+	exit 1
+fi
+
+test $verbose && set -x
+set -e
+OIFS="$IFS"
+
+if [ "$url" = "" ]; then
+	url="$scheme://$host:$port$path"
+fi
+
+if testcmd curl; then
+	curl $url -d '{"jsonrpc":"2.0","id":"0","method":"'"$method"'","params":'$params'}' -H 'Content-Type: application/json'
+	echo ''
+elif testcmd wget; then
+	wget -qO- --post-data '{"jsonrpc":"2.0","id":"0","method":"'"$method"'","params":'$params'}' --header 'Content-Type: application/json' $url
+	echo ''
+else
+	echo "No curl or wget found." >&2
+	exit 1
+fi
+
+set +e && set +x
+
