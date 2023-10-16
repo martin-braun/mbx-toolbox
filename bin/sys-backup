@@ -49,9 +49,8 @@ test $verbose && set -x
 set -e
 os="$(tolower "$OSTYPE")"
 
-while true; do erun test 0; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
-
 if [ "${os#*"darwin"}" == "$os" ]; then # Not MacOS
+	while true; do erun test 0; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 	echo - Creating backup directory ...
 	mkdir -p "$path"
 	erun chmod 1700 "$path"
@@ -100,6 +99,7 @@ if [ "${os#*"darwin"}" != "$os" ]; then # MacOS uses Time Maschine for backups i
 	if [ $shutdown ]; then
 		if [ $upgrade ]; then
 			if [ $extensive_upgrade ]; then
+				# TODO: fix sys-upgrade sub call `sudo zsh -c "sys-upgrade -x"`
 				erun zsh -c 'tmutil startbackup -b && sys-upgrade -x && shutdown -h +5'
 			else
 				erun zsh -c 'tmutil startbackup -b && sys-upgrade && shutdown -h +5'
