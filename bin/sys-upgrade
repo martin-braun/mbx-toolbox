@@ -210,7 +210,7 @@ fi
 
 if [ $gitsources ]; then
 	echo +-- Upgrading git sources ...
-	git-src ls | xargs -L1 git-src up | sub
+	"$MBX_PATH/bin/git-src" ls | xargs -L1 "$MBX_PATH/bin/git-src" up | sub
 	echo +--
 fi
 
