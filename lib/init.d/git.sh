@@ -77,6 +77,25 @@ gitfind() {
 }
 
 ###
+# Shows all changes of a given file, including renames.
+# Arguments:
+#   $1 - Path to the file
+# Outputs:
+#   Verbose information about the result
+# Returns:
+#   1, if the query failed or nothing was found, 0 otherwise
+###
+gitshow() {
+	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+		echo "Shows all changes of a given file, including renames."
+		echo "Usage: gitshow <filename>"
+		echo ""
+		return 1
+	fi
+	git log --stat --follow -p -- "$1"
+}
+
+###
 # Commits the current working changes using semantic commit messages.
 # Arguments:
 #   $1 - Semantic scoped verb [ feat | fix | docs | style | refactor | test | chore ][!][@<scope>]?

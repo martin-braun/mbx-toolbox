@@ -102,6 +102,19 @@ git log -G"%~1" -p --all
 EXIT /B
 
 :::
+: Shows all changes of a given file, including renames.
+: Arguments:
+:   %1 - Path to the file
+: Outputs:
+:   Verbose information about the result
+: Returns:
+:   1, if the query failed or nothing was found, 0 otherwise
+:::
+:gitshow
+git log --stat --follow -p -- "%~1"
+EXIT /B
+
+:::
 : Merges the current branch into the given branches.
 : Repository must not have working changes active.
 : Arguments:
